@@ -5,7 +5,6 @@ import com.nrdc.adminPanel.jsonModel.VTResponse;
 import com.nrdc.adminPanel.jsonModel.jsonRequest.RequestGetAdminUsers;
 import com.nrdc.adminPanel.jsonModel.jsonResponse.ResponseGetUsers;
 import com.nrdc.adminPanel.jsonModel.jsonResponse.ResponseRemoveToken;
-import com.nrdc.adminPanel.service.SimpleService;
 import org.apache.log4j.Logger;
 
 import javax.ws.rs.Consumes;
@@ -16,7 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/getAdminUsers")
-public class GetAPUsersService extends SimpleService {
+public class GetAPUsersService   {
     private static Logger logger = Logger.getLogger(GetAPUsersService.class.getName());
 
     @POST

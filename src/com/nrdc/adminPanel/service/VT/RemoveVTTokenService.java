@@ -4,7 +4,6 @@ import com.nrdc.adminPanel.impl.VT.RemoveVTTokenImpl;
 import com.nrdc.adminPanel.jsonModel.VTResponse;
 import com.nrdc.adminPanel.jsonModel.jsonRequest.RequestRemoveToken;
 import com.nrdc.adminPanel.jsonModel.jsonResponse.ResponseRemoveToken;
-import com.nrdc.adminPanel.service.SimpleService;
 import org.apache.log4j.Logger;
 
 import javax.ws.rs.Consumes;
@@ -15,7 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/removeVTToken")
-public class RemoveVTTokenService extends SimpleService {
+public class RemoveVTTokenService   {
     private static Logger logger = Logger.getLogger(RemoveVTTokenService.class.getName());
 
     @POST

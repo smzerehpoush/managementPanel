@@ -4,7 +4,6 @@ import com.nrdc.adminPanel.impl.AP.AddAPUserImpl;
 import com.nrdc.adminPanel.jsonModel.VTResponse;
 import com.nrdc.adminPanel.jsonModel.jsonRequest.RequestAddAPUser;
 import com.nrdc.adminPanel.jsonModel.jsonResponse.ResponseAddUser;
-import com.nrdc.adminPanel.service.SimpleService;
 import org.apache.log4j.Logger;
 
 import javax.ws.rs.Consumes;
@@ -15,7 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/addAPUser")
-public class AddAPUserService extends SimpleService {
+public class AddAPUserService   {
     private static Logger logger = Logger.getLogger(AddAPUserService.class.getName());
 
     @POST

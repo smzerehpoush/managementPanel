@@ -5,7 +5,6 @@ import com.nrdc.adminPanel.jsonModel.VTResponse;
 import com.nrdc.adminPanel.jsonModel.jsonRequest.RequestActiveUser;
 import com.nrdc.adminPanel.jsonModel.jsonResponse.ResponseActiveUser;
 import com.nrdc.adminPanel.jsonModel.jsonResponse.ResponseDeActiveUser;
-import com.nrdc.adminPanel.service.SimpleService;
 import org.apache.log4j.Logger;
 
 import javax.ws.rs.Consumes;
@@ -16,7 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/activeVTUser")
-public class ActiveVTUserService extends SimpleService {
+public class ActiveVTUserService   {
     private static Logger logger = Logger.getLogger(ActiveVTUserService.class.getName());
 
     @POST

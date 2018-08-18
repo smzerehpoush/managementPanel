@@ -5,7 +5,6 @@ import com.nrdc.adminPanel.jsonModel.VTResponse;
 import com.nrdc.adminPanel.jsonModel.jsonRequest.RequestGetRolesWithPrivileges;
 import com.nrdc.adminPanel.jsonModel.jsonResponse.ResponseGetPrivileges;
 import com.nrdc.adminPanel.jsonModel.jsonResponse.ResponseGetRolesWithPrivileges;
-import com.nrdc.adminPanel.service.SimpleService;
 import org.apache.log4j.Logger;
 
 import javax.ws.rs.Consumes;
@@ -16,7 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/getRolesWithPrivileges")
-public class GetRolesWithPrivilegesService extends SimpleService {
+public class GetRolesWithPrivilegesService   {
     private static Logger logger = Logger.getLogger(GetRolesWithPrivilegesService.class.getName());
 
     @POST

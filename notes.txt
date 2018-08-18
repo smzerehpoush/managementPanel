@@ -1,1 +1,0 @@
-booklet service : 192.168.250.48:3001 -> we dont have access to this service in pc

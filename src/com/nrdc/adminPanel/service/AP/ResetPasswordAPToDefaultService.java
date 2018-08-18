@@ -4,7 +4,6 @@ import com.nrdc.adminPanel.impl.AP.ResetPasswordAPToDefaultImpl;
 import com.nrdc.adminPanel.jsonModel.VTResponse;
 import com.nrdc.adminPanel.jsonModel.jsonRequest.RequestResetPasswordDefault;
 import com.nrdc.adminPanel.jsonModel.jsonResponse.ResponseResetPasswordDefault;
-import com.nrdc.adminPanel.service.SimpleService;
 import org.apache.log4j.Logger;
 
 import javax.ws.rs.Consumes;
@@ -15,7 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/resetPasswordAPToDefault")
-public class ResetPasswordAPToDefaultService extends SimpleService {
+public class ResetPasswordAPToDefaultService   {
     private static Logger logger = Logger.getLogger(ResetPasswordAPToDefaultService.class.getName());
 
     @POST

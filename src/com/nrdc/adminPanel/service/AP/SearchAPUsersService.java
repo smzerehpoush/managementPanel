@@ -4,7 +4,6 @@ import com.nrdc.adminPanel.impl.AP.SearchAPUsersImpl;
 import com.nrdc.adminPanel.jsonModel.VTResponse;
 import com.nrdc.adminPanel.jsonModel.jsonRequest.RequestSearchUsers;
 import com.nrdc.adminPanel.jsonModel.jsonResponse.ResponseSearchUsers;
-import com.nrdc.adminPanel.service.SimpleService;
 import org.apache.log4j.Logger;
 
 import javax.ws.rs.Consumes;
@@ -15,7 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/searchAPUsers")
-public class SearchAPUsersService extends SimpleService {
+public class SearchAPUsersService   {
     private static Logger logger = Logger.getLogger(SearchAPUsersService.class.getName());
 
     @POST

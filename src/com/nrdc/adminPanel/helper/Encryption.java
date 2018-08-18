@@ -2,14 +2,13 @@ package com.nrdc.adminPanel.helper;
 
 import com.nrdc.adminPanel.jsonModel.EncryptedRequest;
 import com.nrdc.adminPanel.jsonModel.EncryptedResponse;
-import com.nrdc.adminPanel.service.SimpleService;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
-public class Encryption extends SimpleService {
+public class Encryption {
     private static ObjectMapper objectMapper = new ObjectMapper();
     private static Logger logger = Logger.getLogger(Encryption.class.getName());
 

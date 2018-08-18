@@ -13,7 +13,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 @Path("/verify")
-public class VerifyService extends SimpleService {
+public class VerifyService {
     private static Logger logger = Logger.getLogger(VerifyService.class.getName());
     private EntityManager entityManager = DBManager.getEntityManager();
 

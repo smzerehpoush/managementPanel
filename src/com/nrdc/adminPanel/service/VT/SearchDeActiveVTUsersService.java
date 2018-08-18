@@ -5,7 +5,6 @@ import com.nrdc.adminPanel.jsonModel.VTResponse;
 import com.nrdc.adminPanel.jsonModel.jsonRequest.RequestSearchDeActiveUsers;
 import com.nrdc.adminPanel.jsonModel.jsonResponse.ResponseSearchDeActiveUsers;
 import com.nrdc.adminPanel.jsonModel.jsonResponse.ResponseSearchUsers;
-import com.nrdc.adminPanel.service.SimpleService;
 import org.apache.log4j.Logger;
 
 import javax.ws.rs.Consumes;
@@ -16,7 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/searchDeActiveVTUsers")
-public class SearchDeActiveVTUsersService extends SimpleService {
+public class SearchDeActiveVTUsersService   {
     private static Logger logger = Logger.getLogger(SearchDeActiveVTUsersService.class.getName());
 
     @POST

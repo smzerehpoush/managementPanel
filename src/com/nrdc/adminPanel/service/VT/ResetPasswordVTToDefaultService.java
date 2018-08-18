@@ -4,7 +4,6 @@ import com.nrdc.adminPanel.impl.VT.ResetPasswordVTToDefaultImpl;
 import com.nrdc.adminPanel.jsonModel.VTResponse;
 import com.nrdc.adminPanel.jsonModel.jsonRequest.RequestResetPasswordDefault;
 import com.nrdc.adminPanel.jsonModel.jsonResponse.ResponseResetPasswordDefault;
-import com.nrdc.adminPanel.service.SimpleService;
 import org.apache.log4j.Logger;
 
 import javax.ws.rs.Consumes;
@@ -15,7 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/resetPasswordVTToDefault")
-public class ResetPasswordVTToDefaultService extends SimpleService {
+public class ResetPasswordVTToDefaultService   {
     private static Logger logger = Logger.getLogger(ResetPasswordVTToDefaultService.class.getName());
 
     @POST

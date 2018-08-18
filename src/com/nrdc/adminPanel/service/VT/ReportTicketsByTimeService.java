@@ -5,7 +5,6 @@ import com.nrdc.adminPanel.jsonModel.VTResponse;
 import com.nrdc.adminPanel.jsonModel.jsonRequest.RequestReportTicketsByTime;
 import com.nrdc.adminPanel.jsonModel.jsonResponse.ResponseLastTickets;
 import com.nrdc.adminPanel.jsonModel.jsonResponse.ResponseReportTickets;
-import com.nrdc.adminPanel.service.SimpleService;
 import org.apache.log4j.Logger;
 
 import javax.ws.rs.Consumes;
@@ -17,7 +16,7 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 
 @Path("reportTicketsByTime")
-public class ReportTicketsByTimeService extends SimpleService {
+public class ReportTicketsByTimeService   {
     private static Logger logger = Logger.getLogger(ReportTicketsByTimeService.class.getName());
 
     @POST

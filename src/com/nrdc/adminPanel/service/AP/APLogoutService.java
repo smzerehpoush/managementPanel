@@ -4,7 +4,6 @@ import com.nrdc.adminPanel.impl.AP.APLogoutImpl;
 import com.nrdc.adminPanel.jsonModel.VTResponse;
 import com.nrdc.adminPanel.jsonModel.jsonRequest.RequestAdminLogout;
 import com.nrdc.adminPanel.jsonModel.jsonResponse.ResponseAdminLogout;
-import com.nrdc.adminPanel.service.SimpleService;
 import org.apache.log4j.Logger;
 
 import javax.ws.rs.Consumes;
@@ -15,7 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/adminLogout")
-public class APLogoutService extends SimpleService {
+public class APLogoutService   {
     private static Logger logger = Logger.getLogger(APLogoutService.class.getName());
 
     @POST

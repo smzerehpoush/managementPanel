@@ -4,7 +4,6 @@ import com.nrdc.adminPanel.impl.VT.GetVTUsersImpl;
 import com.nrdc.adminPanel.jsonModel.VTResponse;
 import com.nrdc.adminPanel.jsonModel.jsonRequest.RequestGetUsers;
 import com.nrdc.adminPanel.jsonModel.jsonResponse.ResponseGetUsers;
-import com.nrdc.adminPanel.service.SimpleService;
 import org.apache.log4j.Logger;
 
 import javax.ws.rs.Consumes;
@@ -15,7 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/getUsers")
-public class GetVTUsersService extends SimpleService {
+public class GetVTUsersService   {
     private static Logger logger = Logger.getLogger(GetVTUsersService.class.getName());
 
     @POST

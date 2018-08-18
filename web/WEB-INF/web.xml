@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
-    <display-name>vehicleTicket</display-name>
+    <display-name>managementPanel</display-name>
 
     <servlet>
         <servlet-name>Jersey</servlet-name>
@@ -16,6 +16,6 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>Jersey</servlet-name>
-        <url-pattern>/server/*</url-pattern>
+        <url-pattern>/api/*</url-pattern>
     </servlet-mapping>
 </web-app>

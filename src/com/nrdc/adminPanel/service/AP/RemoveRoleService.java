@@ -4,7 +4,6 @@ import com.nrdc.adminPanel.impl.AP.RemoveRoleImpl;
 import com.nrdc.adminPanel.jsonModel.VTResponse;
 import com.nrdc.adminPanel.jsonModel.jsonRequest.RequestRemoveRole;
 import com.nrdc.adminPanel.jsonModel.jsonResponse.ResponseRemoveRole;
-import com.nrdc.adminPanel.service.SimpleService;
 import org.apache.log4j.Logger;
 
 import javax.ws.rs.Consumes;
@@ -15,7 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/removeRole")
-public class RemoveRoleService extends SimpleService {
+public class RemoveRoleService   {
     private static Logger logger = Logger.getLogger(RemoveRoleService.class.getName());
 
     @POST

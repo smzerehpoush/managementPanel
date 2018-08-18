@@ -4,7 +4,6 @@ import com.nrdc.adminPanel.impl.AP.CheckUserPrivilegeImpl;
 import com.nrdc.adminPanel.jsonModel.VTResponse;
 import com.nrdc.adminPanel.jsonModel.jsonRequest.RequestCheckUserPrivilege;
 import com.nrdc.adminPanel.jsonModel.jsonResponse.ResponseCheckUserPrivilege;
-import com.nrdc.adminPanel.service.SimpleService;
 import org.apache.log4j.Logger;
 
 import javax.ws.rs.Consumes;
@@ -15,7 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/checkUserPrivilege")
-public class CheckUserPrivilegesService extends SimpleService {
+public class CheckUserPrivilegesService   {
     private static Logger logger = Logger.getLogger(CheckUserPrivilegesService.class.getName());
 
     @POST

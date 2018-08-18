@@ -4,7 +4,6 @@ import com.nrdc.adminPanel.impl.DBManager;
 import com.nrdc.adminPanel.jsonModel.VTResponse;
 import com.nrdc.adminPanel.jsonModel.jsonResponse.ResponseLastVersion;
 import com.nrdc.adminPanel.model.APVersion;
-import com.nrdc.adminPanel.service.SimpleService;
 import org.apache.log4j.Logger;
 
 import javax.persistence.EntityManager;
@@ -17,7 +16,7 @@ import javax.ws.rs.core.Response;
 
 @Path("/getApLastVersion")
 
-public class GetAPLastVersionService extends SimpleService {
+public class GetAPLastVersionService   {
     private static Logger logger = Logger.getLogger(GetAPLastVersionService.class.getName());
 
     @GET

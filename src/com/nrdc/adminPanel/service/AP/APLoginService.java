@@ -4,7 +4,6 @@ import com.nrdc.adminPanel.impl.AP.APLoginImpl;
 import com.nrdc.adminPanel.jsonModel.VTResponse;
 import com.nrdc.adminPanel.jsonModel.jsonRequest.RequestAdminLogin;
 import com.nrdc.adminPanel.jsonModel.jsonResponse.ResponseAdminLogin;
-import com.nrdc.adminPanel.service.SimpleService;
 import org.apache.log4j.Logger;
 
 import javax.ws.rs.Consumes;
@@ -15,7 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/adminLogin")
-public class APLoginService extends SimpleService {
+public class APLoginService   {
     private static Logger logger = Logger.getLogger(APLoginService.class.getName());
 
     @POST

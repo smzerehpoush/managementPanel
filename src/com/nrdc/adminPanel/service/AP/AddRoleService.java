@@ -4,7 +4,6 @@ import com.nrdc.adminPanel.impl.AP.AddRoleImpl;
 import com.nrdc.adminPanel.jsonModel.VTResponse;
 import com.nrdc.adminPanel.jsonModel.jsonRequest.RequestAddRole;
 import com.nrdc.adminPanel.jsonModel.jsonResponse.ResponseAddRole;
-import com.nrdc.adminPanel.service.SimpleService;
 import org.apache.log4j.Logger;
 
 import javax.ws.rs.Consumes;
@@ -15,7 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/addRole")
-public class AddRoleService extends SimpleService {
+public class AddRoleService   {
     private static Logger logger = Logger.getLogger(AddRoleService.class.getName());
 
     @POST
