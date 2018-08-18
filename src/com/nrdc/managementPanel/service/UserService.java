@@ -43,23 +43,23 @@ public class UserService {
             return Response.status(200).entity(response).build();
         }
     }
-    @PUT
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response addUser(EncryptedRequest encryptedRequest){
-        logger.info("++================== login SERVICE : START ==================++");
-        try {
-            RequestAddUser request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestAddUser.class);
-            StandardResponse response = new UserImpl().addUser(encryptedRequest.getToken(), request);
-            String key = Database.getUserKey(encryptedRequest.getToken(), SystemNames.POLICE_HAMRAH).getKey();
-            EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
-            Response finalResponse = Response.status(200).entity(encryptedResponse).build();
-            logger.info("++================== login SERVICE : END ==================++");
-            return finalResponse;
-        } catch (Exception ex) {
-            logger.error("++================== login SERVICE : EXCEPTION ==================++");
-            StandardResponse response = StandardResponse.getNOKExceptions(ex);
-            return Response.status(200).entity(response).build();
-        }
-    }
+//    @PUT
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    public Response addUser(EncryptedRequest encryptedRequest){
+//        logger.info("++================== login SERVICE : START ==================++");
+//        try {
+//            RequestAddUser request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestAddUser.class);
+//            StandardResponse response = new UserImpl().addUser(encryptedRequest.getToken(), request);
+//            String key = Database.getUserKey(encryptedRequest.getToken(), SystemNames.POLICE_HAMRAH).getKey();
+//            EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
+//            Response finalResponse = Response.status(200).entity(encryptedResponse).build();
+//            logger.info("++================== login SERVICE : END ==================++");
+//            return finalResponse;
+//        } catch (Exception ex) {
+//            logger.error("++================== login SERVICE : EXCEPTION ==================++");
+//            StandardResponse response = StandardResponse.getNOKExceptions(ex);
+//            return Response.status(200).entity(response).build();
+//        }
+//    }
 }
