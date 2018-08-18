@@ -1,17 +1,14 @@
 package com.nrdc.managementPanel.model;
 
-import com.nrdc.managementPanel.exceptions.NotValidTokenException;
 import com.nrdc.managementPanel.helper.Constants;
 import com.nrdc.managementPanel.helper.SystemNames;
 import com.nrdc.managementPanel.impl.Database;
-import com.nrdc.managementPanel.helper.Constants;
 import com.sun.istack.internal.NotNull;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.SecureRandom;
-import java.util.List;
 
 @Entity
 @Table(name = "TOKEN", schema = Constants.SCHEMA)
@@ -65,7 +62,7 @@ public class Token implements Serializable {
     public void setFkSystemId(Long fkSystemId) {
         this.fkSystemId = fkSystemId;
     }
-    public Token (User user, Systems system) throws Exception {
+    public Token (User user, System system) throws Exception {
         user.checkToken(system);
         this.token = new BigInteger(40,  new SecureRandom()).toString(32);
         this.fkSystemId=system.getId();
@@ -85,7 +82,7 @@ public class Token implements Serializable {
         EntityManager entityManager = Database.getEntityManager();
 
         try {
-            int size = entityManager.createQuery("SELECT t FROM Token t WHERE t.token = :token AND t.fkSystemId = (SELECT s.id FROM Systems s WHERE s.systemName = :systemName)")
+            int size = entityManager.createQuery("SELECT t FROM Token t WHERE t.token = :token AND t.fkSystemId = (SELECT s.id FROM System s WHERE s.systemName = :systemName)")
                     .setParameter("systemName",systemName)
                     .setParameter("token", token)
                     .getResultList()

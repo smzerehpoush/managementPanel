@@ -66,7 +66,7 @@ public class Key implements Serializable {
                 '}';
     }
     public Key(){}
-    public Key (User user, Systems system) throws Exception {
+    public Key (User user, System system) throws Exception {
         user.checkKey(system);
         this.setKey(UUID.randomUUID().toString());
         this.setFkSystemId(system.getId());

@@ -56,7 +56,7 @@ public class User implements Serializable {
         EntityManager entityManager = Database.getEntityManager();
         logger.info("User authentication");
         try {
-            return (User) entityManager.createQuery("SELECT u FROM User u WHERE u.id = (SELECT t.fkUserId FROM Token t WHERE t.token = :token AND t.fkSystemId = (SELECT s.id FROM Systems s WHERE s.systemName = :systemName))")
+            return (User) entityManager.createQuery("SELECT u FROM User u WHERE u.id = (SELECT t.fkUserId FROM Token t WHERE t.token = :token AND t.fkSystemId = (SELECT s.id FROM System s WHERE s.systemName = :systemName))")
                     .setParameter("token", token)
                     .setParameter("systemName", systemName)
                     .getSingleResult();
@@ -71,7 +71,7 @@ public class User implements Serializable {
         return getUser(token, systemName.name());
     }
 
-    public static User getUser(Token token, Systems system) throws Exception {
+    public static User getUser(Token token, System system) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         logger.info("User authentication");
         try {
@@ -101,7 +101,7 @@ public class User implements Serializable {
 
     }
 
-    public static void verify(String token, Systems system) throws Exception {
+    public static void verify(String token, System system) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
 
         try {
@@ -124,7 +124,7 @@ public class User implements Serializable {
         EntityManager entityManager = Database.getEntityManager();
 
         try {
-            int size = entityManager.createQuery("SELECT t FROM Token t WHERE t.token = :token AND t.fkSystemId = (SELECT s.id FROM Systems s WHERE s.systemName = :systemName )")
+            int size = entityManager.createQuery("SELECT t FROM Token t WHERE t.token = :token AND t.fkSystemId = (SELECT s.id FROM System s WHERE s.systemName = :systemName )")
                     .setParameter("token", token)
                     .setParameter("systemName", systemName)
                     .getResultList()
@@ -142,7 +142,7 @@ public class User implements Serializable {
     public void checkKey(String systemName) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
-            int size = entityManager.createQuery("SELECT  k FROM Key k WHERE k.fkUserId = :fkUserId AND k.fkSystemId = (SELECT s.id FROM Systems s WHERE s.systemName = :systemName)")
+            int size = entityManager.createQuery("SELECT  k FROM Key k WHERE k.fkUserId = :fkUserId AND k.fkSystemId = (SELECT s.id FROM System s WHERE s.systemName = :systemName)")
                     .setParameter("systemName", systemName)
                     .setParameter("fkUserId", this.id)
                     .getResultList()
@@ -155,7 +155,7 @@ public class User implements Serializable {
         }
     }
 
-    public void checkKey(Systems system) throws Exception {
+    public void checkKey(System system) throws Exception {
         checkKey(system.getSystemName());
     }
 
@@ -167,7 +167,7 @@ public class User implements Serializable {
         EntityManager entityManager = Database.getEntityManager();
         try {
 
-            int size = entityManager.createQuery("SELECT  t FROM Token t WHERE t.fkUserId = :fkUserId AND t.fkSystemId = (SELECT s.id FROM Systems s WHERE s.systemName = :systemName)")
+            int size = entityManager.createQuery("SELECT  t FROM Token t WHERE t.fkUserId = :fkUserId AND t.fkSystemId = (SELECT s.id FROM System s WHERE s.systemName = :systemName)")
                     .setParameter("systemName", systemName)
                     .setParameter("fkUserId", this.id)
                     .getResultList()
@@ -180,7 +180,7 @@ public class User implements Serializable {
         }
     }
 
-    public void checkToken(Systems system) throws Exception {
+    public void checkToken(System system) throws Exception {
         checkToken(system.getSystemName());
     }
 

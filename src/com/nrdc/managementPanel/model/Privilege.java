@@ -1,9 +1,11 @@
 package com.nrdc.managementPanel.model;
 
+import com.nrdc.managementPanel.helper.Constants;
+
 import javax.persistence.*;
 
 @Entity
-@Table(name = "PH_PRIVILEGE", schema = "MOBILE")
+@Table(name = "PRIVILEGE", schema = Constants.SCHEMA)
 public class Privilege {
     private Long id;
     private String privilege;
@@ -18,7 +20,7 @@ public class Privilege {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID_VT_PRIVILEGE")
+    @Column(name = "ID_PRIVILEGE")
     public Long getId() {
         return id;
     }

@@ -5,7 +5,7 @@ import com.nrdc.managementPanel.exceptions.NotValidTokenException;
 import com.nrdc.managementPanel.helper.Constants;
 import com.nrdc.managementPanel.helper.SystemNames;
 import com.nrdc.managementPanel.model.Key;
-import com.nrdc.managementPanel.model.Systems;
+import com.nrdc.managementPanel.model.System;
 import com.nrdc.managementPanel.model.Token;
 import com.nrdc.managementPanel.model.User;
 import org.apache.log4j.Logger;
@@ -47,7 +47,7 @@ public class Database {
         Token.validateToken(token,systemName);
         EntityManager entityManager = Database.getEntityManager();
         try {
-            return (Key) entityManager.createQuery("SELECT k FROM Key k JOIN Token t ON k.fkUserId = t.fkUserId WHERE t.token = :token AND k.fkSystemId = (SELECT s.id FROM Systems s WHERE s.systemName = :systemName )")
+            return (Key) entityManager.createQuery("SELECT k FROM Key k JOIN Token t ON k.fkUserId = t.fkUserId WHERE t.token = :token AND k.fkSystemId = (SELECT s.id FROM System s WHERE s.systemName = :systemName )")
                     .setParameter("systemName", systemName)
                     .setParameter("token", token)
                     .getSingleResult();
@@ -91,10 +91,10 @@ public class Database {
 
     }
 
-    public static Systems getSystem(String systemName) throws Exception {
+    public static System getSystem(String systemName) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
-            return (Systems) entityManager.createQuery("SELECT s FROM Systems s WHERE s.systemName =:systemPath")
+            return (System) entityManager.createQuery("SELECT s FROM System s WHERE s.systemName =:systemPath")
                     .setParameter("systemPath", systemName)
                     .getSingleResult();
         } catch (NonUniqueResultException ex) {

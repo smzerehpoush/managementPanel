@@ -17,7 +17,7 @@ public class UserImpl {
             Token.validateToken(token, SystemNames.MANAGEMENT_PANEL);
             if (transaction != null && !transaction.isActive())
                 transaction.begin();
-            entityManager.createQuery("UPDATE User u SET u.isActive = true WHERE u.id = (SELECT t.fkUserId FROM Token t WHERE t.token = :token AND t.fkSystemId = (SELECT s.id FROM Systems s WHERE s.systemName = :systemName))")
+            entityManager.createQuery("UPDATE User u SET u.isActive = true WHERE u.id = (SELECT t.fkUserId FROM Token t WHERE t.token = :token AND t.fkSystemId = (SELECT s.id FROM System s WHERE s.systemName = :systemName))")
                     .setParameter("token", token)
                     .setParameter("systemName", SystemNames.MANAGEMENT_PANEL);
             if (transaction != null && transaction.isActive())

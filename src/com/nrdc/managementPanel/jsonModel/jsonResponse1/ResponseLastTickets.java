@@ -1,7 +1,5 @@
 package com.nrdc.managementPanel.jsonModel.jsonResponse;
 
-import com.nrdc.managementPanel.model.VTTicket;
-
 import java.util.List;
 
 public class ResponseLastTickets {
