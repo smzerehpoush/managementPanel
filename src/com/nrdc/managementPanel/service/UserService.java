@@ -32,7 +32,7 @@ public class UserService {
         try {
             RequestActiveUser request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestActiveUser.class);
             StandardResponse response = new UserImpl().activeUser(encryptedRequest.getToken(), request);
-            String key = Database.getUserKey(encryptedRequest.getToken(), SystemNames.POLICE_HAMRAH).getKey();
+            String key = Database.getUserKey(encryptedRequest.getToken()).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
             logger.info("++================== login SERVICE : END ==================++");
