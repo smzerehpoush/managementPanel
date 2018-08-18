@@ -8,16 +8,16 @@
     <persistence-unit name="vehicleTicketJPA" transaction-type="JTA">
         <jta-data-source>vehicleTicketDataSource</jta-data-source>
 
-        <class>com.nrdc.adminPanel.model.APToken</class>
-        <class>com.nrdc.adminPanel.model.APUser</class>
-        <class>com.nrdc.adminPanel.model.APVersion</class>
-        <class>com.nrdc.adminPanel.model.RolePrivilege</class>
-        <class>com.nrdc.adminPanel.model.VTPrivilege</class>
-        <class>com.nrdc.adminPanel.model.VTRole</class>
-        <class>com.nrdc.adminPanel.model.VTTicket</class>
-        <class>com.nrdc.adminPanel.model.VTToken</class>
-        <class>com.nrdc.adminPanel.model.VTUser</class>
-        <class>com.nrdc.adminPanel.model.VTUserRole</class>
+        <class>com.nrdc.managementPanel.model.APToken</class>
+        <class>com.nrdc.managementPanel.model.APUser</class>
+        <class>com.nrdc.managementPanel.model.APVersion</class>
+        <class>com.nrdc.managementPanel.model.RolePrivilege</class>
+        <class>com.nrdc.managementPanel.model.Privilege</class>
+        <class>com.nrdc.managementPanel.model.VTRole</class>
+        <class>com.nrdc.managementPanel.model.VTTicket</class>
+        <class>com.nrdc.managementPanel.model.VTToken</class>
+        <class>com.nrdc.managementPanel.model.VTUser</class>
+        <class>com.nrdc.managementPanel.model.VTUserRole</class>
 
     </persistence-unit>
 
