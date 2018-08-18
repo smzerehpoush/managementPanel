@@ -23,7 +23,7 @@ public class UserService {
 
 
 
-    @Path("/active")
+    @Path("/activate")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
