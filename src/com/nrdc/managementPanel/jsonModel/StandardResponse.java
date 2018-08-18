@@ -1,14 +1,10 @@
 package com.nrdc.managementPanel.jsonModel;
 
-import java.util.List;
-
-
 public class StandardResponse<T> {
 
     private int resultCode;
     private String resultMessage;
     private T response;
-    private List<T> responseList;
 
     public StandardResponse() {
     }
@@ -46,13 +42,5 @@ public class StandardResponse<T> {
 
     public void setResponse(T response) {
         this.response = response;
-    }
-
-    public List<T> getResponseList() {
-        return responseList;
-    }
-
-    public void setResponseList(List<T> responseList) {
-        this.responseList = responseList;
     }
 }
