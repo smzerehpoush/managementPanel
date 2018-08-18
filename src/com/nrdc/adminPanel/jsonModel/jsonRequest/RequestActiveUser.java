@@ -1,0 +1,30 @@
+package com.nrdc.adminPanel.jsonModel.jsonRequest;
+
+public class RequestActiveUser {
+    private String token;
+    private Integer fkUserId;
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public Integer getFkUserId() {
+        return fkUserId;
+    }
+
+    public void setFkUserId(Integer fkUserId) {
+        this.fkUserId = fkUserId;
+    }
+
+    @Override
+    public String toString() {
+        return "RequestActiveUser{" +
+                "token='" + token + '\'' +
+                ", fkUserId=" + fkUserId +
+                '}';
+    }
+}

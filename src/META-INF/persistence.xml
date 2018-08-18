@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
+             http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
+             version="2.1">
+
+    <persistence-unit name="vehicleTicketJPA" transaction-type="JTA">
+        <jta-data-source>vehicleTicketDataSource</jta-data-source>
+
+        <class>com.nrdc.adminPanel.model.APToken</class>
+        <class>com.nrdc.adminPanel.model.APUser</class>
+        <class>com.nrdc.adminPanel.model.APVersion</class>
+        <class>com.nrdc.adminPanel.model.RolePrivilege</class>
+        <class>com.nrdc.adminPanel.model.VTPrivilege</class>
+        <class>com.nrdc.adminPanel.model.VTRole</class>
+        <class>com.nrdc.adminPanel.model.VTTicket</class>
+        <class>com.nrdc.adminPanel.model.VTToken</class>
+        <class>com.nrdc.adminPanel.model.VTUser</class>
+        <class>com.nrdc.adminPanel.model.VTUserRole</class>
+
+    </persistence-unit>
+
+</persistence>
