@@ -61,6 +61,9 @@ public class Database {
     public static Key getUserKey(String token, SystemNames systemName) throws Exception {
         return getUserKey(token,systemName.name());
     }
+    public static Key getUserKey(String token) throws Exception {
+        return getUserKey(token,SystemNames.MANAGEMENT_PANEL.name());
+    }
 
     public static User getUser(String username) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
