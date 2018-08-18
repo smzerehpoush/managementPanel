@@ -1,6 +1,6 @@
 package com.nrdc.managementPanel.jsonModel.jsonRequest;
 
-public class RequestActiveUser {
+public class RequestActivateUser {
     private Long fkUserId;
     private Long fkSystemId;
 
@@ -22,7 +22,7 @@ public class RequestActiveUser {
 
     @Override
     public String toString() {
-        return "RequestActiveUser{" +
+        return "RequestActivateUser{" +
                 "fkUserId=" + fkUserId +
                 ", fkSystemId=" + fkSystemId +
                 '}';
