@@ -1,7 +1,7 @@
 package com.nrdc.managementPanel.model;
 
 import com.nrdc.managementPanel.helper.Constants;
-import com.nrdc.managementPanel.helper.RoleNames;
+import com.nrdc.managementPanel.helper.PrivilegeNames;
 import com.nrdc.managementPanel.helper.SystemNames;
 import com.nrdc.managementPanel.impl.Database;
 import org.apache.log4j.Logger;
@@ -311,26 +311,28 @@ public class User implements Serializable {
                 entityManager.close();
         }
     }
-    public void checkPrivilege(String privilege){
+
+    public void checkPrivilege(String privilege) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
-            int size  = entityManager.createQuery("SELECT ur FROM UserRole ur JOIN RolePrivilege rp ON ur.fkRoleId = rp.fkRoleId JOIN Privilege p ON rp.fkPrivilegeId = p.id WHERE p.privilege = :privilege AND ur.fkUserId = :fkUserId")
+            int size = entityManager.createQuery("SELECT ur FROM UserRole ur JOIN RolePrivilege rp ON ur.fkRoleId = rp.fkRoleId JOIN Privilege p ON rp.fkPrivilegeId = p.id WHERE p.privilege = :privilege AND ur.fkUserId = :fkUserId")
                     .setParameter("fkUserId", this.id)
                     .setParameter("privilege", privilege)
                     .getResultList()
-                    .size() ;
+                    .size();
             if (size < 1) {
                 throw new Exception(Constants.PERMISSION_ERROR);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+
         } finally {
             if (entityManager != null && entityManager.isOpen())
                 entityManager.close();
         }
     }
-    public void checkPrivilege(RoleNames roleName){
-        checkPrivilege(roleName.name());
+
+
+    public void checkPrivilege(PrivilegeNames privilegeName) throws Exception {
+        checkPrivilege(privilegeName.name());
     }
 }
 
