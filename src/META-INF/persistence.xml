@@ -5,7 +5,7 @@
              http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
              version="2.1">
 
-    <persistence-unit name="vehicleTicketJPA" transaction-type="JTA">
+    <persistence-unit name="managementPanelJPA" transaction-type="JTA">
         <jta-data-source>managementPanelDataSource</jta-data-source>
 
         <class>com.nrdc.managementPanel.model.Key</class>
