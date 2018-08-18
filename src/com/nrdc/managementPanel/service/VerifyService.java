@@ -15,14 +15,14 @@ public class VerifyService {
     private static Logger logger = Logger.getLogger(VerifyService.class.getName());
 
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response verifyRESTService() {
         logger.info("++================== VERIFY SERVICE : START ==================++");
 
         ResponseVerify response = new ResponseVerify();
         response.setName("Management Panel");
-        response.setStatus("OK");
         response.setStatusCode(200);
+        response.setStatusMessage("OK");
         response.setTime(new Date().toString());
         Response finalResponse = Response.status(200).entity(response).build();
         logger.info("++================== VERIFY SERVICE : END ==================++");
