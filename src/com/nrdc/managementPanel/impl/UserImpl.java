@@ -12,7 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
 public class UserImpl {
-    public StandardResponse<ResponseActivateUser> activeUser(String token, RequestActivateUser request) throws Exception {
+    public StandardResponse activeUser(String token, RequestActivateUser request) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
@@ -28,7 +28,7 @@ public class UserImpl {
             if (transaction != null && transaction.isActive())
                 transaction.commit();
 
-            StandardResponse<ResponseActivateUser> response = new StandardResponse<>();
+            StandardResponse response = new StandardResponse<>();
             response.setResultCode(1);
             response.setResultMessage("OK");
             return response;
