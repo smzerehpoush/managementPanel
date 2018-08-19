@@ -39,6 +39,9 @@ public class UserImpl {
             if (entityManager.isOpen())
                 entityManager.close();
             return StandardResponse.getNOKExceptions(ex);
+        } finally {
+            if (entityManager.isOpen())
+                entityManager.close();
         }
     }
 }
