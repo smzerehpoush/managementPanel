@@ -8,6 +8,7 @@ import com.nrdc.managementPanel.jsonModel.EncryptedResponse;
 import com.nrdc.managementPanel.jsonModel.StandardResponse;
 import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestActiveUser;
 import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestAddUser;
+import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestDeActiveUser;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -31,6 +32,26 @@ public class UserService {
         try {
             RequestActiveUser request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestActiveUser.class);
             StandardResponse response = new UserImpl().activeUser(encryptedRequest.getToken(), request);
+            String key = Database.getUserKey(encryptedRequest.getToken()).getKey();
+            EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
+            Response finalResponse = Response.status(200).entity(encryptedResponse).build();
+            logger.info("++================== login SERVICE : END ==================++");
+            return finalResponse;
+        } catch (Exception ex) {
+            logger.error("++================== login SERVICE : EXCEPTION ==================++");
+            StandardResponse response = StandardResponse.getNOKExceptions(ex);
+            return Response.status(200).entity(response).build();
+        }
+    }
+    @Path("/deActivate")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response deActiveUser(EncryptedRequest encryptedRequest){
+        logger.info("++================== login SERVICE : START ==================++");
+        try {
+            RequestDeActiveUser request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestDeActiveUser.class);
+            StandardResponse response = new UserImpl().deActiveUser(encryptedRequest.getToken(), request);
             String key = Database.getUserKey(encryptedRequest.getToken()).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
