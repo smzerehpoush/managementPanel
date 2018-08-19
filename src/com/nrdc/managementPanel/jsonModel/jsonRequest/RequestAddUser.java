@@ -2,29 +2,21 @@ package com.nrdc.managementPanel.jsonModel.jsonRequest;
 
 
 public class RequestAddUser {
-    private String token;
-    private String password;
     private String username;
+    private String password;
     private String phoneNumber;
     private String firstName;
     private String lastName;
     private String nationalId;
     private String policeCode;
+    private Long fkSystemId;
 
-    public String getToken() {
-        return token;
+    public Long getFkSystemId() {
+        return fkSystemId;
     }
 
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public void setFkSystemId(Long fkSystemId) {
+        this.fkSystemId = fkSystemId;
     }
 
     public String getUsername() {
@@ -33,6 +25,14 @@ public class RequestAddUser {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getPhoneNumber() {
