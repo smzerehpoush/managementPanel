@@ -4,6 +4,7 @@ import com.nrdc.managementPanel.helper.Constants;
 import com.nrdc.managementPanel.helper.PrivilegeNames;
 import com.nrdc.managementPanel.helper.SystemNames;
 import com.nrdc.managementPanel.impl.Database;
+import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestAddUser;
 import org.apache.log4j.Logger;
 
 import javax.persistence.*;
@@ -26,6 +27,17 @@ public class User implements Serializable {
     private String policeCode;
 
     public User() {
+    }
+
+    public User(RequestAddUser requestAddUser) {
+        this.password = requestAddUser.getPassword();
+        this.username = requestAddUser.getUsername();
+        this.setIsActive(true);
+        this.phoneNumber = requestAddUser.getPhoneNumber();
+        this.firstName = requestAddUser.getFirstName();
+        this.lastName = requestAddUser.getLastName();
+        this.nationalId = requestAddUser.getNationalId();
+        this.policeCode = requestAddUser.getPoliceCode();
     }
 
     public static User getUser(String username, String password, String phoneNumber) throws Exception {
