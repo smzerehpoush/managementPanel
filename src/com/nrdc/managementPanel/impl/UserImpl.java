@@ -3,10 +3,7 @@ package com.nrdc.managementPanel.impl;
 import com.nrdc.managementPanel.helper.PrivilegeNames;
 import com.nrdc.managementPanel.helper.SystemNames;
 import com.nrdc.managementPanel.jsonModel.StandardResponse;
-import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestActiveUser;
-import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestAddUser;
-import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestDeActiveUser;
-import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestGetUsers;
+import com.nrdc.managementPanel.jsonModel.jsonRequest.*;
 import com.nrdc.managementPanel.jsonModel.jsonResponse.ResponseGetUsers;
 import com.nrdc.managementPanel.model.System;
 import com.nrdc.managementPanel.model.Token;
@@ -26,9 +23,8 @@ public class UserImpl {
             user.checkPrivilege(PrivilegeNames.ACTIVATE_USER);
             if (transaction != null && !transaction.isActive())
                 transaction.begin();
-            entityManager.createQuery("UPDATE User u SET u.isActive = true WHERE u.id = (SELECT t.fkUserId FROM Token t WHERE t.token = :token AND t.fkSystemId = (SELECT s.id FROM System s WHERE s.systemName = :systemName))")
-                    .setParameter("token", token)
-                    .setParameter("systemName", SystemNames.MANAGEMENT_PANEL.name())
+            entityManager.createQuery("UPDATE User u SET u.isActive = true WHERE u.id = :fkUserId")
+                    .setParameter("fkUserId", request.getFkUserId())
                     .executeUpdate();
             if (transaction != null && transaction.isActive())
                 transaction.commit();
@@ -49,6 +45,7 @@ public class UserImpl {
                 entityManager.close();
         }
     }
+
     public StandardResponse deActiveUser (String token, RequestDeActiveUser request) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -58,9 +55,8 @@ public class UserImpl {
             user.checkPrivilege(PrivilegeNames.ACTIVATE_USER);
             if (transaction != null && !transaction.isActive())
                 transaction.begin();
-            entityManager.createQuery("UPDATE User u SET u.isActive = false WHERE u.id = (SELECT t.fkUserId FROM Token t WHERE t.token = :token AND t.fkSystemId = (SELECT s.id FROM System s WHERE s.systemName = :systemName))")
-                    .setParameter("token", token)
-                    .setParameter("systemName", SystemNames.MANAGEMENT_PANEL.name())
+            entityManager.createQuery("UPDATE User u SET u.isActive = false WHERE u.id = :fkUserId")
+                    .setParameter("fkUserId", request.getFkUserId())
                     .executeUpdate();
             if (transaction != null && transaction.isActive())
                 transaction.commit();
@@ -110,6 +106,7 @@ public class UserImpl {
                 entityManager.close();
         }
     }
+
     public StandardResponse getUsers(String token, RequestGetUsers requestAddUser) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
