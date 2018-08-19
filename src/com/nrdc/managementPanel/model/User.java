@@ -40,6 +40,20 @@ public class User implements Serializable {
         this.policeCode = requestAddUser.getPoliceCode();
     }
 
+    public static User getUser(Long fkUserId) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        try {
+            return (User) entityManager.createQuery("SELECT u FROM User u WHERE u.id = :fkUserId")
+                    .setParameter("fkUserId", fkUserId)
+                    .getSingleResult();
+        } catch (Exception ex) {
+            throw new Exception(Constants.NOT_VALID_USER);
+        } finally {
+            if (entityManager != null && entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+
     public static User getUser(String username, String password, String phoneNumber) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
