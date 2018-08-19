@@ -338,11 +338,11 @@ public class User implements Serializable {
         }
     }
 
-    public void checkPrivilege(String privilege) throws Exception {
+    public static void checkPrivilege(String privilege, Long fkUserId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
-            int size = entityManager.createQuery("SELECT ur FROM UserRole ur JOIN RolePrivilege rp ON ur.fkRoleId = rp.fkRoleId JOIN Privilege p ON rp.fkPrivilegeId = p.id WHERE p.privilege = :privilege AND ur.fkUserId = :fkUserId")
-                    .setParameter("fkUserId", this.id)
+            int size = entityManager.createQuery("SELECT p FROM Privilege p JOIN RolePrivilege rp ON p.id = rp.fkPrivilegeId JOIN UserRole ur ON rp.fkRoleId = ur.fkRoleId WHERE ur.fkUserId = :fkUserId AND p.privilege = :privilege")
+                    .setParameter("fkUserId", fkUserId)
                     .setParameter("privilege", privilege)
                     .getResultList()
                     .size();
@@ -354,6 +354,12 @@ public class User implements Serializable {
             if (entityManager != null && entityManager.isOpen())
                 entityManager.close();
         }
+    }
+    public void checkPrivilege(String privilege, User user) throws Exception {
+        checkPrivilege(privilege,user.getId());
+    }
+    public void checkPrivilege(String privilege) throws Exception {
+        checkPrivilege(privilege,this.id);
     }
 
 
