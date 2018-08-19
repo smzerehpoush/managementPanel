@@ -21,7 +21,7 @@ public class Constants {
 
     public static final String VT_CONNECTION_ERROR= "ایراد در ارتباط با سرور ثبت تخلفات .";
 
-    public static final String PERMISSION_ERROR = "شما دسترسی استفاده از این سیستم را ندارید.";
+    public static final String PERMISSION_ERROR = "شما دسترسی استفاده از این خدمت را ندارید.";
 
     public static final String SCHEMA = "MANAGEMENT_PANEL";
 
