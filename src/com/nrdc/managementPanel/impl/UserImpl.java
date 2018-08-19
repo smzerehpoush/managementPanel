@@ -106,6 +106,17 @@ public class UserImpl {
                 entityManager.close();
         }
     }
+    public List<System> getUserSystems(User user){
+        EntityManager entityManager = Database.getEntityManager();
+        try {
+            return entityManager.createQuery("SELECT s FROM System s JOIN UserSystem us ON us.fkSystemId = s.id WHERE us.fkUserId = :fkUserId")
+                    .setParameter("fkUserId",user.getId())
+                    .getResultList();
+        }finally {
+            if (entityManager!=null && entityManager.isOpen())
+                entityManager.close();
+        }
+    }
 
     public StandardResponse getUsers(String token, RequestGetUsers requestAddUser) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
