@@ -1,5 +1,6 @@
 package com.nrdc.managementPanel.impl;
 
+import com.nrdc.managementPanel.helper.Constants;
 import com.nrdc.managementPanel.helper.PrivilegeNames;
 import com.nrdc.managementPanel.helper.SystemNames;
 import com.nrdc.managementPanel.jsonModel.StandardResponse;
@@ -84,9 +85,7 @@ public class UserImpl {
         try {
             Token.validateToken(token, SystemNames.MANAGEMENT_PANEL);
             User user = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
-            System system = System.getSystem(requestAddUser.getFkSystemId());
-            String privilegeName = "ADD_" + system.getSystemName() + "_USER";
-            user.checkPrivilege(privilegeName);
+            user.checkPrivilege(PrivilegeNames.ADD_USERS);
             if (!transaction.isActive())
                 transaction.begin();
             User u = new User(requestAddUser);
@@ -117,35 +116,47 @@ public class UserImpl {
                 entityManager.close();
         }
     }
-//    public StandardResponse editUser(String token, RequestEditUser requestEditUser) {
-//        EntityManager entityManager = Database.getEntityManager();
-//        EntityTransaction transaction = entityManager.getTransaction();
-//        try {
-//            Token.validateToken(token, SystemNames.MANAGEMENT_PANEL);
-//            User user = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
-//            List<System> systems = getUserSystems(user);
-//            System system = System.getSystem(requestEditUser.getFkSystemId());
-//            String privilegeName = "ADD_" + system.getSystemName() + "_USER";
-//            user.checkPrivilege(privilegeName);
-//            if (!transaction.isActive())
-//                transaction.begin();
-//            User u = new User(requestEditUser);
-//            entityManager.persist(u);
-//            if (transaction.isActive())
-//                transaction.commit();
-//            StandardResponse response = new StandardResponse<>();
-//            response.setResultCode(1);
-//            response.setResultMessage("OK");
-//            return response;
-//        } catch (Exception ex) {
-//            if (transaction != null && transaction.isActive())
-//                transaction.rollback();
-//            return StandardResponse.getNOKExceptions(ex);
-//        } finally {
-//            if (entityManager.isOpen())
-//                entityManager.close();
-//        }
-//    }
+    public StandardResponse editUser(String token, RequestEditUser requestEditUser) {
+        EntityManager entityManager = Database.getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            Token.validateToken(token, SystemNames.MANAGEMENT_PANEL);
+            User user = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
+            int size = entityManager.createQuery("SELECT ur1 FROM UserRole ur1 JOIN RolePrivilege rp1 ON ur1.fkRoleId = rp1.fkRoleId JOIN RolePrivilege rp2 ON rp1.fkPrivilegeId= rp2.fkPrivilegeId JOIN UserRole ur2 ON rp2.fkRoleId =ur2.fkRoleId WHERE ur1.fkUserId = :fkUserId1 AND ur2.fkUserId = :fkUserId2")
+                    .setParameter("fkUserId1",user.getId())
+                    .setParameter("fkUserId2",requestEditUser.getId())
+                    .getResultList()
+                    .size();
+            if (size < 1){
+                throw new Exception(Constants.PERMISSION_ERROR);
+            }
+
+            if (!transaction.isActive())
+                transaction.begin();
+            entityManager.createQuery("UPDATE User u SET u.username = :username , u.phoneNumber= :phoneNumber , u.phoneNumber = :phoneNumber , u.firstName = :firstName , u.lastName = :lastName , u.nationalId = :nationalId , u.policeCode = :policeCode WHERE u.id = :id")
+                    .setParameter("username",requestEditUser.getUsername())
+                    .setParameter("phoneNumber",requestEditUser.getPhoneNumber())
+                    .setParameter("firstName",requestEditUser.getFirstName())
+                    .setParameter("lastName",requestEditUser.getLastName())
+                    .setParameter("nationalId",requestEditUser.getNationalId())
+                    .setParameter("policeCode",requestEditUser.getPoliceCode())
+                    .setParameter("id",requestEditUser.getId())
+                    .executeUpdate();
+            if (transaction.isActive())
+                transaction.commit();
+            StandardResponse response = new StandardResponse<>();
+            response.setResultCode(1);
+            response.setResultMessage("OK");
+            return response;
+        } catch (Exception ex) {
+            if (transaction != null && transaction.isActive())
+                transaction.rollback();
+            return StandardResponse.getNOKExceptions(ex);
+        } finally {
+            if (entityManager.isOpen())
+                entityManager.close();
+        }
+    }
 
     public StandardResponse getUsers(String token, RequestGetUsers requestAddUser) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
