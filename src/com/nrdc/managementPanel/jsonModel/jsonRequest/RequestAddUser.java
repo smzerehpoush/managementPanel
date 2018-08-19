@@ -78,14 +78,14 @@ public class RequestAddUser {
     @Override
     public String toString() {
         return "RequestAddUser{" +
-                "token='" + token + '\'' +
+                "username='" + username + '\'' +
                 ", password='" + password + '\'' +
-                ", username='" + username + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", nationalId='" + nationalId + '\'' +
                 ", policeCode='" + policeCode + '\'' +
+                ", fkSystemId=" + fkSystemId +
                 '}';
     }
 }
