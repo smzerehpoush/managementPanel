@@ -117,6 +117,35 @@ public class UserImpl {
                 entityManager.close();
         }
     }
+//    public StandardResponse editUser(String token, RequestEditUser requestEditUser) {
+//        EntityManager entityManager = Database.getEntityManager();
+//        EntityTransaction transaction = entityManager.getTransaction();
+//        try {
+//            Token.validateToken(token, SystemNames.MANAGEMENT_PANEL);
+//            User user = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
+//            List<System> systems = getUserSystems(user);
+//            System system = System.getSystem(requestEditUser.getFkSystemId());
+//            String privilegeName = "ADD_" + system.getSystemName() + "_USER";
+//            user.checkPrivilege(privilegeName);
+//            if (!transaction.isActive())
+//                transaction.begin();
+//            User u = new User(requestEditUser);
+//            entityManager.persist(u);
+//            if (transaction.isActive())
+//                transaction.commit();
+//            StandardResponse response = new StandardResponse<>();
+//            response.setResultCode(1);
+//            response.setResultMessage("OK");
+//            return response;
+//        } catch (Exception ex) {
+//            if (transaction != null && transaction.isActive())
+//                transaction.rollback();
+//            return StandardResponse.getNOKExceptions(ex);
+//        } finally {
+//            if (entityManager.isOpen())
+//                entityManager.close();
+//        }
+//    }
 
     public StandardResponse getUsers(String token, RequestGetUsers requestAddUser) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
