@@ -14,7 +14,7 @@ import javax.persistence.EntityTransaction;
 import java.util.List;
 
 public class UserImpl {
-    public StandardResponse activeUser (String token, RequestActiveUser request) throws Exception {
+    public StandardResponse activeUser(String token, RequestActiveUser request) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
@@ -46,7 +46,7 @@ public class UserImpl {
         }
     }
 
-    public StandardResponse deActiveUser (String token, RequestDeActiveUser request) throws Exception {
+    public StandardResponse deActiveUser(String token, RequestDeActiveUser request) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
@@ -85,7 +85,7 @@ public class UserImpl {
             Token.validateToken(token, SystemNames.MANAGEMENT_PANEL);
             User user = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
             System system = System.getSystem(requestAddUser.getFkSystemId());
-            String privilegeName = "ADD_"+system.getSystemName()+"_USER";
+            String privilegeName = "ADD_" + system.getSystemName() + "_USER";
             user.checkPrivilege(privilegeName);
             if (!transaction.isActive())
                 transaction.begin();
@@ -113,12 +113,82 @@ public class UserImpl {
             Token.validateToken(token, SystemNames.MANAGEMENT_PANEL);
             User user = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
             System system = System.getSystem(requestAddUser.getFkSystemId());
-            String privilegeName = "GET_"+system.getSystemName()+"_USERS";
+            String privilegeName = "GET_" + system.getSystemName() + "_USERS";
             user.checkPrivilege(privilegeName);
             List<User> users = entityManager.createQuery("SELECT u FROM User u JOIN UserSystem us ON u.id = us.fkUserId WHERE us.fkSystemId = :fkSystemId")
-                    .setParameter("fkSystemId",system.getId())
+                    .setParameter("fkSystemId", system.getId())
                     .getResultList();
-            for (User u : users){
+            for (User u : users) {
+                u.setPassword(null);
+            }
+            ResponseGetUsers responseGetUsers = new ResponseGetUsers();
+            responseGetUsers.setUsers(users);
+            StandardResponse response = new StandardResponse<>();
+            response.setResultCode(1);
+            response.setResultMessage("OK");
+            response.setResponse(responseGetUsers);
+            return response;
+        } finally {
+            if (entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+
+    public StandardResponse filterUsers(String token, RequestFilterUsers requestFilterUsers) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        try {
+            Token.validateToken(token, SystemNames.MANAGEMENT_PANEL);
+            User user = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
+            user.checkPrivilege(PrivilegeNames.FILTER_USERS);
+            StringBuilder query = new StringBuilder();
+            query.append("SELECT u FROM User u ");
+            if (requestFilterUsers.getFkSystemId() != null) {
+                query.append(" JOIN UserSystem us ON u.id = us.fkUserId ");
+            }
+            query.append(" WHERE 1=1 ");
+            if (requestFilterUsers.getFkSystemId() != null) {
+                query.append(" AND us.fkSystemId = ");
+                query.append(requestFilterUsers.getFkSystemId());
+            }
+            if (requestFilterUsers.getUsername() != null) {
+                query.append(" AND u.username LIKE '");
+                query.append(requestFilterUsers.getUsername());
+                query.append("%' ");
+            }
+            if (requestFilterUsers.getActive() != null) {
+                query.append(" AND u.isActive = ");
+                query.append(requestFilterUsers.getActive());
+            }
+            if (requestFilterUsers.getPhoneNumber() != null) {
+                query.append(" AND u.phoneNumber LIKE '");
+                query.append(requestFilterUsers.getPhoneNumber());
+                query.append("%' ");
+            }
+            if (requestFilterUsers.getFirstName() != null) {
+                query.append(" AND u.firstName LIKE '");
+                query.append(requestFilterUsers.getFirstName());
+                query.append("%' ");
+            }
+            if (requestFilterUsers.getLastName() != null) {
+                query.append(" AND u.lastName LIKE '");
+                query.append(requestFilterUsers.getLastName());
+                query.append("%' ");
+            }
+            if (requestFilterUsers.getNationalId() != null) {
+                query.append(" AND u.nationalId LIKE '");
+                query.append(requestFilterUsers.getNationalId());
+                query.append("%' ");
+            }
+            if (requestFilterUsers.getPoliceCode() != null) {
+                query.append(" AND u.policeCode LIKE '");
+                query.append(requestFilterUsers.getPoliceCode());
+                query.append("%' ");
+            }
+
+
+            List<User> users = entityManager.createQuery(query.toString())
+                    .getResultList();
+            for (User u : users) {
                 u.setPassword(null);
             }
             ResponseGetUsers responseGetUsers = new ResponseGetUsers();
