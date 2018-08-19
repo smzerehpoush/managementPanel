@@ -6,7 +6,7 @@ import com.nrdc.managementPanel.impl.UserImpl;
 import com.nrdc.managementPanel.jsonModel.EncryptedRequest;
 import com.nrdc.managementPanel.jsonModel.EncryptedResponse;
 import com.nrdc.managementPanel.jsonModel.StandardResponse;
-import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestActivateUser;
+import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestActiveUser;
 import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestAddUser;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -29,7 +29,7 @@ public class UserService {
     public Response activeUser(EncryptedRequest encryptedRequest){
         logger.info("++================== login SERVICE : START ==================++");
         try {
-            RequestActivateUser request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestActivateUser.class);
+            RequestActiveUser request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestActiveUser.class);
             StandardResponse response = new UserImpl().activeUser(encryptedRequest.getToken(), request);
             String key = Database.getUserKey(encryptedRequest.getToken()).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);

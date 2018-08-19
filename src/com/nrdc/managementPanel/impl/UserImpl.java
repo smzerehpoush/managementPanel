@@ -3,7 +3,7 @@ package com.nrdc.managementPanel.impl;
 import com.nrdc.managementPanel.helper.PrivilegeNames;
 import com.nrdc.managementPanel.helper.SystemNames;
 import com.nrdc.managementPanel.jsonModel.StandardResponse;
-import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestActivateUser;
+import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestActiveUser;
 import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestAddUser;
 import com.nrdc.managementPanel.model.System;
 import com.nrdc.managementPanel.model.Token;
@@ -13,7 +13,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
 public class UserImpl {
-    public StandardResponse activeUser(String token, RequestActivateUser request) throws Exception {
+    public StandardResponse activeUser(String token, RequestActiveUser request) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
