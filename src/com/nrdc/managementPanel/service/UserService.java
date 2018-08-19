@@ -9,6 +9,7 @@ import com.nrdc.managementPanel.jsonModel.StandardResponse;
 import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestActiveUser;
 import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestAddUser;
 import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestDeActiveUser;
+import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestGetUsers;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -64,13 +65,32 @@ public class UserService {
         }
     }
     @PUT
-    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response addUser(EncryptedRequest encryptedRequest){
         logger.info("++================== login SERVICE : START ==================++");
         try {
             RequestAddUser request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestAddUser.class);
             StandardResponse response = new UserImpl().addUser(encryptedRequest.getToken(), request);
+            String key = Database.getUserKey(encryptedRequest.getToken()).getKey();
+            EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
+            Response finalResponse = Response.status(200).entity(encryptedResponse).build();
+            logger.info("++================== login SERVICE : END ==================++");
+            return finalResponse;
+        } catch (Exception ex) {
+            logger.error("++================== login SERVICE : EXCEPTION ==================++");
+            StandardResponse response = StandardResponse.getNOKExceptions(ex);
+            return Response.status(200).entity(response).build();
+        }
+    }
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUsers(EncryptedRequest encryptedRequest){
+        logger.info("++================== login SERVICE : START ==================++");
+        try {
+            RequestGetUsers request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestGetUsers.class);
+            StandardResponse response = new UserImpl().getUsers(encryptedRequest.getToken(), request);
             String key = Database.getUserKey(encryptedRequest.getToken()).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
