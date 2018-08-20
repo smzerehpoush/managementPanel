@@ -116,16 +116,9 @@ public class UserImpl {
                 entityManager.close();
         }
     }
-    public StandardResponse editUser(String token, RequestEditUser requestEditUser) {
     public void checkEditUserPermission(Long fkUserId1, Long fkUserId2) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
-        EntityTransaction transaction = entityManager.getTransaction();
         try {
-            Token.validateToken(token, SystemNames.MANAGEMENT_PANEL);
-            User user = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
-            int size = entityManager.createQuery("SELECT ur1 FROM UserRole ur1 JOIN RolePrivilege rp1 ON ur1.fkRoleId = rp1.fkRoleId JOIN RolePrivilege rp2 ON rp1.fkPrivilegeId= rp2.fkPrivilegeId JOIN UserRole ur2 ON rp2.fkRoleId =ur2.fkRoleId WHERE ur1.fkUserId = :fkUserId1 AND ur2.fkUserId = :fkUserId2")
-                    .setParameter("fkUserId1",user.getId())
-                    .setParameter("fkUserId2",requestEditUser.getId())
             int size = entityManager.createQuery("SELECT su1.fkUserId FROM SystemUser su1  JOIN UserRole ur1 ON ur1.fkUserId =su1.fkUserId  JOIN RolePrivilege rp1 ON ur1.fkRoleId = rp1.fkRoleId JOIN Privilege p1 ON rp1.fkPrivilegeId = p1.id JOIN SystemUser su2 ON su1.fkSystemId = su2.fkSystemId WHERE su2.fkUserId = :fkUserId2 AND su1.fkUserId = :fkUserId1 AND p1.privilege LIKE 'EDIT_%_USERS'")
                     .setParameter("fkUserId1",fkUserId1)
                     .setParameter("fkUserId2",fkUserId2)
@@ -140,6 +133,13 @@ public class UserImpl {
                 entityManager.close();
         }
     }
+    public StandardResponse editUser(String token, RequestEditUser requestEditUser) {
+        EntityManager entityManager = Database.getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            Token.validateToken(token, SystemNames.MANAGEMENT_PANEL);
+            User user = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
+            checkEditUserPermission(user.getId(),requestEditUser.getFkUserId());
 
             if (!transaction.isActive())
                 transaction.begin();
@@ -150,7 +150,7 @@ public class UserImpl {
                     .setParameter("lastName",requestEditUser.getLastName())
                     .setParameter("nationalId",requestEditUser.getNationalId())
                     .setParameter("policeCode",requestEditUser.getPoliceCode())
-                    .setParameter("id",requestEditUser.getId())
+                    .setParameter("id",requestEditUser.getFkUserId())
                     .executeUpdate();
             if (transaction.isActive())
                 transaction.commit();
