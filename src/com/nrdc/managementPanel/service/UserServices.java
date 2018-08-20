@@ -26,17 +26,17 @@ public class UserServices {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response activeUser(EncryptedRequest encryptedRequest){
-        logger.info("++================== login SERVICE : START ==================++");
+        logger.info("++================== activeUser SERVICE : START ==================++");
         try {
             RequestActiveUser request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestActiveUser.class);
             StandardResponse response = new UserImpl().activeUser(encryptedRequest.getToken(), request);
             String key = Database.getUserKey(encryptedRequest.getToken()).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
-            logger.info("++================== login SERVICE : END ==================++");
+            logger.info("++================== activeUser SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            logger.error("++================== login SERVICE : EXCEPTION ==================++");
+            logger.error("++================== activeUser SERVICE : EXCEPTION ==================++");
             StandardResponse response = StandardResponse.getNOKExceptions(ex);
             return Response.status(200).entity(response).build();
         }
@@ -46,17 +46,17 @@ public class UserServices {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response deActiveUser(EncryptedRequest encryptedRequest){
-        logger.info("++================== login SERVICE : START ==================++");
+        logger.info("++================== deActiveUser SERVICE : START ==================++");
         try {
             RequestDeActiveUser request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestDeActiveUser.class);
             StandardResponse response = new UserImpl().deActiveUser(encryptedRequest.getToken(), request);
             String key = Database.getUserKey(encryptedRequest.getToken()).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
-            logger.info("++================== login SERVICE : END ==================++");
+            logger.info("++================== deActiveUser SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            logger.error("++================== login SERVICE : EXCEPTION ==================++");
+            logger.error("++================== deActiveUser SERVICE : EXCEPTION ==================++");
             StandardResponse response = StandardResponse.getNOKExceptions(ex);
             return Response.status(200).entity(response).build();
         }
@@ -65,17 +65,17 @@ public class UserServices {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addUser(EncryptedRequest encryptedRequest){
-        logger.info("++================== login SERVICE : START ==================++");
+        logger.info("++================== addUser SERVICE : START ==================++");
         try {
             RequestAddUser request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestAddUser.class);
             StandardResponse response = new UserImpl().addUser(encryptedRequest.getToken(), request);
             String key = Database.getUserKey(encryptedRequest.getToken()).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
-            logger.info("++================== login SERVICE : END ==================++");
+            logger.info("++================== addUser SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            logger.error("++================== login SERVICE : EXCEPTION ==================++");
+            logger.error("++================== addUser SERVICE : EXCEPTION ==================++");
             StandardResponse response = StandardResponse.getNOKExceptions(ex);
             return Response.status(200).entity(response).build();
         }
@@ -84,17 +84,17 @@ public class UserServices {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUsers(EncryptedRequest encryptedRequest){
-        logger.info("++================== login SERVICE : START ==================++");
+        logger.info("++================== getUsers SERVICE : START ==================++");
         try {
             RequestGetUsers request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestGetUsers.class);
             StandardResponse response = new UserImpl().getUsers(encryptedRequest.getToken(), request);
             String key = Database.getUserKey(encryptedRequest.getToken()).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
-            logger.info("++================== login SERVICE : END ==================++");
+            logger.info("++================== getUsers SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            logger.error("++================== login SERVICE : EXCEPTION ==================++");
+            logger.error("++================== getUsers SERVICE : EXCEPTION ==================++");
             StandardResponse response = StandardResponse.getNOKExceptions(ex);
             return Response.status(200).entity(response).build();
         }
@@ -104,17 +104,17 @@ public class UserServices {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response filterUsers(EncryptedRequest encryptedRequest){
-        logger.info("++================== login SERVICE : START ==================++");
+        logger.info("++================== filterUsers SERVICE : START ==================++");
         try {
             RequestFilterUsers request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestFilterUsers.class);
             StandardResponse response = new UserImpl().filterUsers(encryptedRequest.getToken(), request);
             String key = Database.getUserKey(encryptedRequest.getToken()).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
-            logger.info("++================== login SERVICE : END ==================++");
+            logger.info("++================== filterUsers SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            logger.error("++================== login SERVICE : EXCEPTION ==================++");
+            logger.error("++================== filterUsers SERVICE : EXCEPTION ==================++");
             StandardResponse response = StandardResponse.getNOKExceptions(ex);
             return Response.status(200).entity(response).build();
         }
@@ -124,17 +124,17 @@ public class UserServices {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response editUser(EncryptedRequest encryptedRequest){
-        logger.info("++================== login SERVICE : START ==================++");
+        logger.info("++================== editUser SERVICE : START ==================++");
         try {
             RequestEditUser request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestEditUser.class);
             StandardResponse response = new UserImpl().editUser(encryptedRequest.getToken(), request);
             String key = Database.getUserKey(encryptedRequest.getToken()).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
-            logger.info("++================== login SERVICE : END ==================++");
+            logger.info("++================== editUser SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            logger.error("++================== login SERVICE : EXCEPTION ==================++");
+            logger.error("++================== editUser SERVICE : EXCEPTION ==================++");
             StandardResponse response = StandardResponse.getNOKExceptions(ex);
             return Response.status(200).entity(response).build();
         }
@@ -144,17 +144,17 @@ public class UserServices {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getPrivileges(EncryptedRequest encryptedRequest){
-        logger.info("++================== login SERVICE : START ==================++");
+        logger.info("++================== getPrivileges SERVICE : START ==================++");
         try {
             RequestGetUserRolesWithPrivileges request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestGetUserRolesWithPrivileges.class);
             StandardResponse response = new UserImpl().getRolesWithPrivileges(encryptedRequest.getToken(), request);
             String key = Database.getUserKey(encryptedRequest.getToken()).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
-            logger.info("++================== login SERVICE : END ==================++");
+            logger.info("++================== getPrivileges SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            logger.error("++================== login SERVICE : EXCEPTION ==================++");
+            logger.error("++================== getPrivileges SERVICE : EXCEPTION ==================++");
             StandardResponse response = StandardResponse.getNOKExceptions(ex);
             return Response.status(200).entity(response).build();
         }
