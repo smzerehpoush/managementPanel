@@ -29,16 +29,16 @@ public class PrivilegeServices {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getPrivileges(EncryptedRequest encryptedRequest){
-        logger.info("++================== login SERVICE : START ==================++");
+        logger.info("++================== getPrivileges SERVICE : START ==================++");
         try {
             StandardResponse response = new PrivilegeImpl().getPrivileges(encryptedRequest.getToken());
             String key = Database.getUserKey(encryptedRequest.getToken()).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
-            logger.info("++================== login SERVICE : END ==================++");
+            logger.info("++================== getPrivileges SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            logger.error("++================== login SERVICE : EXCEPTION ==================++");
+            logger.error("++================== getPrivileges SERVICE : EXCEPTION ==================++");
             StandardResponse response = StandardResponse.getNOKExceptions(ex);
             return Response.status(200).entity(response).build();
         }
