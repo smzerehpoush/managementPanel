@@ -108,7 +108,7 @@ public class UserImpl {
     public List<System> getUserSystems(User user){
         EntityManager entityManager = Database.getEntityManager();
         try {
-            return entityManager.createQuery("SELECT s FROM System s JOIN UserSystem us ON us.fkSystemId = s.id WHERE us.fkUserId = :fkUserId")
+            return entityManager.createQuery("SELECT s FROM System s JOIN SystemUser us ON us.fkSystemId = s.id WHERE us.fkUserId = :fkUserId")
                     .setParameter("fkUserId",user.getId())
                     .getResultList();
         }finally {
@@ -166,7 +166,7 @@ public class UserImpl {
             System system = System.getSystem(requestAddUser.getFkSystemId());
             String privilegeName = "GET_" + system.getSystemName() + "_USERS";
             user.checkPrivilege(privilegeName);
-            List<User> users = entityManager.createQuery("SELECT u FROM User u JOIN UserSystem us ON u.id = us.fkUserId WHERE us.fkSystemId = :fkSystemId")
+            List<User> users = entityManager.createQuery("SELECT u FROM User u JOIN SystemUser us ON u.id = us.fkUserId WHERE us.fkSystemId = :fkSystemId")
                     .setParameter("fkSystemId", system.getId())
                     .getResultList();
             for (User u : users) {
@@ -194,7 +194,7 @@ public class UserImpl {
             StringBuilder query = new StringBuilder();
             query.append("SELECT u FROM User u ");
             if (requestFilterUsers.getFkSystemId() != null) {
-                query.append(" JOIN UserSystem us ON u.id = us.fkUserId ");
+                query.append(" JOIN SystemUser us ON u.id = us.fkUserId ");
             }
             query.append(" WHERE 1=1 ");
             if (requestFilterUsers.getFkSystemId() != null) {

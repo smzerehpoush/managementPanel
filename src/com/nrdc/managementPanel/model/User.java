@@ -324,7 +324,7 @@ public class User implements Serializable {
     public void checkSystemAccess(Long fkSystemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
-            boolean hasAccess = entityManager.createQuery("SELECT u FROM UserSystem u WHERE u.fkUserId = :userId  AND u.fkSystemId = :systemId")
+            boolean hasAccess = entityManager.createQuery("SELECT u FROM SystemUser u WHERE u.fkUserId = :userId  AND u.fkSystemId = :systemId")
                     .setParameter("userId", this.id)
                     .setParameter("systemId", fkSystemId)
                     .getResultList()
