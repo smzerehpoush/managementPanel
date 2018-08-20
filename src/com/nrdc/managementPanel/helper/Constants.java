@@ -25,5 +25,6 @@ public class Constants {
 
     public static final String SCHEMA = "MANAGEMENT_PANEL";
     public static final String CANT_NOT_EDIT_THIS_USER = "شما دسترسی تغییر کارری با";
+    public static final String USER_SYSTEM_ERROR = "کاربر مربوط به سیستم وارد شده نمی باشد.";
 
 }
