@@ -13,10 +13,7 @@ import com.nrdc.managementPanel.model.Token;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -28,11 +25,11 @@ public class PrivilegeServices {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getPrivileges(EncryptedRequest encryptedRequest){
+    public Response getPrivileges(@QueryParam("token")String token){
         logger.info("++================== getPrivileges SERVICE : START ==================++");
         try {
-            StandardResponse response = new PrivilegeImpl().getPrivileges(encryptedRequest.getToken());
-            String key = Database.getUserKey(encryptedRequest.getToken()).getKey();
+            StandardResponse response = new PrivilegeImpl().getPrivileges(token);
+            String key = Database.getUserKey(token).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
             logger.info("++================== getPrivileges SERVICE : END ==================++");
