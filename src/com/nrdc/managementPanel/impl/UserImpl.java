@@ -7,6 +7,7 @@ import com.nrdc.managementPanel.jsonModel.StandardResponse;
 import com.nrdc.managementPanel.jsonModel.customizedModel.RoleWithPrivileges;
 import com.nrdc.managementPanel.jsonModel.jsonRequest.*;
 import com.nrdc.managementPanel.jsonModel.jsonResponse.ResponseGetPrivileges;
+import com.nrdc.managementPanel.jsonModel.jsonResponse.ResponseGetRoles;
 import com.nrdc.managementPanel.jsonModel.jsonResponse.ResponseGetRolesWithPrivileges;
 import com.nrdc.managementPanel.jsonModel.jsonResponse.ResponseGetUsers;
 import com.nrdc.managementPanel.model.Role;
@@ -296,6 +297,27 @@ public class UserImpl {
             response.setResultCode(1);
             response.setResultMessage("OK");
             response.setResponse(responseGetRolesWithPrivileges);
+            return response;
+        } finally {
+            if (entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+    public StandardResponse getRoles(String token, RequestGetUserRolesWithPrivileges requestGetUserRolesWithPrivileges) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        try {
+            Token.validateToken(token, SystemNames.MANAGEMENT_PANEL);
+            User user = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
+            user.checkPrivilege(PrivilegeNames.GET_ROLES);
+            List roles = entityManager.createQuery("SELECT r FROM Role r JOIN UserRole ur ON r.id=ur.fkRoleId WHERE ur.fkUserId = :fkUserId")
+                    .setParameter("fkUserId",requestGetUserRolesWithPrivileges.getFkUserId())
+                    .getResultList();
+            ResponseGetRoles responseGetRoles = new ResponseGetRoles();
+            responseGetRoles.setRoles(roles);
+            StandardResponse response = new StandardResponse<>();
+            response.setResultCode(1);
+            response.setResultMessage("OK");
+            response.setResponse(responseGetRoles);
             return response;
         } finally {
             if (entityManager.isOpen())
