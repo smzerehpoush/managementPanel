@@ -9,6 +9,11 @@
         }
 
 
+entityManager.createQuery("SELECT s1 FROM User  u1 JOIN UserRole ur1 ON ur1.fkUserId =u1.id  JOIN RolePrivilege rp1 ON ur1.fkRoleId = rp1.fkRoleId JOIN Privilege p1 ON rp1.fkPrivilegeId = p1.id JOIN PrivilegeSystem ps1 ON ps1.fkPrivilegeId = p1.id JOIN System s2 ON ps1.fkSystemId = s2.id  WHERE u1.id = :fkUserId1 AND p1.privilege LIKE 'EDIT_%_USERS'")
+        .setParameter("fkUserId1",user.getId())
+//        .setParameter("fkUserId2",requestEditUser.getId())
+        .getResultList();
+
 //sample code to work with entityManager and transaction
 
         EntityManager entityManager = Database.getEntityManager();
