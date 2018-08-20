@@ -58,7 +58,9 @@ public class Encryption {
 
     public static String decryptRequest(EncryptedRequest request) throws Exception {
         String key = Database.getUserKey(request.getToken(), SystemNames.MANAGEMENT_PANEL).getKey();
-        return decryptOrNull(key, request.getData());
+        String decrypted = decryptOrNull(key, request.getData());
+        logger.info(decrypted);
+        return decrypted;
     }
 
     public static EncryptedResponse encryptResponse(String key, Object response) throws IOException, NoSuchAlgorithmException {
