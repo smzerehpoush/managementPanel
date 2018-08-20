@@ -125,13 +125,21 @@ public class UserImpl {
             Token.validateToken(token, SystemNames.MANAGEMENT_PANEL);
             User user1 = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
             System system = System.getSystem(requestEditUser.getFkSystemId());
-            String privilegeName = "EDIT_"+system.getSystemName()+"_USERS";
+            String privilegeName = "EDIT_" + system.getSystemName() + "_USERS";
             user1.checkPrivilege(privilegeName);
             User user2 = User.getUser(requestEditUser.getFkUserId());
-            if(user2.checkPrivilege(privilegeName)){
-                throw new Exception()
+            List<System> user2Systems = getUserSystems(user2);
+            if (!user2Systems.contains(system)){
+                throw new Exception(Constants.USER_SYSTEM_ERROR);
             }
-            checkEditUserPermission(user.getId(), requestEditUser.getFkUserId());
+            try {
+                boolean b = user2.checkPrivilege(privilegeName);
+                if (b)
+                    throw new Exception(Constants.CANT_NOT_EDIT_THIS_USER);
+            } catch (Exception ex) {
+                if (ex.getMessage().equals(Constants.CANT_NOT_EDIT_THIS_USER))
+                    throw ex;
+            }
 
             if (!transaction.isActive())
                 transaction.begin();
