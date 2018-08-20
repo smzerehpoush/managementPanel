@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name = "SYSTEM", schema = Constants.SCHEMA)
@@ -75,6 +76,20 @@ public class System implements Serializable {
 
     public static System getSystem(SystemNames systemName) throws Exception {
         return getSystem(systemName.name());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        System system = (System) o;
+        return Objects.equals(getId(), system.getId()) &&
+                Objects.equals(getSystemName(), system.getSystemName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getSystemName());
     }
 
     @NotNull
