@@ -15,6 +15,16 @@ public class Key implements Serializable {
     private Long fkSystemId;
     private Long fkUserId;
 
+    public Key() {
+    }
+
+    public Key(User user, System system) throws Exception {
+        user.checkKey(system);
+        this.setKey(UUID.randomUUID().toString());
+        this.setFkSystemId(system.getId());
+        this.setFkUserId(user.getId());
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID_KEYS")
@@ -64,12 +74,5 @@ public class Key implements Serializable {
                 ", fkSystemId=" + fkSystemId +
                 ", fkUserId=" + fkUserId +
                 '}';
-    }
-    public Key(){}
-    public Key (User user, System system) throws Exception {
-        user.checkKey(system);
-        this.setKey(UUID.randomUUID().toString());
-        this.setFkSystemId(system.getId());
-        this.setFkUserId(user.getId());
     }
 }

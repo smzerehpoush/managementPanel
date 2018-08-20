@@ -17,7 +17,7 @@
         <class>com.nrdc.managementPanel.model.Token</class>
         <class>com.nrdc.managementPanel.model.User</class>
         <class>com.nrdc.managementPanel.model.UserRole</class>
-        <class>com.nrdc.managementPanel.model.UserSystem</class>
+        <class>com.nrdc.managementPanel.model.SystemUser</class>
 
     </persistence-unit>
 

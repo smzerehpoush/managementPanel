@@ -1,9 +1,8 @@
 package com.nrdc.managementPanel.jsonModel.jsonRequest;
 
-
-public class RequestAddUser {
+public class RequestFilterUsers {
     private String username;
-    private String password;
+    private Boolean isActive;
     private String phoneNumber;
     private String firstName;
     private String lastName;
@@ -27,12 +26,12 @@ public class RequestAddUser {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
+    public Boolean getActive() {
+        return isActive;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setActive(Boolean active) {
+        isActive = active;
     }
 
     public String getPhoneNumber() {
@@ -77,9 +76,9 @@ public class RequestAddUser {
 
     @Override
     public String toString() {
-        return "RequestAddUser{" +
+        return "RequestFilterUsers{" +
                 "username='" + username + '\'' +
-                ", password='" + password + '\'' +
+                ", isActive=" + isActive +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +

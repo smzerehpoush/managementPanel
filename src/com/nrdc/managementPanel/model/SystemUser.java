@@ -7,12 +7,12 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "USER_SYSTEM", schema = Constants.SCHEMA)
-public class UserSystem implements Serializable {
+public class SystemUser implements Serializable {
     private Long id;
     private Long fkUserId;
     private Long fkSystemId;
 
-    public UserSystem() {
+    public SystemUser() {
     }
 
     @Id

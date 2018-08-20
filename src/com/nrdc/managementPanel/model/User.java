@@ -4,6 +4,7 @@ import com.nrdc.managementPanel.helper.Constants;
 import com.nrdc.managementPanel.helper.PrivilegeNames;
 import com.nrdc.managementPanel.helper.SystemNames;
 import com.nrdc.managementPanel.impl.Database;
+import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestAddUser;
 import org.apache.log4j.Logger;
 
 import javax.persistence.*;
@@ -26,6 +27,31 @@ public class User implements Serializable {
     private String policeCode;
 
     public User() {
+    }
+
+    public User(RequestAddUser requestAddUser) {
+        this.password = requestAddUser.getPassword();
+        this.username = requestAddUser.getUsername();
+        this.setIsActive(true);
+        this.phoneNumber = requestAddUser.getPhoneNumber();
+        this.firstName = requestAddUser.getFirstName();
+        this.lastName = requestAddUser.getLastName();
+        this.nationalId = requestAddUser.getNationalId();
+        this.policeCode = requestAddUser.getPoliceCode();
+    }
+
+    public static User getUser(Long fkUserId) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        try {
+            return (User) entityManager.createQuery("SELECT u FROM User u WHERE u.id = :fkUserId")
+                    .setParameter("fkUserId", fkUserId)
+                    .getSingleResult();
+        } catch (Exception ex) {
+            throw new Exception(Constants.NOT_VALID_USER);
+        } finally {
+            if (entityManager != null && entityManager.isOpen())
+                entityManager.close();
+        }
     }
 
     public static User getUser(String username, String password, String phoneNumber) throws Exception {
@@ -298,7 +324,7 @@ public class User implements Serializable {
     public void checkSystemAccess(Long fkSystemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
-            boolean hasAccess = entityManager.createQuery("SELECT u FROM UserSystem u WHERE u.fkUserId = :userId  AND u.fkSystemId = :systemId")
+            boolean hasAccess = entityManager.createQuery("SELECT u FROM SystemUser u WHERE u.fkUserId = :userId  AND u.fkSystemId = :systemId")
                     .setParameter("userId", this.id)
                     .setParameter("systemId", fkSystemId)
                     .getResultList()
@@ -312,22 +338,29 @@ public class User implements Serializable {
         }
     }
 
-    public void checkPrivilege(String privilege) throws Exception {
+    public static boolean checkPrivilege(String privilege, Long fkUserId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
-            int size = entityManager.createQuery("SELECT ur FROM UserRole ur JOIN RolePrivilege rp ON ur.fkRoleId = rp.fkRoleId JOIN Privilege p ON rp.fkPrivilegeId = p.id WHERE p.privilege = :privilege AND ur.fkUserId = :fkUserId")
-                    .setParameter("fkUserId", this.id)
+            int size = entityManager.createQuery("SELECT p FROM Privilege p JOIN RolePrivilege rp ON p.id = rp.fkPrivilegeId JOIN UserRole ur ON rp.fkRoleId = ur.fkRoleId WHERE ur.fkUserId = :fkUserId AND p.privilege = :privilege")
+                    .setParameter("fkUserId", fkUserId)
                     .setParameter("privilege", privilege)
                     .getResultList()
                     .size();
             if (size < 1) {
                 throw new Exception(Constants.PERMISSION_ERROR);
             }
+            return true;
 
         } finally {
             if (entityManager != null && entityManager.isOpen())
                 entityManager.close();
         }
+    }
+    public boolean checkPrivilege(String privilege, User user) throws Exception {
+        return checkPrivilege(privilege,user.getId());
+    }
+    public boolean checkPrivilege(String privilege) throws Exception {
+        return checkPrivilege(privilege,this.id);
     }
 
 

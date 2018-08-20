@@ -1,0 +1,27 @@
+//sample code to work with entityManager
+
+        EntityManager entityManager = Database.getEntityManager();
+        try {
+
+        }finally {
+            if (entityManager!=null && entityManager.isOpen())
+                entityManager.close();
+        }
+
+
+//sample code to work with entityManager and transaction
+
+        EntityManager entityManager = Database.getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            if (!transaction.isActive())
+                transaction.begin();
+
+            if (transaction.isActive())
+                transaction.commit();
+        } catch (Exception ex) {
+            if (transaction != null && transaction.isActive())
+                transaction.rollback();
+        } finally {
+            if (entityManager.isOpen())
+                entityManager.close();
