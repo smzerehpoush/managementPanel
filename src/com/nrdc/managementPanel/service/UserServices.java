@@ -139,5 +139,26 @@ public class UserServices {
             return Response.status(200).entity(response).build();
         }
     }
+    @Path("/rolesWithPrivileges")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPrivileges(EncryptedRequest encryptedRequest){
+        logger.info("++================== login SERVICE : START ==================++");
+        try {
+            RequestGetUserRolesWithPrivileges request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestGetUserRolesWithPrivileges.class);
+            StandardResponse response = new UserImpl().getRolesWithPrivileges(encryptedRequest.getToken(), request);
+            String key = Database.getUserKey(encryptedRequest.getToken()).getKey();
+            EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
+            Response finalResponse = Response.status(200).entity(encryptedResponse).build();
+            logger.info("++================== login SERVICE : END ==================++");
+            return finalResponse;
+        } catch (Exception ex) {
+            logger.error("++================== login SERVICE : EXCEPTION ==================++");
+            StandardResponse response = StandardResponse.getNOKExceptions(ex);
+            return Response.status(200).entity(response).build();
+        }
+    }
+
 
 }
