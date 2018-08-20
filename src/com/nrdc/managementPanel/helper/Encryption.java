@@ -6,6 +6,7 @@ import com.nrdc.managementPanel.jsonModel.EncryptedRequest;
 import com.nrdc.managementPanel.jsonModel.EncryptedResponse;
 import com.nrdc.managementPanel.model.Token;
 import com.nrdc.managementPanel.model.User;
+import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
@@ -16,6 +17,7 @@ import java.security.NoSuchAlgorithmException;
 public class Encryption {
     private static se.simbio.encryption.Encryption.Builder encryptionBuilder;
     private static se.simbio.encryption.Encryption encryption;
+    private static Logger logger = Logger.getLogger(Encryption.class.getName());
 
     private static se.simbio.encryption.Encryption getEncryption(String key) throws NoSuchAlgorithmException {
         return buildEncryption(key, "JVAaVhAiddKAaghraikhmaini");
@@ -56,7 +58,9 @@ public class Encryption {
 
     public static String decryptRequest(EncryptedRequest request) throws Exception {
         String key = Database.getUserKey(request.getToken(), SystemNames.MANAGEMENT_PANEL).getKey();
-        return decryptOrNull(key, request.getData());
+        String decrypted = decryptOrNull(key, request.getData());
+        logger.info(decrypted);
+        return decrypted;
     }
 
     public static EncryptedResponse encryptResponse(String key, Object response) throws IOException, NoSuchAlgorithmException {

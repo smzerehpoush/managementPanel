@@ -42,7 +42,7 @@ public class UserServices {
         }
     }
     @Path("/deActivate")
-    @POST
+    @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response deActiveUser(EncryptedRequest encryptedRequest){
@@ -61,6 +61,7 @@ public class UserServices {
             return Response.status(200).entity(response).build();
         }
     }
+
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

@@ -6,7 +6,6 @@ import com.nrdc.managementPanel.helper.SystemNames;
 import com.nrdc.managementPanel.jsonModel.StandardResponse;
 import com.nrdc.managementPanel.jsonModel.customizedModel.RoleWithPrivileges;
 import com.nrdc.managementPanel.jsonModel.jsonRequest.*;
-import com.nrdc.managementPanel.jsonModel.jsonResponse.ResponseGetPrivileges;
 import com.nrdc.managementPanel.jsonModel.jsonResponse.ResponseGetRoles;
 import com.nrdc.managementPanel.jsonModel.jsonResponse.ResponseGetRolesWithPrivileges;
 import com.nrdc.managementPanel.jsonModel.jsonResponse.ResponseGetUsers;
@@ -76,8 +75,6 @@ public class UserImpl {
         } catch (Exception ex) {
             if (transaction != null && transaction.isActive())
                 transaction.rollback();
-            if (entityManager.isOpen())
-                entityManager.close();
             return StandardResponse.getNOKExceptions(ex);
         } finally {
             if (entityManager.isOpen())
@@ -303,6 +300,7 @@ public class UserImpl {
                 entityManager.close();
         }
     }
+
     public StandardResponse getRoles(String token, RequestGetUserRolesWithPrivileges requestGetUserRolesWithPrivileges) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
@@ -310,7 +308,7 @@ public class UserImpl {
             User user = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
             user.checkPrivilege(PrivilegeNames.GET_ROLES);
             List roles = entityManager.createQuery("SELECT r FROM Role r JOIN UserRole ur ON r.id=ur.fkRoleId WHERE ur.fkUserId = :fkUserId")
-                    .setParameter("fkUserId",requestGetUserRolesWithPrivileges.getFkUserId())
+                    .setParameter("fkUserId", requestGetUserRolesWithPrivileges.getFkUserId())
                     .getResultList();
             ResponseGetRoles responseGetRoles = new ResponseGetRoles();
             responseGetRoles.setRoles(roles);
