@@ -10,10 +10,7 @@ import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestGetRolePrivileges;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -22,14 +19,14 @@ public class RoleServices {
     private static Logger logger = Logger.getLogger(UserServices.class.getName());
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    @POST
+    @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getRoles(EncryptedRequest encryptedRequest) {
+    public Response getRoles(@QueryParam("token")String token) {
         logger.info("++================== getRoles SERVICE : START ==================++");
         try {
-            StandardResponse response = new RoleImpl().getRoles(encryptedRequest.getToken());
-            String key = Database.getUserKey(encryptedRequest.getToken()).getKey();
+            StandardResponse response = new RoleImpl().getRoles(token);
+            String key = Database.getUserKey(token).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
             logger.info("++================== getRoles SERVICE : END ==================++");
