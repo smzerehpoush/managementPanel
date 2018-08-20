@@ -10,6 +10,15 @@ public class RequestEditUser {
     private String lastName;
     private String nationalId;
     private String policeCode;
+    private Long fkSystemId;
+
+    public Long getFkSystemId() {
+        return fkSystemId;
+    }
+
+    public void setFkSystemId(Long fkSystemId) {
+        this.fkSystemId = fkSystemId;
+    }
 
     public Long getFkUserId() {
         return fkUserId;
@@ -73,5 +82,20 @@ public class RequestEditUser {
 
     public void setPoliceCode(String policeCode) {
         this.policeCode = policeCode;
+    }
+
+    @Override
+    public String toString() {
+        return "RequestEditUser{" +
+                "fkUserId=" + fkUserId +
+                ", username='" + username + '\'' +
+                ", isActive=" + isActive +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", nationalId='" + nationalId + '\'' +
+                ", policeCode='" + policeCode + '\'' +
+                ", fkSystemId=" + fkSystemId +
+                '}';
     }
 }
