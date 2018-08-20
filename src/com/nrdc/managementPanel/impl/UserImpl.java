@@ -4,14 +4,19 @@ import com.nrdc.managementPanel.helper.Constants;
 import com.nrdc.managementPanel.helper.PrivilegeNames;
 import com.nrdc.managementPanel.helper.SystemNames;
 import com.nrdc.managementPanel.jsonModel.StandardResponse;
+import com.nrdc.managementPanel.jsonModel.customizedModel.RoleWithPrivileges;
 import com.nrdc.managementPanel.jsonModel.jsonRequest.*;
+import com.nrdc.managementPanel.jsonModel.jsonResponse.ResponseGetPrivileges;
+import com.nrdc.managementPanel.jsonModel.jsonResponse.ResponseGetRolesWithPrivileges;
 import com.nrdc.managementPanel.jsonModel.jsonResponse.ResponseGetUsers;
+import com.nrdc.managementPanel.model.Role;
 import com.nrdc.managementPanel.model.System;
 import com.nrdc.managementPanel.model.Token;
 import com.nrdc.managementPanel.model.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import java.util.LinkedList;
 import java.util.List;
 
 public class UserImpl {
@@ -129,7 +134,7 @@ public class UserImpl {
             user1.checkPrivilege(privilegeName);
             User user2 = User.getUser(requestEditUser.getFkUserId());
             List<System> user2Systems = getUserSystems(user2);
-            if (!user2Systems.contains(system)){
+            if (!user2Systems.contains(system)) {
                 throw new Exception(Constants.USER_SYSTEM_ERROR);
             }
             try {
@@ -258,6 +263,39 @@ public class UserImpl {
             response.setResultCode(1);
             response.setResultMessage("OK");
             response.setResponse(responseGetUsers);
+            return response;
+        } finally {
+            if (entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+
+    public StandardResponse getRolesWithPrivileges(String token, RequestGetUserRolesWithPrivileges requestGetUserRolesWithPrivileges) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        try {
+            Token.validateToken(token, SystemNames.MANAGEMENT_PANEL);
+            User user = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
+            user.checkPrivilege(PrivilegeNames.GET_PRIVILEGES);
+            List<RoleWithPrivileges> rolesWithPrivileges = new LinkedList<>();
+            List<Role> roles = entityManager.createQuery("SELECT r FROM Role r JOIN UserRole ur ON r.id = ur.fkRoleId WHERE ur.fkUserId = :fkUserId")
+                    .setParameter("fkUserId", requestGetUserRolesWithPrivileges.getFkUserId())
+                    .getResultList();
+            RoleWithPrivileges roleWithPrivileges;
+            for (Role role : roles) {
+                roleWithPrivileges = new RoleWithPrivileges();
+                roleWithPrivileges.setId(role.getId());
+                roleWithPrivileges.setRole(role.getRole());
+                roleWithPrivileges.setPrivileges(
+                        entityManager.createQuery("SELECT p FROM Privilege p JOIN RolePrivilege rp ON p.id=rp.fkPrivilegeId WHERE rp.fkRoleId = :fkRoleId")
+                                .setParameter("fkRoleId", role.getId()).getResultList());
+                rolesWithPrivileges.add(roleWithPrivileges);
+            }
+            ResponseGetRolesWithPrivileges responseGetRolesWithPrivileges = new ResponseGetRolesWithPrivileges();
+            responseGetRolesWithPrivileges.setRoleWithPrivileges(rolesWithPrivileges);
+            StandardResponse response = new StandardResponse<>();
+            response.setResultCode(1);
+            response.setResultMessage("OK");
+            response.setResponse(responseGetRolesWithPrivileges);
             return response;
         } finally {
             if (entityManager.isOpen())
