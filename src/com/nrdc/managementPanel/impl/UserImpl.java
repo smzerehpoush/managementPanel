@@ -118,33 +118,6 @@ public class UserImpl {
         }
     }
 
-    public void checkEditUserPermission(Long fkUserId1, Long fkUserId2) throws Exception {
-        EntityManager entityManager = Database.getEntityManager();
-        try {
-            int size = entityManager.createQuery("SELECT su1.fkUserId FROM SystemUser su1  JOIN UserRole ur1 ON ur1.fkUserId =su1.fkUserId  JOIN RolePrivilege rp1 ON ur1.fkRoleId = rp1.fkRoleId JOIN Privilege p1 ON rp1.fkPrivilegeId = p1.id JOIN SystemUser su2 ON su1.fkSystemId = su2.fkSystemId WHERE su2.fkUserId = :fkUserId2 AND su1.fkUserId = :fkUserId1 AND p1.privilege LIKE 'EDIT_%_USERS'")
-                    .setParameter("fkUserId1", fkUserId1)
-                    .setParameter("fkUserId2", fkUserId2)
-                    .getResultList()
-                    .size();
-
-            if (size < 1) {
-                throw new Exception(Constants.PERMISSION_ERROR);
-            }
-            size = entityManager.createQuery("SELECT p1.privilege FROM UserRole ur1 JOIN RolePrivilege rp1 ON ur1.fkRoleId = rp1.fkRoleId JOIN Privilege p1 ON rp1.fkPrivilegeId = p1.id JOIN RolePrivilege rp2 ON p1.id = rp2.fkPrivilegeId JOIN UserRole ur2 ON ur2.fkRoleId = rp2.fkRoleId WHERE ur1.fkUserId = :fkUserId1 AND ur2.fkUserId = :fkUserId2 AND p1.privilege LIKE 'EDIT_%_USERS'")
-                    .setParameter("fkUserId1", 1)
-                    .setParameter("fkUserId2", 2)
-                    .getResultList()
-                    .size();
-            if (size>0){
-                throw new Exception(Constants.)
-            }
-
-        } finally {
-            if (entityManager != null && entityManager.isOpen())
-                entityManager.close();
-        }
-    }
-
     public StandardResponse editUser(String token, RequestEditUser requestEditUser) {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
