@@ -105,52 +105,71 @@ public class UserImpl {
                 entityManager.close();
         }
     }
-    public List<System> getUserSystems(User user){
+
+    public List<System> getUserSystems(User user) {
         EntityManager entityManager = Database.getEntityManager();
         try {
             return entityManager.createQuery("SELECT s FROM System s JOIN SystemUser us ON us.fkSystemId = s.id WHERE us.fkUserId = :fkUserId")
-                    .setParameter("fkUserId",user.getId())
+                    .setParameter("fkUserId", user.getId())
                     .getResultList();
-        }finally {
-            if (entityManager!=null && entityManager.isOpen())
+        } finally {
+            if (entityManager != null && entityManager.isOpen())
                 entityManager.close();
         }
     }
+
     public void checkEditUserPermission(Long fkUserId1, Long fkUserId2) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
             int size = entityManager.createQuery("SELECT su1.fkUserId FROM SystemUser su1  JOIN UserRole ur1 ON ur1.fkUserId =su1.fkUserId  JOIN RolePrivilege rp1 ON ur1.fkRoleId = rp1.fkRoleId JOIN Privilege p1 ON rp1.fkPrivilegeId = p1.id JOIN SystemUser su2 ON su1.fkSystemId = su2.fkSystemId WHERE su2.fkUserId = :fkUserId2 AND su1.fkUserId = :fkUserId1 AND p1.privilege LIKE 'EDIT_%_USERS'")
-                    .setParameter("fkUserId1",fkUserId1)
-                    .setParameter("fkUserId2",fkUserId2)
+                    .setParameter("fkUserId1", fkUserId1)
+                    .setParameter("fkUserId2", fkUserId2)
                     .getResultList()
                     .size();
 
-            if (size < 1){
+            if (size < 1) {
                 throw new Exception(Constants.PERMISSION_ERROR);
             }
-        }finally {
-            if (entityManager!=null && entityManager.isOpen())
+            size = entityManager.createQuery("SELECT p1.privilege FROM UserRole ur1 JOIN RolePrivilege rp1 ON ur1.fkRoleId = rp1.fkRoleId JOIN Privilege p1 ON rp1.fkPrivilegeId = p1.id JOIN RolePrivilege rp2 ON p1.id = rp2.fkPrivilegeId JOIN UserRole ur2 ON ur2.fkRoleId = rp2.fkRoleId WHERE ur1.fkUserId = :fkUserId1 AND ur2.fkUserId = :fkUserId2 AND p1.privilege LIKE 'EDIT_%_USERS'")
+                    .setParameter("fkUserId1", 1)
+                    .setParameter("fkUserId2", 2)
+                    .getResultList()
+                    .size();
+            if (size>0){
+                throw new Exception(Constants.)
+            }
+
+        } finally {
+            if (entityManager != null && entityManager.isOpen())
                 entityManager.close();
         }
     }
+
     public StandardResponse editUser(String token, RequestEditUser requestEditUser) {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             Token.validateToken(token, SystemNames.MANAGEMENT_PANEL);
-            User user = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
-            checkEditUserPermission(user.getId(),requestEditUser.getFkUserId());
+            User user1 = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
+            System system = System.getSystem(requestEditUser.getFkSystemId());
+            String privilegeName = "EDIT_"+system.getSystemName()+"_USERS";
+            user1.checkPrivilege(privilegeName);
+            User user2 = User.getUser(requestEditUser.getFkUserId());
+            if(user2.checkPrivilege(privilegeName)){
+                throw new Exception()
+            }
+            checkEditUserPermission(user.getId(), requestEditUser.getFkUserId());
 
             if (!transaction.isActive())
                 transaction.begin();
             entityManager.createQuery("UPDATE User u SET u.username = :username , u.phoneNumber= :phoneNumber , u.phoneNumber = :phoneNumber , u.firstName = :firstName , u.lastName = :lastName , u.nationalId = :nationalId , u.policeCode = :policeCode WHERE u.id = :id")
-                    .setParameter("username",requestEditUser.getUsername())
-                    .setParameter("phoneNumber",requestEditUser.getPhoneNumber())
-                    .setParameter("firstName",requestEditUser.getFirstName())
-                    .setParameter("lastName",requestEditUser.getLastName())
-                    .setParameter("nationalId",requestEditUser.getNationalId())
-                    .setParameter("policeCode",requestEditUser.getPoliceCode())
-                    .setParameter("id",requestEditUser.getFkUserId())
+                    .setParameter("username", requestEditUser.getUsername())
+                    .setParameter("phoneNumber", requestEditUser.getPhoneNumber())
+                    .setParameter("firstName", requestEditUser.getFirstName())
+                    .setParameter("lastName", requestEditUser.getLastName())
+                    .setParameter("nationalId", requestEditUser.getNationalId())
+                    .setParameter("policeCode", requestEditUser.getPoliceCode())
+                    .setParameter("id", requestEditUser.getFkUserId())
                     .executeUpdate();
             if (transaction.isActive())
                 transaction.commit();
