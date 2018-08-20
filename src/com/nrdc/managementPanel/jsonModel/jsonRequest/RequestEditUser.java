@@ -2,7 +2,7 @@ package com.nrdc.managementPanel.jsonModel.jsonRequest;
 
 
 public class RequestEditUser {
-    private Long id;
+    private Long fkUserId;
     private String username;
     private Boolean isActive;
     private String phoneNumber;
@@ -11,12 +11,12 @@ public class RequestEditUser {
     private String nationalId;
     private String policeCode;
 
-    public Long getId() {
-        return id;
+    public Long getFkUserId() {
+        return fkUserId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setFkUserId(Long fkUserId) {
+        this.fkUserId = fkUserId;
     }
 
     public String getUsername() {
