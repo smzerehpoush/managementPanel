@@ -42,21 +42,7 @@ public class Database {
     public static Key getUserKey(String token) throws Exception {
         return getUserKey(token,SystemNames.MANAGEMENT_PANEL.name());
     }
-
-    public static User getUser(String username) throws Exception {
-        EntityManager entityManager = Database.getEntityManager();
-        try {
-            return (User) entityManager.createQuery("SELECT u FROM User u WHERE u.username = :username")
-                    .setParameter("username", username)
-                    .getSingleResult();
-        } catch (NonUniqueResultException | NoResultException ex) {
-            throw new Exception(Constants.NOT_VALID_USER);
-        } finally {
-            if (entityManager != null && entityManager.isOpen())
-                entityManager.close();
-        }
-    }
-
+}
     public static Key getUsernameKey(String username) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
