@@ -23,6 +23,12 @@ public class Operation {
         this.fkPrivilegeId = fkPrivilegeId;
     }
 
+    public Operation(User user, Privilege privilege, Long statusCode) {
+        this.fkUserId = user.getId();
+        this.fkPrivilegeId = privilege.getId();
+        this.statusCode = statusCode;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID_OPERATION")
