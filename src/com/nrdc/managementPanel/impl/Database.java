@@ -42,22 +42,6 @@ public class Database {
     public static Key getUserKey(String token) throws Exception {
         return getUserKey(token,SystemNames.MANAGEMENT_PANEL.name());
     }
-}
-    public static Key getUsernameKey(String username) throws Exception {
-        EntityManager entityManager = Database.getEntityManager();
-        try {
-            return (Key) entityManager.createQuery("SELECT k FROM Key k JOIN User u ON k.fkUserId = u.id WHERE u.username = :username")
-                    .setParameter("username", username)
-                    .getSingleResult();
-        } catch (NonUniqueResultException | NoResultException ex) {
-            throw new Exception(Constants.NOT_VALID_USER);
-        } finally {
-            if (entityManager != null && entityManager.isOpen())
-                entityManager.close();
-        }
-
-    }
-
     public static System getSystem(String systemName) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
