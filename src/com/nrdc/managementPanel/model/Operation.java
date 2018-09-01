@@ -13,6 +13,7 @@ public class Operation {
     private Long fkPrivilegeId;
     private Date time;
     private String description;
+    private Long statusCode;
 
 
     @Id
@@ -64,5 +65,15 @@ public class Operation {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Basic
+    @Column(name = "STATUS_CODE")
+    public Long getStatusCode() {
+        return statusCode;
+    }
+
+    public void setStatusCode(Long statusCode) {
+        this.statusCode = statusCode;
     }
 }
