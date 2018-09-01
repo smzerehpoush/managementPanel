@@ -1,6 +1,7 @@
 package com.nrdc.managementPanel.model;
 
 import com.nrdc.managementPanel.helper.Constants;
+import com.nrdc.managementPanel.impl.Database;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -27,6 +28,24 @@ public class Operation {
         this.fkUserId = user.getId();
         this.fkPrivilegeId = privilege.getId();
         this.statusCode = statusCode;
+    }
+
+    public void persist() {
+        EntityManager entityManager = Database.getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            if (!transaction.isActive())
+                transaction.begin();
+                entityManager.persist(this);
+            if (transaction.isActive())
+                transaction.commit();
+        } catch (Exception ex) {
+            if (transaction != null && transaction.isActive())
+                transaction.rollback();
+        } finally {
+            if (entityManager.isOpen())
+                entityManager.close();
+        }
     }
 
     @Id
