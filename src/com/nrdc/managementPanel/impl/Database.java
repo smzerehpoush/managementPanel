@@ -42,18 +42,4 @@ public class Database {
     public static Key getUserKey(String token) throws Exception {
         return getUserKey(token,SystemNames.MANAGEMENT_PANEL.name());
     }
-    public static System getSystem(String systemName) throws Exception {
-        EntityManager entityManager = Database.getEntityManager();
-        try {
-            return (System) entityManager.createQuery("SELECT s FROM System s WHERE s.systemName =:systemPath")
-                    .setParameter("systemPath", systemName)
-                    .getSingleResult();
-        } catch (NonUniqueResultException ex) {
-            throw new Exception("System is not valid");
-        }finally {
-            if (entityManager.isOpen())
-                entityManager.close();
-        }
-
-    }
 }
