@@ -165,6 +165,30 @@ public class User implements Serializable {
         }
     }
 
+    public static boolean checkPrivilege(String privilege, Long fkUserId) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        Privilege p = Privilege.getPrivilege(privilege);
+        Operation operation = new Operation(fkUserId,p.getId());
+        try {
+            int size = entityManager.createQuery("SELECT p FROM Privilege p JOIN RolePrivilege rp ON p.id = rp.fkPrivilegeId JOIN UserRole ur ON rp.fkRoleId = ur.fkRoleId WHERE ur.fkUserId = :fkUserId AND p.privilege = :privilege")
+                    .setParameter("fkUserId", fkUserId)
+                    .setParameter("privilege", privilege)
+                    .getResultList()
+                    .size();
+            if (size < 1) {
+                operation.setStatusCode(-1L);
+                throw new Exception(Constants.PERMISSION_ERROR);
+            }
+            operation.setStatusCode(1L);
+            return true;
+
+        } finally {
+            operation.persist();
+            if (entityManager != null && entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+
     public void checkKey(String systemName) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
@@ -213,7 +237,6 @@ public class User implements Serializable {
     public void checkToken(SystemNames system) throws Exception {
         checkToken(system.name());
     }
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -338,29 +361,12 @@ public class User implements Serializable {
         }
     }
 
-    public static boolean checkPrivilege(String privilege, Long fkUserId) throws Exception {
-        EntityManager entityManager = Database.getEntityManager();
-        try {
-            int size = entityManager.createQuery("SELECT p FROM Privilege p JOIN RolePrivilege rp ON p.id = rp.fkPrivilegeId JOIN UserRole ur ON rp.fkRoleId = ur.fkRoleId WHERE ur.fkUserId = :fkUserId AND p.privilege = :privilege")
-                    .setParameter("fkUserId", fkUserId)
-                    .setParameter("privilege", privilege)
-                    .getResultList()
-                    .size();
-            if (size < 1) {
-                throw new Exception(Constants.PERMISSION_ERROR);
-            }
-            return true;
-
-        } finally {
-            if (entityManager != null && entityManager.isOpen())
-                entityManager.close();
-        }
-    }
     public boolean checkPrivilege(String privilege, User user) throws Exception {
-        return checkPrivilege(privilege,user.getId());
+        return checkPrivilege(privilege, user.getId());
     }
+
     public boolean checkPrivilege(String privilege) throws Exception {
-        return checkPrivilege(privilege,this.id);
+        return checkPrivilege(privilege, this.id);
     }
 
 
