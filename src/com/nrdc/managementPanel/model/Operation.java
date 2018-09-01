@@ -15,6 +15,9 @@ public class Operation {
     private String description;
     private Long statusCode;
 
+    public Operation() {
+    }
+
     public Operation(Long fkUserId, Long fkPrivilegeId) {
         this.fkUserId = fkUserId;
         this.fkPrivilegeId = fkPrivilegeId;
