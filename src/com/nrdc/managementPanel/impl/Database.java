@@ -21,28 +21,6 @@ public class Database {
         return entityManagerFactory.createEntityManager();
     }
 
-    public static void tokenValidation(String token) throws NotValidTokenException {
-        EntityManager entityManager = Database.getEntityManager();
-
-        try {
-            logger.info("=======[ ADMIN TOKEN VALIDATION : START ]=======");
-            logger.info("TOKEN : " + token);
-            Query tokenValidationQuery = entityManager.createQuery("SELECT it FROM Token it WHERE it.token = :token")
-                    .setParameter("token", token);
-            List result = tokenValidationQuery.getResultList();
-            if (result.size() == 0) {
-                logger.info("token is not valid");
-                throw new NotValidTokenException(Constants.NOT_VALID_TOKEN);
-            } else {
-                logger.info("token is valid");
-            }
-        } finally {
-            if (entityManager != null && entityManager.isOpen())
-                entityManager.close();
-        }
-
-    }
-
     public static Key getUserKey(String token, String systemName) throws Exception {
         Token.validateToken(token,systemName);
         EntityManager entityManager = Database.getEntityManager();
