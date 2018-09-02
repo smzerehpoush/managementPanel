@@ -3,12 +3,11 @@ package com.nrdc.managementPanel.model;
 import com.nrdc.managementPanel.helper.Constants;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.UUID;
 
 @Entity
 @Table(name = "KEYS", schema = Constants.SCHEMA)
-public class Key implements Serializable {
+public class Key extends BaseModel {
 
     private Long id;
     private String key;
