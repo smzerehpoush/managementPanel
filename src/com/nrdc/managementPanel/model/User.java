@@ -170,7 +170,7 @@ public class User implements Serializable {
         Privilege p = Privilege.getPrivilege(privilege);
         Operation operation = new Operation(fkUserId,p.getId());
         try {
-            int size = entityManager.createQuery("SELECT p FROM Privilege p JOIN RolePrivilege rp ON p.id = rp.fkPrivilegeId JOIN UserRole ur ON rp.fkRoleId = ur.fkRoleId WHERE ur.fkUserId = :fkUserId AND p.privilege = :privilege")
+            int size = entityManager.createQuery("SELECT p FROM Privilege p JOIN RolePrivilege rp ON p.id = rp.fkPrivilegeId JOIN UserRole ur ON rp.fkRoleId = ur.fkRoleId WHERE ur.fkUserId = :fkUserId AND p.privilegeText = :privilege")
                     .setParameter("fkUserId", fkUserId)
                     .setParameter("privilege", privilege)
                     .getResultList()
