@@ -3,6 +3,7 @@ package com.nrdc.managementPanel.model;
 import com.nrdc.managementPanel.helper.Constants;
 import com.nrdc.managementPanel.helper.SystemNames;
 import com.nrdc.managementPanel.impl.Database;
+import com.nrdc.managementPanel.model.dao.BaseModel;
 import com.sun.istack.internal.NotNull;
 
 import javax.persistence.*;

@@ -1,6 +1,8 @@
-package com.nrdc.managementPanel.model;
+package com.nrdc.managementPanel.model.dao;
 
 import com.nrdc.managementPanel.helper.Constants;
+import com.nrdc.managementPanel.model.Privilege;
+import com.nrdc.managementPanel.model.User;
 import com.nrdc.managementPanel.model.dao.BaseModel;
 
 import javax.persistence.*;
@@ -8,7 +10,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "OPERATION", schema = Constants.SCHEMA)
-public class Operation extends BaseModel {
+public class OperationDAO extends BaseModel {
     private Long id;
     private Long fkUserId;
     private Long fkPrivilegeId;
@@ -17,19 +19,6 @@ public class Operation extends BaseModel {
     private Long statusCode;
     private String userToken;
 
-    public Operation() {
-    }
-
-    public Operation(Long fkUserId, Long fkPrivilegeId) {
-        this.fkUserId = fkUserId;
-        this.fkPrivilegeId = fkPrivilegeId;
-    }
-
-    public Operation(User user, Privilege privilege, Long statusCode) {
-        this.fkUserId = user.getId();
-        this.fkPrivilegeId = privilege.getId();
-        this.statusCode = statusCode;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

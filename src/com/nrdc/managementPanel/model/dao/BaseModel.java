@@ -1,4 +1,4 @@
-package com.nrdc.managementPanel.model;
+package com.nrdc.managementPanel.model.dao;
 
 import com.nrdc.managementPanel.impl.Database;
 

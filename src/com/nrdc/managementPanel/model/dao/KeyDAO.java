@@ -1,6 +1,8 @@
-package com.nrdc.managementPanel.model;
+package com.nrdc.managementPanel.model.dao;
 
 import com.nrdc.managementPanel.helper.Constants;
+import com.nrdc.managementPanel.model.System;
+import com.nrdc.managementPanel.model.User;
 import com.nrdc.managementPanel.model.dao.BaseModel;
 
 import javax.persistence.*;
@@ -8,22 +10,12 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "KEYS", schema = Constants.SCHEMA)
-public class Key extends BaseModel {
+public class KeyDAO extends BaseModel {
 
     private Long id;
     private String key;
     private Long fkSystemId;
     private Long fkUserId;
-
-    public Key() {
-    }
-
-    public Key(User user, System system) throws Exception {
-        user.checkKey(system);
-        this.setKey(UUID.randomUUID().toString());
-        this.setFkSystemId(system.getId());
-        this.setFkUserId(user.getId());
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -66,13 +58,4 @@ public class Key extends BaseModel {
         this.fkUserId = fkUserId;
     }
 
-    @Override
-    public String toString() {
-        return "Key{" +
-                "id=" + id +
-                ", key='" + key + '\'' +
-                ", fkSystemId=" + fkSystemId +
-                ", fkUserId=" + fkUserId +
-                '}';
-    }
 }

@@ -5,6 +5,7 @@ import com.nrdc.managementPanel.helper.PrivilegeNames;
 import com.nrdc.managementPanel.helper.SystemNames;
 import com.nrdc.managementPanel.impl.Database;
 import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestAddUser;
+import com.nrdc.managementPanel.model.dao.BaseModel;
 import org.apache.log4j.Logger;
 
 import javax.persistence.*;
