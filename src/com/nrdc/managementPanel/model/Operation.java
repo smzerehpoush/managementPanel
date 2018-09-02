@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "OPERATION", schema = Constants.SCHEMA)
-public class Operation {
+public class Operation extends BaseModel {
     private Long id;
     private Long fkUserId;
     private Long fkPrivilegeId;
