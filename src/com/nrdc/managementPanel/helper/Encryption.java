@@ -59,7 +59,7 @@ public class Encryption {
     public static String decryptRequest(EncryptedRequest request) throws Exception {
         String key = Database.getUserKey(request.getToken(), SystemNames.MANAGEMENT_PANEL).getKey();
         String decrypted = decryptOrNull(key, request.getData());
-        logger.info(decrypted);
+        logger.debug(decrypted);
         return decrypted;
     }
 
