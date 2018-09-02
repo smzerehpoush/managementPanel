@@ -1,7 +1,6 @@
 package com.nrdc.managementPanel.model;
 
 import com.nrdc.managementPanel.helper.Constants;
-import com.nrdc.managementPanel.impl.Database;
 
 import javax.persistence.*;
 import java.util.Date;

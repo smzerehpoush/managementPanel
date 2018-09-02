@@ -1,8 +1,6 @@
 package com.nrdc.managementPanel.service;
 
 import com.nrdc.managementPanel.helper.Encryption;
-import com.nrdc.managementPanel.impl.Database;
-import com.nrdc.managementPanel.impl.RoleImpl;
 import com.nrdc.managementPanel.impl.SystemImpl;
 import com.nrdc.managementPanel.jsonModel.EncryptedResponse;
 import com.nrdc.managementPanel.jsonModel.StandardResponse;
@@ -22,7 +20,7 @@ public class SystemServices {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getRoles(@QueryParam("token")String token) {
+    public Response getRoles(@QueryParam("token") String token) {
         logger.info("++================== getRoles SERVICE : START ==================++");
         try {
             StandardResponse response = new SystemImpl().getSystems(token);

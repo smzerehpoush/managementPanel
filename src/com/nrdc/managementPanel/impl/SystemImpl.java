@@ -3,7 +3,6 @@ package com.nrdc.managementPanel.impl;
 import com.nrdc.managementPanel.helper.PrivilegeNames;
 import com.nrdc.managementPanel.helper.SystemNames;
 import com.nrdc.managementPanel.jsonModel.StandardResponse;
-import com.nrdc.managementPanel.jsonModel.jsonResponse.ResponseGetRoles;
 import com.nrdc.managementPanel.jsonModel.jsonResponse.ResponseGetSystems;
 import com.nrdc.managementPanel.model.Token;
 import com.nrdc.managementPanel.model.User;

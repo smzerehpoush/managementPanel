@@ -20,7 +20,7 @@ public class Constants {
     public static final String CAN_NOT_CHANGE_YOUR_ROLE = "شما نمی توانید درجه خود را تغییر دهید.";
     public static final String NON_UNIQUE_ROLE = "نقش غیر یکتا";
 
-    public static final String VT_CONNECTION_ERROR= "ایراد در ارتباط با سرور ثبت تخلفات .";
+    public static final String VT_CONNECTION_ERROR = "ایراد در ارتباط با سرور ثبت تخلفات .";
 
     public static final String PERMISSION_ERROR = "شما دسترسی استفاده از این خدمت را ندارید.";
 

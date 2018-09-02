@@ -8,7 +8,6 @@ import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestAddUser;
 import org.apache.log4j.Logger;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
 @Table(name = "PH_USER", schema = Constants.SCHEMA)

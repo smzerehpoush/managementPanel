@@ -19,22 +19,25 @@ public class Privilege {
         this.id = id;
         this.privilegeText = privilegeText;
     }
+
     public static Privilege getPrivilege(String privilege) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
             return (Privilege) entityManager.createQuery("SELECT p FROM Privilege p WHERE p.privilegeText = :privilegeText")
                     .setParameter("privilegeText", privilege)
                     .getSingleResult();
-        }catch (Exception ex){
+        } catch (Exception ex) {
             throw new Exception(Constants.NOT_VALID_PRIVILEGE);
-        }finally {
+        } finally {
             if (entityManager != null && entityManager.isOpen())
                 entityManager.close();
         }
     }
+
     public static Privilege getPrivilege(PrivilegeNames privilegeName) throws Exception {
         return getPrivilege(privilegeName.name());
     }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID_PRIVILEGE")

@@ -19,13 +19,13 @@ public class TokenImpl {
             Token.validateToken(token, SystemNames.MANAGEMENT_PANEL);
             User user = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
             System us = System.getSystem(requestRemoveToken.getFkSystemId());
-            Token.validateToken(requestRemoveToken.getToken(),us.getSystemName());
+            Token.validateToken(requestRemoveToken.getToken(), us.getSystemName());
 
             Long fkUserId = (Long) entityManager.createQuery("SELECT t.fkUserId FROM Token t WHERE t.token = :token AND t.fkSystemId = :fkSystemId")
                     .setParameter("token", requestRemoveToken.getToken())
                     .setParameter("fkSystemId", requestRemoveToken.getFkSystemId())
                     .getSingleResult();
-            if (user.getId().equals(fkUserId)){
+            if (user.getId().equals(fkUserId)) {
                 throw new Exception(Constants.CAN_NOT_REMOVE_YOUR_TOKEN);
             }
             System system = System.getSystem(requestRemoveToken.getFkSystemId());

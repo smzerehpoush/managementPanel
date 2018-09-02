@@ -5,7 +5,7 @@ import com.nrdc.managementPanel.model.Role;
 import java.util.List;
 
 public class ResponseGetRoles {
-    private List<Role> roles ;
+    private List<Role> roles;
 
     public List<Role> getRoles() {
         return roles;

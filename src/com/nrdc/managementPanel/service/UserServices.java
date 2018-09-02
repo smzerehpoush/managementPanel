@@ -1,8 +1,6 @@
 package com.nrdc.managementPanel.service;
 
 import com.nrdc.managementPanel.helper.Encryption;
-import com.nrdc.managementPanel.impl.Database;
-import com.nrdc.managementPanel.impl.LoginImpl;
 import com.nrdc.managementPanel.impl.UserImpl;
 import com.nrdc.managementPanel.jsonModel.EncryptedRequest;
 import com.nrdc.managementPanel.jsonModel.EncryptedResponse;
@@ -25,7 +23,7 @@ public class UserServices {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response activeUser(EncryptedRequest encryptedRequest){
+    public Response activeUser(EncryptedRequest encryptedRequest) {
         logger.info("++================== activeUser SERVICE : START ==================++");
         try {
             RequestActiveUser request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestActiveUser.class);
@@ -46,7 +44,7 @@ public class UserServices {
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response deActiveUser(EncryptedRequest encryptedRequest){
+    public Response deActiveUser(EncryptedRequest encryptedRequest) {
         logger.info("++================== deActiveUser SERVICE : START ==================++");
         try {
             RequestDeActiveUser request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestDeActiveUser.class);
@@ -66,7 +64,7 @@ public class UserServices {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addUser(EncryptedRequest encryptedRequest){
+    public Response addUser(EncryptedRequest encryptedRequest) {
         logger.info("++================== addUser SERVICE : START ==================++");
         try {
             RequestAddUser request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestAddUser.class);
@@ -86,7 +84,7 @@ public class UserServices {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUsers(EncryptedRequest encryptedRequest){
+    public Response getUsers(EncryptedRequest encryptedRequest) {
         logger.info("++================== getUsers SERVICE : START ==================++");
         try {
             RequestGetUsers request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestGetUsers.class);
@@ -107,7 +105,7 @@ public class UserServices {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response filterUsers(EncryptedRequest encryptedRequest){
+    public Response filterUsers(EncryptedRequest encryptedRequest) {
         logger.info("++================== filterUsers SERVICE : START ==================++");
         try {
             RequestFilterUsers request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestFilterUsers.class);
@@ -128,7 +126,7 @@ public class UserServices {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response editUser(EncryptedRequest encryptedRequest){
+    public Response editUser(EncryptedRequest encryptedRequest) {
         logger.info("++================== editUser SERVICE : START ==================++");
         try {
             RequestEditUser request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestEditUser.class);
@@ -149,7 +147,7 @@ public class UserServices {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response resetPassword(EncryptedRequest encryptedRequest){
+    public Response resetPassword(EncryptedRequest encryptedRequest) {
         logger.info("++================== editUser SERVICE : START ==================++");
         try {
             RequestResetPassword request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestResetPassword.class);
@@ -170,7 +168,7 @@ public class UserServices {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getRoles(EncryptedRequest encryptedRequest){
+    public Response getRoles(EncryptedRequest encryptedRequest) {
         logger.info("++================== getRoles SERVICE : START ==================++");
         try {
             RequestGetUserRolesWithPrivileges request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestGetUserRolesWithPrivileges.class);
@@ -186,11 +184,12 @@ public class UserServices {
             return Response.status(200).entity(response).build();
         }
     }
+
     @Path("/roles/privileges")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getPrivileges(EncryptedRequest encryptedRequest){
+    public Response getPrivileges(EncryptedRequest encryptedRequest) {
         logger.info("++================== getPrivileges SERVICE : START ==================++");
         try {
             RequestGetUserRolesWithPrivileges request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestGetUserRolesWithPrivileges.class);
