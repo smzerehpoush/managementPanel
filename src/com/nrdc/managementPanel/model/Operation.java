@@ -30,24 +30,6 @@ public class Operation {
         this.statusCode = statusCode;
     }
 
-    public void persist() {
-        EntityManager entityManager = Database.getEntityManager();
-        EntityTransaction transaction = entityManager.getTransaction();
-        try {
-            if (!transaction.isActive())
-                transaction.begin();
-                entityManager.persist(this);
-            if (transaction.isActive())
-                transaction.commit();
-        } catch (Exception ex) {
-            if (transaction != null && transaction.isActive())
-                transaction.rollback();
-        } finally {
-            if (entityManager.isOpen())
-                entityManager.close();
-        }
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID_OPERATION")
