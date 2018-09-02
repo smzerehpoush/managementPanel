@@ -24,11 +24,10 @@ public class UserImpl {
         try {
             Token.validateToken(token, SystemNames.MANAGEMENT_PANEL);
             User user = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
-            user.checkPrivilege(PrivilegeNames.RESET_PASSWORD);
-            if (!checkUserOldPassword(requestResetPassword))
+            if (!checkUserOldPassword(user.getUsername(), requestResetPassword))
                 throw new Exception(Constants.INCORRECT_USER_OR_PASSWORD);
             checkPassword(requestResetPassword);
-            setUserNewPassword(requestResetPassword);
+            setUserNewPassword(user.getUsername(), requestResetPassword);
             StandardResponse response = StandardResponse.getOKResponse();
             return response;
         } catch (Exception ex) {
@@ -36,14 +35,14 @@ public class UserImpl {
         }
     }
 
-    private boolean checkUserOldPassword(RequestResetPassword requestResetPassword) {
+    private boolean checkUserOldPassword(String username, RequestResetPassword requestResetPassword) {
         EntityManager entityManager = Database.getEntityManager();
         try {
-            int size = (int) entityManager.createQuery("SELECT count (u) FROM User u WHERE u.username = :username AND u.password = :password ")
-                    .setParameter("username", requestResetPassword.getUsername())
+            Long size = (Long) entityManager.createQuery("SELECT count (u) FROM User u WHERE u.username = :username AND u.password = :password ")
+                    .setParameter("username", username)
                     .setParameter("password", requestResetPassword.getOldPassword())
                     .getSingleResult();
-            return size == 1;
+            return size.equals(1L);
         } finally {
             if (entityManager != null && entityManager.isOpen())
                 entityManager.close();
@@ -59,14 +58,14 @@ public class UserImpl {
         return true;
     }
 
-    private void setUserNewPassword(RequestResetPassword requestResetPassword) {
+    private void setUserNewPassword(String username, RequestResetPassword requestResetPassword) {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             if (!transaction.isActive())
                 transaction.begin();
             entityManager.createQuery("UPDATE User u SET u.password = :newPassword WHERE u.username = :username")
-                    .setParameter("username", requestResetPassword.getUsername())
+                    .setParameter("username", username)
                     .setParameter("newPassword", requestResetPassword.getNewPassword())
                     .executeUpdate();
             if (transaction.isActive())
