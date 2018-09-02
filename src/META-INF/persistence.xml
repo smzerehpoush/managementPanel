@@ -18,6 +18,7 @@
         <class>com.nrdc.managementPanel.model.User</class>
         <class>com.nrdc.managementPanel.model.UserRole</class>
         <class>com.nrdc.managementPanel.model.SystemUser</class>
+        <class>com.nrdc.managementPanel.model.Operation</class>
 
     </persistence-unit>
 
