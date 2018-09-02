@@ -32,7 +32,7 @@ public class User implements Serializable {
     public User(RequestAddUser requestAddUser) {
         this.password = requestAddUser.getPassword();
         this.username = requestAddUser.getUsername();
-        this.setIsActive(true);
+        this.isActive = true;
         this.phoneNumber = requestAddUser.getPhoneNumber();
         this.firstName = requestAddUser.getFirstName();
         this.lastName = requestAddUser.getLastName();
@@ -168,7 +168,7 @@ public class User implements Serializable {
     public static boolean checkPrivilege(String privilege, Long fkUserId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         Privilege p = Privilege.getPrivilege(privilege);
-        Operation operation = new Operation(fkUserId,p.getId());
+        Operation operation = new Operation(fkUserId, p.getId());
         try {
             int size = entityManager.createQuery("SELECT p FROM Privilege p JOIN RolePrivilege rp ON p.id = rp.fkPrivilegeId JOIN UserRole ur ON rp.fkRoleId = ur.fkRoleId WHERE ur.fkUserId = :fkUserId AND p.privilegeText = :privilege")
                     .setParameter("fkUserId", fkUserId)
