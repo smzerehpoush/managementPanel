@@ -5,6 +5,11 @@ import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestLogin;
 
 public class LoginImpl {
     public StandardResponse login(String token, RequestLogin requestLogin){
+    private String decryptPassword(String username, String encryptedPassword) throws Exception {
+        String key = getUserPassword(username);
+        return Encryption.decryptPassword(key, encryptedPassword);
+    }
+
     private String getUserPassword(String username) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
