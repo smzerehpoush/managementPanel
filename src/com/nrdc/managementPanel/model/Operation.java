@@ -14,6 +14,7 @@ public class Operation extends BaseModel {
     private Date time;
     private String description;
     private Long statusCode;
+    private String userToken;
 
     public Operation() {
     }
@@ -89,5 +90,15 @@ public class Operation extends BaseModel {
 
     public void setStatusCode(Long statusCode) {
         this.statusCode = statusCode;
+    }
+
+    @Basic
+    @Column(name = "USER_TOKEN")
+    public String getUserToken() {
+        return userToken;
+    }
+
+    public void setUserToken(String userToken) {
+        this.userToken = userToken;
     }
 }
