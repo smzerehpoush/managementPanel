@@ -374,6 +374,13 @@ public class User extends BaseModel {
     public void checkPrivilege(PrivilegeNames privilegeName) throws Exception {
         checkPrivilege(privilegeName.name());
     }
+
+    public User createCustomUser() throws CloneNotSupportedException {
+        User user = (User) this.clone();
+        user.setPassword("");
+        return user;
+    }
+
 }
 
 
