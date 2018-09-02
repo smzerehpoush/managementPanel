@@ -24,6 +24,7 @@ public class UserImpl {
         Privilege privilege = Privilege.getPrivilege(PrivilegeNames.RESET_PASSWORD);
         operation.setFkPrivilegeId(privilege.getId());
         User user = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
+        operation.setUserToken(token);
         operation.setFkUserId(user.getId());
         operation.setTime(new Date());
         try {
