@@ -12,11 +12,12 @@ import java.security.SecureRandom;
 
 @Entity
 @Table(name = "TOKEN", schema = Constants.SCHEMA)
-public class Token implements Serializable {
+public class Token extends BaseModel {
     private Long id;
     private Long fkUserId;
     private String token;
     private Long fkSystemId;
+
     public Token() {
     }
 
