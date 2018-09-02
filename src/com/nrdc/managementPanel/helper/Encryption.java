@@ -1,16 +1,13 @@
 package com.nrdc.managementPanel.helper;
 
 
-import com.nrdc.managementPanel.impl.Database;
 import com.nrdc.managementPanel.jsonModel.EncryptedRequest;
 import com.nrdc.managementPanel.jsonModel.EncryptedResponse;
-import com.nrdc.managementPanel.model.Token;
 import com.nrdc.managementPanel.model.User;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
-import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 
 
@@ -57,10 +54,14 @@ public class Encryption {
     }
 
     public static String decryptRequest(EncryptedRequest request) throws Exception {
-        String key = Database.getUserKey(request.getToken(), SystemNames.MANAGEMENT_PANEL).getKey();
+        String key = User.getKey(request.getToken(), SystemNames.MANAGEMENT_PANEL).getKey();
         String decrypted = decryptOrNull(key, request.getData());
-        logger.info(decrypted);
+        logger.debug(decrypted);
         return decrypted;
+    }
+
+    public static String decryptPassword(String key, String data) throws Exception {
+        return decryptOrNull(key, data);
     }
 
     public static EncryptedResponse encryptResponse(String key, Object response) throws IOException, NoSuchAlgorithmException {

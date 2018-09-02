@@ -8,12 +8,11 @@ import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestAddUser;
 import org.apache.log4j.Logger;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
 @Table(name = "PH_USER", schema = Constants.SCHEMA)
 
-public class User implements Serializable {
+public class User extends BaseModel {
     private static Logger logger = Logger.getLogger(User.class.getName());
 
     private Long id;
@@ -32,13 +31,14 @@ public class User implements Serializable {
     public User(RequestAddUser requestAddUser) {
         this.password = requestAddUser.getPassword();
         this.username = requestAddUser.getUsername();
-        this.setIsActive(true);
+        this.isActive = true;
         this.phoneNumber = requestAddUser.getPhoneNumber();
         this.firstName = requestAddUser.getFirstName();
         this.lastName = requestAddUser.getLastName();
         this.nationalId = requestAddUser.getNationalId();
         this.policeCode = requestAddUser.getPoliceCode();
     }
+
 
     public static User getUser(Long fkUserId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
@@ -67,7 +67,7 @@ public class User implements Serializable {
             }
             return user;
         } catch (NoResultException ex1) {
-            throw new Exception(Constants.INCORRECT_USER_OR_PASSWORD);
+            throw new Exception(Constants.INCORRECT_USERNAME_OR_PASSWORD);
         } catch (NonUniqueResultException ex2) {
             throw new Exception(Constants.NOT_VALID_USER);
         } finally {
@@ -165,6 +165,68 @@ public class User implements Serializable {
         }
     }
 
+    public static boolean checkPrivilege(String privilege, Long fkUserId) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        Privilege p = Privilege.getPrivilege(privilege);
+        Operation operation = new Operation(fkUserId, p.getId());
+        try {
+            int size = entityManager.createQuery("SELECT p FROM Privilege p JOIN RolePrivilege rp ON p.id = rp.fkPrivilegeId JOIN UserRole ur ON rp.fkRoleId = ur.fkRoleId WHERE ur.fkUserId = :fkUserId AND p.privilegeText = :privilege")
+                    .setParameter("fkUserId", fkUserId)
+                    .setParameter("privilege", privilege)
+                    .getResultList()
+                    .size();
+            if (size < 1) {
+                operation.setStatusCode(-1L);
+                throw new Exception(Constants.PERMISSION_ERROR);
+            }
+            operation.setStatusCode(1L);
+            return true;
+
+        } finally {
+            operation.persist();
+            if (entityManager != null && entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+
+    public static Key getKey(String token, String systemName) throws Exception {
+        Token.validateToken(token, systemName);
+        EntityManager entityManager = Database.getEntityManager();
+        try {
+            return (Key) entityManager.createQuery("SELECT k FROM Key k JOIN Token t ON k.fkUserId = t.fkUserId WHERE t.token = :token AND k.fkSystemId = (SELECT s.id FROM System s WHERE s.systemName = :systemName )")
+                    .setParameter("systemName", systemName)
+                    .setParameter("token", token)
+                    .getSingleResult();
+        } catch (NonUniqueResultException | NoResultException ex) {
+            throw new Exception(Constants.NOT_VALID_USER);
+        } finally {
+            if (entityManager != null && entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+
+    public static Key getKey(String token, SystemNames systemName) throws Exception {
+        return getKey(token, systemName.name());
+    }
+
+    public static Key getKey(String token) throws Exception {
+        return getKey(token, SystemNames.MANAGEMENT_PANEL);
+    }
+
+    public static Key getKeyByUsername(String username) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        try {
+            return (Key) entityManager.createQuery("SELECT k FROM Key k JOIN User u ON u.id = k.fkUserId WHERE u.username = :username")
+                    .setParameter("username", username)
+                    .getSingleResult();
+        } catch (NonUniqueResultException | NoResultException ex) {
+            throw new Exception(Constants.NOT_VALID_USER);
+        } finally {
+            if (entityManager != null && entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+
     public void checkKey(String systemName) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
@@ -213,7 +275,6 @@ public class User implements Serializable {
     public void checkToken(SystemNames system) throws Exception {
         checkToken(system.name());
     }
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -338,35 +399,25 @@ public class User implements Serializable {
         }
     }
 
-    public static boolean checkPrivilege(String privilege, Long fkUserId) throws Exception {
-        EntityManager entityManager = Database.getEntityManager();
-        try {
-            int size = entityManager.createQuery("SELECT p FROM Privilege p JOIN RolePrivilege rp ON p.id = rp.fkPrivilegeId JOIN UserRole ur ON rp.fkRoleId = ur.fkRoleId WHERE ur.fkUserId = :fkUserId AND p.privilege = :privilege")
-                    .setParameter("fkUserId", fkUserId)
-                    .setParameter("privilege", privilege)
-                    .getResultList()
-                    .size();
-            if (size < 1) {
-                throw new Exception(Constants.PERMISSION_ERROR);
-            }
-            return true;
-
-        } finally {
-            if (entityManager != null && entityManager.isOpen())
-                entityManager.close();
-        }
-    }
     public boolean checkPrivilege(String privilege, User user) throws Exception {
-        return checkPrivilege(privilege,user.getId());
+        return checkPrivilege(privilege, user.getId());
     }
+
     public boolean checkPrivilege(String privilege) throws Exception {
-        return checkPrivilege(privilege,this.id);
+        return checkPrivilege(privilege, this.id);
     }
 
 
     public void checkPrivilege(PrivilegeNames privilegeName) throws Exception {
         checkPrivilege(privilegeName.name());
     }
+
+    public User createCustomUser() throws CloneNotSupportedException {
+        User user = (User) this.clone();
+        user.setPassword("");
+        return user;
+    }
+
 }
 
 

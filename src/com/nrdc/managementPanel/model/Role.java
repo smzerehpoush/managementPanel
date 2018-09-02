@@ -9,6 +9,7 @@ import javax.persistence.*;
 public class Role {
     private Long id;
     private String role;
+    private Long fkCreatorId;
 
     public Role() {
     }
@@ -37,6 +38,16 @@ public class Role {
 
     public void setRole(String privilege) {
         this.role = privilege;
+    }
+
+    @Basic
+    @Column(name = "FK_CREATOR_ID")
+    public Long getFkCreatorId() {
+        return fkCreatorId;
+    }
+
+    public void setFkCreatorId(Long fkCreatorId) {
+        this.fkCreatorId = fkCreatorId;
     }
 
     @Override

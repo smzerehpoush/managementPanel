@@ -6,8 +6,6 @@ import com.nrdc.managementPanel.jsonModel.StandardResponse;
 import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestGetRolePrivileges;
 import com.nrdc.managementPanel.jsonModel.jsonResponse.ResponseGetPrivileges;
 import com.nrdc.managementPanel.jsonModel.jsonResponse.ResponseGetRoles;
-import com.nrdc.managementPanel.model.Privilege;
-import com.nrdc.managementPanel.model.Role;
 import com.nrdc.managementPanel.model.Token;
 import com.nrdc.managementPanel.model.User;
 
@@ -35,6 +33,7 @@ public class RoleImpl {
                 entityManager.close();
         }
     }
+
     public StandardResponse getPrivileges(String token, RequestGetRolePrivileges requestGetRolePrivileges) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {

@@ -1,15 +1,10 @@
 package com.nrdc.managementPanel.service;
 
 import com.nrdc.managementPanel.helper.Encryption;
-import com.nrdc.managementPanel.helper.SystemNames;
-import com.nrdc.managementPanel.impl.Database;
 import com.nrdc.managementPanel.impl.PrivilegeImpl;
-import com.nrdc.managementPanel.impl.UserImpl;
-import com.nrdc.managementPanel.jsonModel.EncryptedRequest;
 import com.nrdc.managementPanel.jsonModel.EncryptedResponse;
 import com.nrdc.managementPanel.jsonModel.StandardResponse;
-import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestGetUsers;
-import com.nrdc.managementPanel.model.Token;
+import com.nrdc.managementPanel.model.User;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -25,11 +20,11 @@ public class PrivilegeServices {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getPrivileges(@QueryParam("token")String token){
+    public Response getPrivileges(@QueryParam("token") String token) {
         logger.info("++================== getPrivileges SERVICE : START ==================++");
         try {
             StandardResponse response = new PrivilegeImpl().getPrivileges(token);
-            String key = Database.getUserKey(token).getKey();
+            String key = User.getKey(token).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
             logger.info("++================== getPrivileges SERVICE : END ==================++");

@@ -10,4 +10,11 @@ public class RequestGetUsers {
     public void setFkSystemId(Long fkSystemId) {
         this.fkSystemId = fkSystemId;
     }
+
+    @Override
+    public String toString() {
+        return "RequestGetUsers{" +
+                "fkSystemId=" + fkSystemId +
+                '}';
+    }
 }

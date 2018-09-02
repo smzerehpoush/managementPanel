@@ -1,12 +1,12 @@
 package com.nrdc.managementPanel.service;
 
 import com.nrdc.managementPanel.helper.Encryption;
-import com.nrdc.managementPanel.impl.Database;
 import com.nrdc.managementPanel.impl.RoleImpl;
 import com.nrdc.managementPanel.jsonModel.EncryptedRequest;
 import com.nrdc.managementPanel.jsonModel.EncryptedResponse;
 import com.nrdc.managementPanel.jsonModel.StandardResponse;
 import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestGetRolePrivileges;
+import com.nrdc.managementPanel.model.User;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -22,11 +22,11 @@ public class RoleServices {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getRoles(@QueryParam("token")String token) {
+    public Response getRoles(@QueryParam("token") String token) {
         logger.info("++================== getRoles SERVICE : START ==================++");
         try {
             StandardResponse response = new RoleImpl().getRoles(token);
-            String key = Database.getUserKey(token).getKey();
+            String key = User.getKey(token).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
             logger.info("++================== getRoles SERVICE : END ==================++");
@@ -47,7 +47,7 @@ public class RoleServices {
         try {
             RequestGetRolePrivileges request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestGetRolePrivileges.class);
             StandardResponse response = new RoleImpl().getPrivileges(encryptedRequest.getToken(), request);
-            String key = Database.getUserKey(encryptedRequest.getToken()).getKey();
+            String key = User.getKey(encryptedRequest.getToken()).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
             logger.info("++================== getPrivileges SERVICE : END ==================++");
