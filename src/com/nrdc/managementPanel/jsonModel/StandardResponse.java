@@ -15,6 +15,12 @@ public class StandardResponse<T> {
         response.setResultMessage(exceptionMessage);
         return response;
     }
+    public static StandardResponse getOKResponse(){
+        StandardResponse response = new StandardResponse();
+        response.setResultCode(1);
+        response.setResultMessage("OK");
+        return response;
+    }
 
     public static StandardResponse getNOKExceptions(Exception ex) {
         return getNOKExceptions(ex.getMessage());
