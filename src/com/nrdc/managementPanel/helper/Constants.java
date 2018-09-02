@@ -10,7 +10,7 @@ public class Constants {
     public static final String NO_USER_FOR_TOKEN = "کاربری بر اساس توکن داده شده پیدا نشد.";
     public static final String USER_IS_NOT_ACTIVE = "کاربر فعال نمی باشد";
     public static final String ACTIVE_USER_EXISTS = "چنین کاربری فعال می باشد.";
-    public static final String INCORRECT_USER_OR_PASSWORD = "نام کاربری یا رمز عبور اشتباه می باشد.";
+    public static final String INCORRECT_USERNAME_OR_PASSWORD = "نام کاربری یا رمز عبور اشتباه می باشد.";
     public static final String UNKNOWN_ERROR = "اشتباهی رخ داده است. دوباره تلاش کنید.";
     public static final String UNKNOWN_USER = "چنین کاربری وجود ندارد.";
 
