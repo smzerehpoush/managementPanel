@@ -2,6 +2,7 @@ package com.nrdc.managementPanel.service;
 
 import com.nrdc.managementPanel.helper.Encryption;
 import com.nrdc.managementPanel.impl.Database;
+import com.nrdc.managementPanel.impl.LoginImpl;
 import com.nrdc.managementPanel.impl.UserImpl;
 import com.nrdc.managementPanel.jsonModel.EncryptedRequest;
 import com.nrdc.managementPanel.jsonModel.EncryptedResponse;
@@ -18,8 +19,6 @@ import javax.ws.rs.core.Response;
 public class UserServices {
     private static Logger logger = Logger.getLogger(UserServices.class.getName());
     private ObjectMapper objectMapper = new ObjectMapper();
-
-
 
     @Path("/activate")
     @POST
@@ -41,6 +40,7 @@ public class UserServices {
             return Response.status(200).entity(response).build();
         }
     }
+
     @Path("/deActivate")
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
@@ -81,6 +81,7 @@ public class UserServices {
             return Response.status(200).entity(response).build();
         }
     }
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -100,6 +101,7 @@ public class UserServices {
             return Response.status(200).entity(response).build();
         }
     }
+
     @Path("/filter")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -120,6 +122,7 @@ public class UserServices {
             return Response.status(200).entity(response).build();
         }
     }
+
     @Path("/edit")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -140,6 +143,7 @@ public class UserServices {
             return Response.status(200).entity(response).build();
         }
     }
+
     @Path("/resetPassword")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
