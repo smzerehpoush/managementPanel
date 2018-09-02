@@ -20,6 +20,28 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class UserImpl {
+    private void setUserNewPassword(RequestResetPassword requestResetPassword) {
+        EntityManager entityManager = Database.getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            if (!transaction.isActive())
+                transaction.begin();
+            entityManager.createQuery("UPDATE User u SET u.password = :newPassword WHERE u.username = :username")
+                    .setParameter("username", requestResetPassword.getUsername())
+                    .setParameter("newPassword", requestResetPassword.getNewPassword())
+                    .executeUpdate();
+            if (transaction.isActive())
+                transaction.commit();
+        } catch (Exception ex) {
+            if (transaction != null && transaction.isActive())
+                transaction.rollback();
+        } finally {
+            if (entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+
+
     public StandardResponse activeUser(String token, RequestActiveUser request) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
