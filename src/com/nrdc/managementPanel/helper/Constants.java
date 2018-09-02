@@ -6,6 +6,7 @@ public class Constants {
     public static final String NOT_VALID_TOKEN = "توکن معتبر نیست.";
     public static final String NOT_VALID_SYSTEM = "سیستم معتبر نمی باشد.";
     public static final String NOT_VALID_USER = "کاربر معتبر نمی باشد";
+    public static final String NOT_VALID_PRIVILEGE = "سیستم معتبر نمی باشد";
 
     public static final String NO_USER_FOR_TOKEN = "کاربری بر اساس توکن داده شده پیدا نشد.";
     public static final String USER_IS_NOT_ACTIVE = "کاربر فعال نمی باشد";
