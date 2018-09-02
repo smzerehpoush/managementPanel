@@ -5,6 +5,12 @@ import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestLogin;
 
 public class LoginImpl {
     public StandardResponse login(String token, RequestLogin requestLogin){
+    private User verifyUser(String username, String encryptePassword, String phoneNumber) throws Exception {
+
+        String password = decryptPassword(username, encryptePassword);
+        return User.getUser(username, password, phoneNumber);
+    }
+
     private String decryptPassword(String username, String encryptedPassword) throws Exception {
         String key = getUserPassword(username);
         return Encryption.decryptPassword(key, encryptedPassword);
