@@ -62,6 +62,9 @@ public class Encryption {
         logger.debug(decrypted);
         return decrypted;
     }
+    public static String decryptPassword(String key, String data) throws Exception {
+        return decryptOrNull(key, data);
+    }
 
     public static EncryptedResponse encryptResponse(String key, Object response) throws IOException, NoSuchAlgorithmException {
         EncryptedResponse encryptedResponse = new EncryptedResponse();
