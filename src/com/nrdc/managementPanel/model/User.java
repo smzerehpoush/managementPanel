@@ -190,6 +190,20 @@ public class User extends BaseModel {
         }
     }
 
+    public static Key getKeyByUsername(String username) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        try {
+            return (Key) entityManager.createQuery("SELECT k FROM Key k JOIN User u ON u.id = k.fkUserId WHERE u.username = :username")
+                    .setParameter("username", username)
+                    .getSingleResult();
+        } catch (NonUniqueResultException | NoResultException ex) {
+            throw new Exception(Constants.NOT_VALID_USER);
+        } finally {
+            if (entityManager != null && entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+
     public void checkKey(String systemName) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
