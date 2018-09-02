@@ -20,6 +20,21 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class UserImpl {
+    public StandardResponse resetPassword(String token, RequestResetPassword requestResetPassword) {
+        try {
+            Token.validateToken(token, SystemNames.MANAGEMENT_PANEL);
+            User user = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
+            user.checkPrivilege(PrivilegeNames.RESET_PASSWORD);
+            if (!checkUserOldPassword(requestResetPassword))
+                throw new Exception(Constants.INCORRECT_USER_OR_PASSWORD);
+            checkPassword(requestResetPassword);
+            setUserNewPassword(requestResetPassword);
+            StandardResponse response = StandardResponse.getOKResponse();
+            return response;
+        } catch (Exception ex) {
+            return StandardResponse.getNOKExceptions(ex);
+        }
+    }
 
     private boolean checkUserOldPassword(RequestResetPassword requestResetPassword) {
         EntityManager entityManager = Database.getEntityManager();
