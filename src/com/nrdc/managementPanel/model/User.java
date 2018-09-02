@@ -40,6 +40,7 @@ public class User implements Serializable {
         this.policeCode = requestAddUser.getPoliceCode();
     }
 
+
     public static User getUser(Long fkUserId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
@@ -67,7 +68,7 @@ public class User implements Serializable {
             }
             return user;
         } catch (NoResultException ex1) {
-            throw new Exception(Constants.INCORRECT_USER_OR_PASSWORD);
+            throw new Exception(Constants.INCORRECT_USERNAME_OR_PASSWORD);
         } catch (NonUniqueResultException ex2) {
             throw new Exception(Constants.NOT_VALID_USER);
         } finally {
