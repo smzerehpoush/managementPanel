@@ -80,6 +80,7 @@ public class Operation {
     }
 
     @Basic
+    @Temporal(TemporalType.DATE)
     @Column(name = "TIME")
     public Date getTime() {
         return time;
