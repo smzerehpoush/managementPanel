@@ -6,6 +6,7 @@ import com.nrdc.managementPanel.impl.RoleImpl;
 import com.nrdc.managementPanel.impl.SystemImpl;
 import com.nrdc.managementPanel.jsonModel.EncryptedResponse;
 import com.nrdc.managementPanel.jsonModel.StandardResponse;
+import com.nrdc.managementPanel.model.User;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -25,7 +26,7 @@ public class SystemServices {
         logger.info("++================== getRoles SERVICE : START ==================++");
         try {
             StandardResponse response = new SystemImpl().getSystems(token);
-            String key = Database.getUserKey(token).getKey();
+            String key = User.getKey(token).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
             logger.info("++================== getRoles SERVICE : END ==================++");
