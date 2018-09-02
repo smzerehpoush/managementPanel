@@ -190,6 +190,9 @@ public class User extends BaseModel {
         }
     }
 
+    public static Key getKey(String token, SystemNames systemName) throws Exception {
+        return getKey(token, systemName.name());
+    }
     public static Key getKeyByUsername(String username) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
