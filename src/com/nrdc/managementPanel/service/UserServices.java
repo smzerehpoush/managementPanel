@@ -140,6 +140,26 @@ public class UserServices {
             return Response.status(200).entity(response).build();
         }
     }
+    @Path("/resetPassword")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response resetPassword(EncryptedRequest encryptedRequest){
+        logger.info("++================== editUser SERVICE : START ==================++");
+        try {
+            RequestResetPassword request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestResetPassword.class);
+            StandardResponse response = new UserImpl().resetPassword(encryptedRequest.getToken(), request);
+            String key = Database.getUserKey(encryptedRequest.getToken()).getKey();
+            EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
+            Response finalResponse = Response.status(200).entity(encryptedResponse).build();
+            logger.info("++================== editUser SERVICE : END ==================++");
+            return finalResponse;
+        } catch (Exception ex) {
+            logger.error("++================== editUser SERVICE : EXCEPTION ==================++");
+            StandardResponse response = StandardResponse.getNOKExceptions(ex);
+            return Response.status(200).entity(response).build();
+        }
+    }
 
     @Path("/roles")
     @POST
