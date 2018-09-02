@@ -19,4 +19,12 @@ public class RequestRemoveToken {
     public void setFkSystemId(Long fkSystemId) {
         this.fkSystemId = fkSystemId;
     }
+
+    @Override
+    public String toString() {
+        return "RequestRemoveToken{" +
+                "token='" + token + '\'' +
+                ", fkSystemId=" + fkSystemId +
+                '}';
+    }
 }

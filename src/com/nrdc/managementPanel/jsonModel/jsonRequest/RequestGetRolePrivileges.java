@@ -14,4 +14,11 @@ public class RequestGetRolePrivileges {
     public void setFkRoleId(Long fkRoleId) {
         this.fkRoleId = fkRoleId;
     }
+
+    @Override
+    public String toString() {
+        return "RequestGetRolePrivileges{" +
+                "fkRoleId=" + fkRoleId +
+                '}';
+    }
 }

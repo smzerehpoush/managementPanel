@@ -10,4 +10,11 @@ public class RequestGetUserRolesWithPrivileges {
     public void setFkUserId(Long fkUserId) {
         this.fkUserId = fkUserId;
     }
+
+    @Override
+    public String toString() {
+        return "RequestGetUserRolesWithPrivileges{" +
+                "fkUserId=" + fkUserId +
+                '}';
+    }
 }
