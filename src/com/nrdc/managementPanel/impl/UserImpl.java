@@ -9,30 +9,62 @@ import com.nrdc.managementPanel.jsonModel.jsonRequest.*;
 import com.nrdc.managementPanel.jsonModel.jsonResponse.ResponseGetRoles;
 import com.nrdc.managementPanel.jsonModel.jsonResponse.ResponseGetRolesWithPrivileges;
 import com.nrdc.managementPanel.jsonModel.jsonResponse.ResponseGetUsers;
-import com.nrdc.managementPanel.model.Role;
+import com.nrdc.managementPanel.model.*;
 import com.nrdc.managementPanel.model.System;
-import com.nrdc.managementPanel.model.Token;
-import com.nrdc.managementPanel.model.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 public class UserImpl {
-    public StandardResponse resetPassword(String token, RequestResetPassword requestResetPassword) {
+    public StandardResponse resetPassword(String token, RequestResetPassword requestResetPassword) throws Exception {
+        Operation operation = new Operation();
+        Privilege privilege = Privilege.getPrivilege(PrivilegeNames.RESET_PASSWORD);
+        operation.setFkPrivilegeId(privilege.getId());
+        User user = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
+        operation.setFkUserId(user.getId());
+        operation.setTime(new Date());
         try {
-            Token.validateToken(token, SystemNames.MANAGEMENT_PANEL);
-            User user = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
             if (!checkUserOldPassword(user.getUsername(), requestResetPassword))
                 throw new Exception(Constants.INCORRECT_USER_OR_PASSWORD);
             checkPassword(requestResetPassword);
             setUserNewPassword(user.getUsername(), requestResetPassword);
             StandardResponse response = StandardResponse.getOKResponse();
+            operation.setStatusCode(1L);
+            String description = createResetPasswordLog(user);
+            operation.setDescription(description);
+            operation.persist();
             return response;
         } catch (Exception ex) {
+            operation.setStatusCode(-1L);
+            String description = createResetPasswordLog(user,ex.getMessage());
+            operation.setDescription(description);
+            operation.persist();
             return StandardResponse.getNOKExceptions(ex);
         }
+    }
+
+    private String createResetPasswordLog(User user) {
+        StringBuilder stringBuilder = new StringBuilder();
+        user.setPassword("");
+        stringBuilder.append("User {")
+                .append(user)
+                .append("}")
+                .append(" changed his password .");
+        return stringBuilder.toString();
+    }
+
+    private String createResetPasswordLog(User user, String exception) {
+        StringBuilder stringBuilder = new StringBuilder();
+        user.setPassword("");
+        stringBuilder.append("User {")
+                .append(user)
+                .append("}")
+                .append(" attempts to change his password . failed with exception :")
+                .append(exception);
+        return stringBuilder.toString();
     }
 
     private boolean checkUserOldPassword(String username, RequestResetPassword requestResetPassword) {
