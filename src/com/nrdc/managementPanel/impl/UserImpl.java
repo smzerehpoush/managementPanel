@@ -20,6 +20,21 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class UserImpl {
+
+    private boolean checkUserOldPassword(RequestResetPassword requestResetPassword) {
+        EntityManager entityManager = Database.getEntityManager();
+        try {
+            int size = (int) entityManager.createQuery("SELECT count (u) FROM User u WHERE u.username = :username AND u.password = :password ")
+                    .setParameter("username", requestResetPassword.getUsername())
+                    .setParameter("password", requestResetPassword.getOldPassword())
+                    .getSingleResult();
+            return size == 1;
+        } finally {
+            if (entityManager != null && entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+
     private boolean checkPassword(RequestResetPassword requestResetPassword) {
         String password = requestResetPassword.getNewPassword();
         if (password.length() < 8)
