@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "PH_USER", schema = Constants.SCHEMA)
 
-public class User implements Serializable {
+public class User extends BaseModel {
     private static Logger logger = Logger.getLogger(User.class.getName());
 
     private Long id;
