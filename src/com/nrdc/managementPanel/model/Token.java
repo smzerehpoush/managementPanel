@@ -6,9 +6,7 @@ import com.nrdc.managementPanel.impl.Database;
 import com.sun.istack.internal.NotNull;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.math.BigInteger;
-import java.security.SecureRandom;
+import java.util.UUID;
 
 @Entity
 @Table(name = "TOKEN", schema = Constants.SCHEMA)
@@ -21,6 +19,35 @@ public class Token extends BaseModel {
     public Token() {
     }
 
+
+    public Token(User user, System system) throws Exception {
+        user.checkToken(system);
+        this.token = UUID.randomUUID().toString();
+        this.fkSystemId = system.getId();
+        this.fkUserId = user.getId();
+    }
+
+    public static void validateToken(String token, String systemName) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+
+        try {
+            int size = entityManager.createQuery("SELECT t FROM Token t WHERE t.token = :token AND t.fkSystemId = (SELECT s.id FROM System s WHERE s.systemName = :systemName)")
+                    .setParameter("systemName", systemName)
+                    .setParameter("token", token)
+                    .getResultList()
+                    .size();
+            if (size != 1) {
+                throw new Exception(Constants.NOT_VALID_TOKEN);
+            }
+        } finally {
+            if (entityManager != null && entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+
+    public static void validateToken(String token, SystemNames systemName) throws Exception {
+        validateToken(token, systemName.name());
+    }
 
     @NotNull
     @Id
@@ -63,12 +90,6 @@ public class Token extends BaseModel {
     public void setFkSystemId(Long fkSystemId) {
         this.fkSystemId = fkSystemId;
     }
-    public Token (User user, System system) throws Exception {
-        user.checkToken(system);
-        this.token = new BigInteger(40,  new SecureRandom()).toString(32);
-        this.fkSystemId=system.getId();
-        this.fkUserId = user.getId();
-    }
 
     @Override
     public String toString() {
@@ -79,24 +100,5 @@ public class Token extends BaseModel {
                 ", fkSystemId=" + fkSystemId +
                 '}';
     }
-    public static void validateToken(String token, String systemName) throws Exception {
-        EntityManager entityManager = Database.getEntityManager();
-
-        try {
-            int size = entityManager.createQuery("SELECT t FROM Token t WHERE t.token = :token AND t.fkSystemId = (SELECT s.id FROM System s WHERE s.systemName = :systemName)")
-                    .setParameter("systemName",systemName)
-                    .setParameter("token", token)
-                    .getResultList()
-                    .size();
-            if (size != 1) {
-                throw new Exception(Constants.NOT_VALID_TOKEN);
-            }
-        } finally {
-            if (entityManager != null && entityManager.isOpen())
-                entityManager.close();
-        }
-    }
-    public static void validateToken(String token, SystemNames systemName) throws Exception {
-        validateToken(token,systemName.name());
-    }
 }
+
