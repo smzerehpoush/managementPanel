@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "ROLE_PRIVILEGE", schema = Constants.SCHEMA)
-public class RolePrivilegeDAO extends BaseModel{
+public class RolePrivilegeDAO extends BaseModel {
     private Long id;
     private Long fkRoleId;
     private Long fkPrivilegeId;
@@ -41,5 +41,15 @@ public class RolePrivilegeDAO extends BaseModel{
 
     public void setFkPrivilegeId(Long fkPrivilegeId) {
         this.fkPrivilegeId = fkPrivilegeId;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("RolePrivilegeDAO{");
+        sb.append("id=").append(id);
+        sb.append(", fkRoleId=").append(fkRoleId);
+        sb.append(", fkPrivilegeId=").append(fkPrivilegeId);
+        sb.append('}');
+        return sb.toString();
     }
 }

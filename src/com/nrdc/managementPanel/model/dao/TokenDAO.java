@@ -1,15 +1,9 @@
 package com.nrdc.managementPanel.model.dao;
 
 import com.nrdc.managementPanel.helper.Constants;
-import com.nrdc.managementPanel.helper.SystemNames;
-import com.nrdc.managementPanel.impl.Database;
-import com.nrdc.managementPanel.model.System;
-import com.nrdc.managementPanel.model.User;
-import com.nrdc.managementPanel.model.dao.BaseModel;
 import com.sun.istack.internal.NotNull;
 
 import javax.persistence.*;
-import java.util.UUID;
 
 @Entity
 @Table(name = "TOKEN", schema = Constants.SCHEMA)
@@ -59,6 +53,17 @@ public class TokenDAO extends BaseModel {
 
     public void setFkSystemId(Long fkSystemId) {
         this.fkSystemId = fkSystemId;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("TokenDAO{");
+        sb.append("id=").append(id);
+        sb.append(", fkUserId=").append(fkUserId);
+        sb.append(", token='").append(token).append('\'');
+        sb.append(", fkSystemId=").append(fkSystemId);
+        sb.append('}');
+        return sb.toString();
     }
 }
 

@@ -3,7 +3,6 @@ package com.nrdc.managementPanel.model.dao;
 import com.nrdc.managementPanel.helper.Constants;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
 @Table(name = "USER_SYSTEM", schema = Constants.SCHEMA)
@@ -44,4 +43,13 @@ public class SystemUserDAO extends BaseModel {
     }
 
 
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("SystemUserDAO{");
+        sb.append("id=").append(id);
+        sb.append(", fkUserId=").append(fkUserId);
+        sb.append(", fkSystemId=").append(fkSystemId);
+        sb.append('}');
+        return sb.toString();
+    }
 }

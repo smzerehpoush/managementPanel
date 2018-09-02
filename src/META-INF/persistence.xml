@@ -8,17 +8,17 @@
     <persistence-unit name="managementPanelJPA" transaction-type="JTA">
         <jta-data-source>managementPanelDataSource</jta-data-source>
 
-        <class>com.nrdc.managementPanel.model.Key</class>
-        <class>com.nrdc.managementPanel.model.Privilege</class>
-        <class>com.nrdc.managementPanel.model.Role</class>
-        <class>com.nrdc.managementPanel.model.RolePrivilege</class>
-        <class>com.nrdc.managementPanel.model.System</class>
-        <class>com.nrdc.managementPanel.model.SystemVersion</class>
-        <class>com.nrdc.managementPanel.model.Token</class>
-        <class>com.nrdc.managementPanel.model.User</class>
-        <class>com.nrdc.managementPanel.model.UserRole</class>
-        <class>com.nrdc.managementPanel.model.SystemUser</class>
-        <class>com.nrdc.managementPanel.model.Operation</class>
+        <class>com.nrdc.managementPanel.model.dto.Key</class>
+        <class>com.nrdc.managementPanel.model.dto.Privilege</class>
+        <class>com.nrdc.managementPanel.model.dto.Role</class>
+        <class>com.nrdc.managementPanel.model.dto.RolePrivilege</class>
+        <class>com.nrdc.managementPanel.model.dto.System</class>
+        <class>com.nrdc.managementPanel.model.dto.SystemVersion</class>
+        <class>com.nrdc.managementPanel.model.dto.Token</class>
+        <class>com.nrdc.managementPanel.model.dto.User</class>
+        <class>com.nrdc.managementPanel.model.dto.UserRole</class>
+        <class>com.nrdc.managementPanel.model.dto.SystemUser</class>
+        <class>com.nrdc.managementPanel.model.dto.Operation</class>
 
     </persistence-unit>
 

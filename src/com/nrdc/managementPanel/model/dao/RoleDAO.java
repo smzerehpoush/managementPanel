@@ -41,4 +41,14 @@ public class RoleDAO extends BaseModel {
     public void setFkCreatorId(Long fkCreatorId) {
         this.fkCreatorId = fkCreatorId;
     }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("RoleDAO{");
+        sb.append("id=").append(id);
+        sb.append(", role='").append(role).append('\'');
+        sb.append(", fkCreatorId=").append(fkCreatorId);
+        sb.append('}');
+        return sb.toString();
+    }
 }

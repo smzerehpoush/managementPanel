@@ -4,7 +4,6 @@ import com.nrdc.managementPanel.helper.Constants;
 import com.sun.istack.internal.NotNull;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
 @Table(name = "SYSTEM_VERSIONS", schema = Constants.SCHEMA)
@@ -65,5 +64,17 @@ public class SystemVersionDAO extends BaseModel {
 
     public void setApkPath(String apkPath) {
         this.apkPath = apkPath;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("SystemVersionDAO{");
+        sb.append("id=").append(id);
+        sb.append(", fkSystemId=").append(fkSystemId);
+        sb.append(", versionName='").append(versionName).append('\'');
+        sb.append(", versionCode=").append(versionCode);
+        sb.append(", apkPath='").append(apkPath).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 }

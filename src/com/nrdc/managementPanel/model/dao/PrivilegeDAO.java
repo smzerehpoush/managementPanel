@@ -1,14 +1,12 @@
 package com.nrdc.managementPanel.model.dao;
 
 import com.nrdc.managementPanel.helper.Constants;
-import com.nrdc.managementPanel.helper.PrivilegeNames;
-import com.nrdc.managementPanel.impl.Database;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "PRIVILEGE", schema = Constants.SCHEMA)
-public class PrivilegeDAO extends BaseModel{
+public class PrivilegeDAO extends BaseModel {
     private Long id;
     private String privilegeText;
 
@@ -33,4 +31,13 @@ public class PrivilegeDAO extends BaseModel{
         this.privilegeText = privilege;
     }
 
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("PrivilegeDAO{");
+        sb.append("id=").append(id);
+        sb.append(", privilegeText='").append(privilegeText).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

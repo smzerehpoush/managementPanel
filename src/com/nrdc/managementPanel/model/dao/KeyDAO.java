@@ -1,12 +1,8 @@
 package com.nrdc.managementPanel.model.dao;
 
 import com.nrdc.managementPanel.helper.Constants;
-import com.nrdc.managementPanel.model.System;
-import com.nrdc.managementPanel.model.User;
-import com.nrdc.managementPanel.model.dao.BaseModel;
 
 import javax.persistence.*;
-import java.util.UUID;
 
 @Entity
 @Table(name = "KEYS", schema = Constants.SCHEMA)
@@ -56,6 +52,16 @@ public class KeyDAO extends BaseModel {
 
     public void setFkUserId(Long fkUserId) {
         this.fkUserId = fkUserId;
+    }
+
+    @Override
+    public String toString() {
+        return "Key{" +
+                "id=" + id +
+                ", key='" + key + '\'' +
+                ", fkSystemId=" + fkSystemId +
+                ", fkUserId=" + fkUserId +
+                '}';
     }
 
 }

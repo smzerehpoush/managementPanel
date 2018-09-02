@@ -1,9 +1,6 @@
 package com.nrdc.managementPanel.model.dao;
 
 import com.nrdc.managementPanel.helper.Constants;
-import com.nrdc.managementPanel.model.Privilege;
-import com.nrdc.managementPanel.model.User;
-import com.nrdc.managementPanel.model.dao.BaseModel;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -90,5 +87,19 @@ public class OperationDAO extends BaseModel {
 
     public void setUserToken(String userToken) {
         this.userToken = userToken;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("OperationDAO{");
+        sb.append("id=").append(id);
+        sb.append(", fkUserId=").append(fkUserId);
+        sb.append(", fkPrivilegeId=").append(fkPrivilegeId);
+        sb.append(", time=").append(time);
+        sb.append(", description='").append(description).append('\'');
+        sb.append(", statusCode=").append(statusCode);
+        sb.append(", userToken='").append(userToken).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 }

@@ -1,6 +1,6 @@
 package com.nrdc.managementPanel.jsonModel.customizedModel;
 
-import com.nrdc.managementPanel.model.Privilege;
+import com.nrdc.managementPanel.model.dto.Privilege;
 
 import java.util.List;
 

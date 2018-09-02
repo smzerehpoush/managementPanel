@@ -4,8 +4,8 @@ import com.nrdc.managementPanel.helper.PrivilegeNames;
 import com.nrdc.managementPanel.helper.SystemNames;
 import com.nrdc.managementPanel.jsonModel.StandardResponse;
 import com.nrdc.managementPanel.jsonModel.jsonResponse.ResponseGetSystems;
-import com.nrdc.managementPanel.model.Token;
-import com.nrdc.managementPanel.model.User;
+import com.nrdc.managementPanel.model.dto.Token;
+import com.nrdc.managementPanel.model.dto.User;
 
 import javax.persistence.EntityManager;
 import java.util.List;

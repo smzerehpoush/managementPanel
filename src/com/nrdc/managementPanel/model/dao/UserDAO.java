@@ -110,6 +110,21 @@ public class UserDAO extends BaseModel {
         this.policeCode = policeCode;
     }
 
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("UserDAO{");
+        sb.append("id=").append(id);
+        sb.append(", password='").append(password).append('\'');
+        sb.append(", username='").append(username).append('\'');
+        sb.append(", isActive=").append(isActive);
+        sb.append(", phoneNumber='").append(phoneNumber).append('\'');
+        sb.append(", firstName='").append(firstName).append('\'');
+        sb.append(", lastName='").append(lastName).append('\'');
+        sb.append(", nationalId='").append(nationalId).append('\'');
+        sb.append(", policeCode='").append(policeCode).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }
 
 

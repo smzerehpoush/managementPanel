@@ -45,4 +45,13 @@ public class UserRoleDAO extends BaseModel {
         this.fkRoleId = fkRoleId;
     }
 
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("UserRoleDAO{");
+        sb.append("id=").append(id);
+        sb.append(", fkUserId=").append(fkUserId);
+        sb.append(", fkRoleId=").append(fkRoleId);
+        sb.append('}');
+        return sb.toString();
+    }
 }
