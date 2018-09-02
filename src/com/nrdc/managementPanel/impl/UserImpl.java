@@ -29,7 +29,7 @@ public class UserImpl {
         operation.setTime(new Date());
         try {
             if (!checkUserOldPassword(user.getUsername(), requestResetPassword))
-                throw new Exception(Constants.INCORRECT_USER_OR_PASSWORD);
+                throw new Exception(Constants.INCORRECT_USERNAME_OR_PASSWORD);
             checkPassword(requestResetPassword);
             setUserNewPassword(user.getUsername(), requestResetPassword);
             StandardResponse response = StandardResponse.getOKResponse();
@@ -40,7 +40,7 @@ public class UserImpl {
             return response;
         } catch (Exception ex) {
             operation.setStatusCode(-1L);
-            String description = createResetPasswordLog(user,ex.getMessage());
+            String description = createResetPasswordLog(user, ex.getMessage());
             operation.setDescription(description);
             operation.persist();
             return StandardResponse.getNOKExceptions(ex);
