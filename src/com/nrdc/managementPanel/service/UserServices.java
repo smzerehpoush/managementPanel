@@ -8,6 +8,7 @@ import com.nrdc.managementPanel.jsonModel.EncryptedRequest;
 import com.nrdc.managementPanel.jsonModel.EncryptedResponse;
 import com.nrdc.managementPanel.jsonModel.StandardResponse;
 import com.nrdc.managementPanel.jsonModel.jsonRequest.*;
+import com.nrdc.managementPanel.model.User;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -29,7 +30,7 @@ public class UserServices {
         try {
             RequestActiveUser request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestActiveUser.class);
             StandardResponse response = new UserImpl().activeUser(encryptedRequest.getToken(), request);
-            String key = Database.getUserKey(encryptedRequest.getToken()).getKey();
+            String key = User.getKey(encryptedRequest.getToken()).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
             logger.info("++================== activeUser SERVICE : END ==================++");
@@ -50,7 +51,7 @@ public class UserServices {
         try {
             RequestDeActiveUser request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestDeActiveUser.class);
             StandardResponse response = new UserImpl().deActiveUser(encryptedRequest.getToken(), request);
-            String key = Database.getUserKey(encryptedRequest.getToken()).getKey();
+            String key = User.getKey(encryptedRequest.getToken()).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
             logger.info("++================== deActiveUser SERVICE : END ==================++");
@@ -70,7 +71,7 @@ public class UserServices {
         try {
             RequestAddUser request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestAddUser.class);
             StandardResponse response = new UserImpl().addUser(encryptedRequest.getToken(), request);
-            String key = Database.getUserKey(encryptedRequest.getToken()).getKey();
+            String key = User.getKey(encryptedRequest.getToken()).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
             logger.info("++================== addUser SERVICE : END ==================++");
@@ -90,7 +91,7 @@ public class UserServices {
         try {
             RequestGetUsers request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestGetUsers.class);
             StandardResponse response = new UserImpl().getUsers(encryptedRequest.getToken(), request);
-            String key = Database.getUserKey(encryptedRequest.getToken()).getKey();
+            String key = User.getKey(encryptedRequest.getToken()).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
             logger.info("++================== getUsers SERVICE : END ==================++");
@@ -111,7 +112,7 @@ public class UserServices {
         try {
             RequestFilterUsers request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestFilterUsers.class);
             StandardResponse response = new UserImpl().filterUsers(encryptedRequest.getToken(), request);
-            String key = Database.getUserKey(encryptedRequest.getToken()).getKey();
+            String key = User.getKey(encryptedRequest.getToken()).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
             logger.info("++================== filterUsers SERVICE : END ==================++");
@@ -132,7 +133,7 @@ public class UserServices {
         try {
             RequestEditUser request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestEditUser.class);
             StandardResponse response = new UserImpl().editUser(encryptedRequest.getToken(), request);
-            String key = Database.getUserKey(encryptedRequest.getToken()).getKey();
+            String key = User.getKey(encryptedRequest.getToken()).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
             logger.info("++================== editUser SERVICE : END ==================++");
@@ -153,7 +154,7 @@ public class UserServices {
         try {
             RequestResetPassword request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestResetPassword.class);
             StandardResponse response = new UserImpl().resetPassword(encryptedRequest.getToken(), request);
-            String key = Database.getUserKey(encryptedRequest.getToken()).getKey();
+            String key = User.getKey(encryptedRequest.getToken()).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
             logger.info("++================== editUser SERVICE : END ==================++");
@@ -174,7 +175,7 @@ public class UserServices {
         try {
             RequestGetUserRolesWithPrivileges request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestGetUserRolesWithPrivileges.class);
             StandardResponse response = new UserImpl().getRoles(encryptedRequest.getToken(), request);
-            String key = Database.getUserKey(encryptedRequest.getToken()).getKey();
+            String key = User.getKey(encryptedRequest.getToken()).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
             logger.info("++================== getRoles SERVICE : END ==================++");
@@ -194,7 +195,7 @@ public class UserServices {
         try {
             RequestGetUserRolesWithPrivileges request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestGetUserRolesWithPrivileges.class);
             StandardResponse response = new UserImpl().getRolesWithPrivileges(encryptedRequest.getToken(), request);
-            String key = Database.getUserKey(encryptedRequest.getToken()).getKey();
+            String key = User.getKey(encryptedRequest.getToken()).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
             logger.info("++================== getPrivileges SERVICE : END ==================++");
