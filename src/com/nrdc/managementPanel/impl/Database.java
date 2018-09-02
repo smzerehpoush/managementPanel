@@ -21,25 +21,5 @@ public class Database {
         return entityManagerFactory.createEntityManager();
     }
 
-    public static Key getUserKey(String token, String systemName) throws Exception {
-        Token.validateToken(token,systemName);
-        EntityManager entityManager = Database.getEntityManager();
-        try {
-            return (Key) entityManager.createQuery("SELECT k FROM Key k JOIN Token t ON k.fkUserId = t.fkUserId WHERE t.token = :token AND k.fkSystemId = (SELECT s.id FROM System s WHERE s.systemName = :systemName )")
-                    .setParameter("systemName", systemName)
-                    .setParameter("token", token)
-                    .getSingleResult();
-        } catch (NonUniqueResultException | NoResultException ex) {
-            throw new Exception(Constants.NOT_VALID_USER);
-        } finally {
-            if (entityManager != null && entityManager.isOpen())
-                entityManager.close();
-        }
-    }
-    public static Key getUserKey(String token, SystemNames systemName) throws Exception {
-        return getUserKey(token,systemName.name());
-    }
-    public static Key getUserKey(String token) throws Exception {
-        return getUserKey(token,SystemNames.MANAGEMENT_PANEL.name());
-    }
+
 }
