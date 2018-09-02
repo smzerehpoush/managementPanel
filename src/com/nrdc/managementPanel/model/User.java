@@ -190,6 +190,22 @@ public class User extends BaseModel {
         }
     }
 
+    public static Key getKey(String token, String systemName) throws Exception {
+        Token.validateToken(token, systemName);
+        EntityManager entityManager = Database.getEntityManager();
+        try {
+            return (Key) entityManager.createQuery("SELECT k FROM Key k JOIN Token t ON k.fkUserId = t.fkUserId WHERE t.token = :token AND k.fkSystemId = (SELECT s.id FROM System s WHERE s.systemName = :systemName )")
+                    .setParameter("systemName", systemName)
+                    .setParameter("token", token)
+                    .getSingleResult();
+        } catch (NonUniqueResultException | NoResultException ex) {
+            throw new Exception(Constants.NOT_VALID_USER);
+        } finally {
+            if (entityManager != null && entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+
     public static Key getKey(String token, SystemNames systemName) throws Exception {
         return getKey(token, systemName.name());
     }
