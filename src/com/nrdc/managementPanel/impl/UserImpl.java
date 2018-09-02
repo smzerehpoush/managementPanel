@@ -20,6 +20,15 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class UserImpl {
+    private boolean checkPassword(RequestResetPassword requestResetPassword) {
+        String password = requestResetPassword.getNewPassword();
+        if (password.length() < 8)
+            return false;
+        if (!password.matches("[[a-z][0-9]]"))
+            return false;
+        return true;
+    }
+
     private void setUserNewPassword(RequestResetPassword requestResetPassword) {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
