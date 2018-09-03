@@ -32,6 +32,13 @@ public class Token extends TokenDAO {
             if (!size.equals(1L)) {
                 throw new Exception(Constants.NOT_VALID_TOKEN);
             }
+            size = (Long) entityManager.createQuery("SELECT count (t) FROM Token t JOIN System s ON s.id = t.fkSystemId JOIN User  u ON t.fkUserId = u.id WHERE t.token = :token AND s.systemName = :systemName AND u.isActive = true")
+                    .setParameter("systemName", systemName)
+                    .setParameter("token", token)
+                    .getSingleResult();
+            if (!size.equals(1L)) {
+                throw new Exception(Constants.NOT_ACTIVE_USER);
+            }
         } finally {
             if (entityManager != null && entityManager.isOpen())
                 entityManager.close();
