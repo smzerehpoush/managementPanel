@@ -25,12 +25,11 @@ public class Token extends TokenDAO {
         EntityManager entityManager = Database.getEntityManager();
 
         try {
-            int size = entityManager.createQuery("SELECT t FROM Token t WHERE t.token = :token AND t.fkSystemId = (SELECT s.id FROM System s WHERE s.systemName = :systemName)")
+            Long size = (Long) entityManager.createQuery("SELECT count (t) FROM Token t JOIN System s ON s.id = t.fkSystemId WHERE t.token = :token AND s.systemName = :systemName")
                     .setParameter("systemName", systemName)
                     .setParameter("token", token)
-                    .getResultList()
-                    .size();
-            if (size != 1) {
+                    .getSingleResult();
+            if (!size.equals(1L)) {
                 throw new Exception(Constants.NOT_VALID_TOKEN);
             }
         } finally {
