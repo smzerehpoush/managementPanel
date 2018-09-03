@@ -1,6 +1,6 @@
 package com.nrdc.managementPanel.jsonModel.jsonResponse;
 
-import com.nrdc.managementPanel.model.User;
+import com.nrdc.managementPanel.model.dto.User;
 
 public class ResponseLogin {
     private User user;

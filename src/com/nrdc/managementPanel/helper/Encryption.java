@@ -3,7 +3,7 @@ package com.nrdc.managementPanel.helper;
 
 import com.nrdc.managementPanel.jsonModel.EncryptedRequest;
 import com.nrdc.managementPanel.jsonModel.EncryptedResponse;
-import com.nrdc.managementPanel.model.User;
+import com.nrdc.managementPanel.model.dto.User;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 

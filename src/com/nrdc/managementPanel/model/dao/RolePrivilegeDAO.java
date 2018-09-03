@@ -1,28 +1,15 @@
-package com.nrdc.managementPanel.model;
+package com.nrdc.managementPanel.model.dao;
 
 import com.nrdc.managementPanel.helper.Constants;
 
 import javax.persistence.*;
 
-@Entity
-@Table(name = "ROLE_PRIVILEGE", schema = Constants.SCHEMA)
-public class RolePrivilege {
+public class RolePrivilegeDAO extends BaseModel {
     private Long id;
     private Long fkRoleId;
     private Long fkPrivilegeId;
 
-    public RolePrivilege() {
-    }
 
-    public RolePrivilege(Long id, Long fkRoleId, Long fkPrivilegeId) {
-        this.id = id;
-        this.fkRoleId = fkRoleId;
-        this.fkPrivilegeId = fkPrivilegeId;
-    }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID_ROLE_PRIVILEGE")
     public Long getId() {
         return id;
     }
@@ -31,8 +18,6 @@ public class RolePrivilege {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "FK_ROLE_ID")
     public Long getFkRoleId() {
         return fkRoleId;
     }
@@ -41,13 +26,21 @@ public class RolePrivilege {
         this.fkRoleId = fkRoleId;
     }
 
-    @Basic
-    @Column(name = "FK_PRIVILEGE_ID")
     public Long getFkPrivilegeId() {
         return fkPrivilegeId;
     }
 
     public void setFkPrivilegeId(Long fkPrivilegeId) {
         this.fkPrivilegeId = fkPrivilegeId;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("RolePrivilegeDAO{");
+        sb.append("id=").append(id);
+        sb.append(", fkRoleId=").append(fkRoleId);
+        sb.append(", fkPrivilegeId=").append(fkPrivilegeId);
+        sb.append('}');
+        return sb.toString();
     }
 }

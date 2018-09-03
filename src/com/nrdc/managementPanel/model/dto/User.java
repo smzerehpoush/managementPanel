@@ -1,44 +1,33 @@
-package com.nrdc.managementPanel.model;
+package com.nrdc.managementPanel.model.dto;
 
 import com.nrdc.managementPanel.helper.Constants;
 import com.nrdc.managementPanel.helper.PrivilegeNames;
 import com.nrdc.managementPanel.helper.SystemNames;
 import com.nrdc.managementPanel.impl.Database;
 import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestAddUser;
+import com.nrdc.managementPanel.model.dao.UserDAO;
 import org.apache.log4j.Logger;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "PH_USER", schema = Constants.SCHEMA)
-
-public class User extends BaseModel {
+public class User extends UserDAO {
     private static Logger logger = Logger.getLogger(User.class.getName());
-
-    private Long id;
-    private String password;
-    private String username;
-    private Boolean isActive;
-    private String phoneNumber;
-    private String firstName;
-    private String lastName;
-    private String nationalId;
-    private String policeCode;
 
     public User() {
     }
 
     public User(RequestAddUser requestAddUser) {
-        this.password = requestAddUser.getPassword();
-        this.username = requestAddUser.getUsername();
-        this.isActive = true;
-        this.phoneNumber = requestAddUser.getPhoneNumber();
-        this.firstName = requestAddUser.getFirstName();
-        this.lastName = requestAddUser.getLastName();
-        this.nationalId = requestAddUser.getNationalId();
-        this.policeCode = requestAddUser.getPoliceCode();
+        this.setPassword(requestAddUser.getPassword());
+        this.setUsername(requestAddUser.getUsername());
+        this.setIsActive(true);
+        this.setPhoneNumber(requestAddUser.getPhoneNumber());
+        this.setFirstName(requestAddUser.getFirstName());
+        this.setLastName(requestAddUser.getLastName());
+        this.setNationalId(requestAddUser.getNationalId());
+        this.setPoliceCode(requestAddUser.getPoliceCode());
     }
-
 
     public static User getUser(Long fkUserId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
@@ -227,12 +216,76 @@ public class User extends BaseModel {
         }
     }
 
+    @Override
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ID_PH_USER")
+    public Long getId() {
+        return super.getId();
+    }
+
+    @Override
+    @Basic
+    @Column(name = "PASSWORD")
+    public String getPassword() {
+        return super.getPassword();
+    }
+
+    @Override
+    @Basic
+    @Column(name = "USERNAME")
+    public String getUsername() {
+        return super.getUsername();
+    }
+
+    @Override
+    @Basic
+    @Column(name = "IS_ACTIVE")
+    public Boolean getIsActive() {
+        return super.getIsActive();
+    }
+
+    @Override
+    @Basic
+    @Column(name = "PHONE_NUMBER")
+    public String getPhoneNumber() {
+        return super.getPhoneNumber();
+    }
+
+    @Override
+    @Basic
+    @Column(name = "FIRST_NAME")
+    public String getFirstName() {
+        return super.getFirstName();
+    }
+
+    @Override
+    @Basic
+    @Column(name = "LAST_NAME")
+    public String getLastName() {
+        return super.getLastName();
+    }
+
+    @Override
+    @Basic
+    @Column(name = "NATIONAL_ID")
+    public String getNationalId() {
+        return super.getNationalId();
+    }
+
+    @Override
+    @Basic
+    @Column(name = "POLICE_CODE")
+    public String getPoliceCode() {
+        return super.getPoliceCode();
+    }
+
     public void checkKey(String systemName) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
             int size = entityManager.createQuery("SELECT  k FROM Key k WHERE k.fkUserId = :fkUserId AND k.fkSystemId = (SELECT s.id FROM System s WHERE s.systemName = :systemName)")
                     .setParameter("systemName", systemName)
-                    .setParameter("fkUserId", this.id)
+                    .setParameter("fkUserId", super.getId())
                     .getResultList()
                     .size();
             if (size != 0)
@@ -257,7 +310,7 @@ public class User extends BaseModel {
 
             int size = entityManager.createQuery("SELECT  t FROM Token t WHERE t.fkUserId = :fkUserId AND t.fkSystemId = (SELECT s.id FROM System s WHERE s.systemName = :systemName)")
                     .setParameter("systemName", systemName)
-                    .setParameter("fkUserId", this.id)
+                    .setParameter("fkUserId", super.getId())
                     .getResultList()
                     .size();
             if (size != 0)
@@ -276,117 +329,11 @@ public class User extends BaseModel {
         checkToken(system.name());
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID_PH_USER")
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long pkUserId) {
-        this.id = pkUserId;
-    }
-
-    @Basic
-    @Column(name = "PASSWORD")
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    @Basic
-    @Column(name = "USERNAME")
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    @Basic
-    @Column(name = "IS_ACTIVE")
-    public Boolean getIsActive() {
-        return isActive;
-    }
-
-    public void setIsActive(Boolean isActive) {
-        this.isActive = isActive;
-    }
-
-    @Basic
-    @Column(name = "PHONE_NUMBER")
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    @Basic
-    @Column(name = "FIRST_NAME")
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    @Basic
-    @Column(name = "LAST_NAME")
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    @Basic
-    @Column(name = "NATIONAL_ID")
-    public String getNationalId() {
-        return nationalId;
-    }
-
-    public void setNationalId(String nationalId) {
-        this.nationalId = nationalId;
-    }
-
-    @Basic
-    @Column(name = "POLICE_CODE")
-    public String getPoliceCode() {
-        return policeCode;
-    }
-
-    public void setPoliceCode(String policeCode) {
-        this.policeCode = policeCode;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", password='" + password + '\'' +
-                ", username='" + username + '\'' +
-                ", isActive=" + isActive +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", nationalId='" + nationalId + '\'' +
-                ", policeCode='" + policeCode + '\'' +
-                '}';
-    }
-
     public void checkSystemAccess(Long fkSystemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
             boolean hasAccess = entityManager.createQuery("SELECT u FROM SystemUser u WHERE u.fkUserId = :userId  AND u.fkSystemId = :systemId")
-                    .setParameter("userId", this.id)
+                    .setParameter("userId", super.getId())
                     .setParameter("systemId", fkSystemId)
                     .getResultList()
                     .size() == 1;
@@ -404,7 +351,7 @@ public class User extends BaseModel {
     }
 
     public boolean checkPrivilege(String privilege) throws Exception {
-        return checkPrivilege(privilege, this.id);
+        return checkPrivilege(privilege, super.getId());
     }
 
 
