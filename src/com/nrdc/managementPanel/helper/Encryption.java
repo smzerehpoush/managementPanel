@@ -66,11 +66,6 @@ public class Encryption {
         return decrypted;
     }
 
-    public static String decryptRequest(String data, String key) throws Exception {
-        String decrypted = decryptOrNull(key, data);
-        logger.debug(decrypted);
-        return decrypted;
-    }
 
     public static String decryptPassword(String key, String data) throws Exception {
         return decryptOrNull(key, data);
