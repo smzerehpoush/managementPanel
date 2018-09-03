@@ -1,12 +1,5 @@
 package com.nrdc.managementPanel.model.dao;
 
-import com.nrdc.managementPanel.helper.Constants;
-
-import javax.persistence.*;
-
-@Entity
-@Table(name = "PH_USER", schema = Constants.SCHEMA)
-
 public class UserDAO extends BaseModel {
 
     private Long id;
@@ -19,9 +12,6 @@ public class UserDAO extends BaseModel {
     private String nationalId;
     private String policeCode;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID_PH_USER")
     public Long getId() {
         return id;
     }
@@ -30,8 +20,6 @@ public class UserDAO extends BaseModel {
         this.id = pkUserId;
     }
 
-    @Basic
-    @Column(name = "PASSWORD")
     public String getPassword() {
         return password;
     }
@@ -40,8 +28,6 @@ public class UserDAO extends BaseModel {
         this.password = password;
     }
 
-    @Basic
-    @Column(name = "USERNAME")
     public String getUsername() {
         return username;
     }
@@ -50,8 +36,6 @@ public class UserDAO extends BaseModel {
         this.username = username;
     }
 
-    @Basic
-    @Column(name = "IS_ACTIVE")
     public Boolean getIsActive() {
         return isActive;
     }
@@ -60,8 +44,6 @@ public class UserDAO extends BaseModel {
         this.isActive = isActive;
     }
 
-    @Basic
-    @Column(name = "PHONE_NUMBER")
     public String getPhoneNumber() {
         return phoneNumber;
     }
@@ -70,8 +52,6 @@ public class UserDAO extends BaseModel {
         this.phoneNumber = phoneNumber;
     }
 
-    @Basic
-    @Column(name = "FIRST_NAME")
     public String getFirstName() {
         return firstName;
     }
@@ -80,8 +60,6 @@ public class UserDAO extends BaseModel {
         this.firstName = firstName;
     }
 
-    @Basic
-    @Column(name = "LAST_NAME")
     public String getLastName() {
         return lastName;
     }
@@ -90,8 +68,6 @@ public class UserDAO extends BaseModel {
         this.lastName = lastName;
     }
 
-    @Basic
-    @Column(name = "NATIONAL_ID")
     public String getNationalId() {
         return nationalId;
     }
@@ -100,8 +76,6 @@ public class UserDAO extends BaseModel {
         this.nationalId = nationalId;
     }
 
-    @Basic
-    @Column(name = "POLICE_CODE")
     public String getPoliceCode() {
         return policeCode;
     }

@@ -1,7 +1,12 @@
 package com.nrdc.managementPanel.model.dto;
 
+import com.nrdc.managementPanel.helper.Constants;
 import com.nrdc.managementPanel.model.dao.RolePrivilegeDAO;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "ROLE_PRIVILEGE", schema = Constants.SCHEMA)
 public class RolePrivilege extends RolePrivilegeDAO {
 
     public RolePrivilege() {
@@ -11,5 +16,27 @@ public class RolePrivilege extends RolePrivilegeDAO {
         this.setId(id);
         this.setFkRoleId(fkRoleId);
         this.setFkPrivilegeId(fkPrivilegeId);
+    }
+
+    @Override
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ID_ROLE_PRIVILEGE")
+    public Long getId() {
+        return super.getId();
+    }
+
+    @Override
+    @Basic
+    @Column(name = "FK_ROLE_ID")
+    public Long getFkRoleId() {
+        return super.getFkRoleId();
+    }
+
+    @Override
+    @Basic
+    @Column(name = "FK_PRIVILEGE_ID")
+    public Long getFkPrivilegeId() {
+        return super.getFkPrivilegeId();
     }
 }

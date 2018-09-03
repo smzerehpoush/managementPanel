@@ -5,8 +5,10 @@ import com.nrdc.managementPanel.helper.PrivilegeNames;
 import com.nrdc.managementPanel.impl.Database;
 import com.nrdc.managementPanel.model.dao.PrivilegeDAO;
 
-import javax.persistence.EntityManager;
+import javax.persistence.*;
 
+@Entity
+@Table(name = "PRIVILEGE", schema = Constants.SCHEMA)
 public class Privilege extends PrivilegeDAO {
     public Privilege() {
     }
@@ -14,6 +16,21 @@ public class Privilege extends PrivilegeDAO {
     public Privilege(Long id, String privilegeText) {
         this.setId(id);
         this.setPrivilegeText(privilegeText);
+    }
+
+    @Override
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ID_PRIVILEGE")
+    public Long getId() {
+        return super.getId();
+    }
+
+    @Override
+    @Basic
+    @Column(name = "PRIVILEGE_TEXT")
+    public String getPrivilegeText() {
+        return super.getPrivilegeText();
     }
 
     public static Privilege getPrivilege(String privilege) throws Exception {

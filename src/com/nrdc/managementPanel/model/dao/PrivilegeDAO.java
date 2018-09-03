@@ -4,15 +4,10 @@ import com.nrdc.managementPanel.helper.Constants;
 
 import javax.persistence.*;
 
-@Entity
-@Table(name = "PRIVILEGE", schema = Constants.SCHEMA)
 public class PrivilegeDAO extends BaseModel {
     private Long id;
     private String privilegeText;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID_PRIVILEGE")
     public Long getId() {
         return id;
     }
@@ -21,8 +16,6 @@ public class PrivilegeDAO extends BaseModel {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "PRIVILEGE_TEXT")
     public String getPrivilegeText() {
         return privilegeText;
     }

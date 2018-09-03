@@ -5,8 +5,6 @@ import com.nrdc.managementPanel.helper.Constants;
 import javax.persistence.*;
 import java.util.Date;
 
-@Entity
-@Table(name = "OPERATION", schema = Constants.SCHEMA)
 public class OperationDAO extends BaseModel {
     private Long id;
     private Long fkUserId;
@@ -17,9 +15,6 @@ public class OperationDAO extends BaseModel {
     private String userToken;
 
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID_OPERATION")
     public Long getId() {
         return id;
     }
@@ -28,8 +23,6 @@ public class OperationDAO extends BaseModel {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "FK_USER_ID")
     public Long getFkUserId() {
         return fkUserId;
     }
@@ -38,8 +31,6 @@ public class OperationDAO extends BaseModel {
         this.fkUserId = fkUserId;
     }
 
-    @Basic
-    @Column(name = "FK_PRIVILEGE_ID")
     public Long getFkPrivilegeId() {
         return fkPrivilegeId;
     }
@@ -48,9 +39,6 @@ public class OperationDAO extends BaseModel {
         this.fkPrivilegeId = fkPrivilegeId;
     }
 
-    @Basic
-    @Temporal(TemporalType.DATE)
-    @Column(name = "TIME")
     public Date getTime() {
         return time;
     }
@@ -59,8 +47,6 @@ public class OperationDAO extends BaseModel {
         this.time = time;
     }
 
-    @Basic
-    @Column(name = "DESCRIPTION")
     public String getDescription() {
         return description;
     }
@@ -69,8 +55,6 @@ public class OperationDAO extends BaseModel {
         this.description = description;
     }
 
-    @Basic
-    @Column(name = "STATUS_CODE")
     public Long getStatusCode() {
         return statusCode;
     }
@@ -79,8 +63,6 @@ public class OperationDAO extends BaseModel {
         this.statusCode = statusCode;
     }
 
-    @Basic
-    @Column(name = "USER_TOKEN")
     public String getUserToken() {
         return userToken;
     }

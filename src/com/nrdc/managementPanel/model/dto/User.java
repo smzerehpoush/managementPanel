@@ -8,11 +8,10 @@ import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestAddUser;
 import com.nrdc.managementPanel.model.dao.UserDAO;
 import org.apache.log4j.Logger;
 
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.NonUniqueResultException;
-import javax.persistence.Query;
+import javax.persistence.*;
 
+@Entity
+@Table(name = "PH_USER", schema = Constants.SCHEMA)
 public class User extends UserDAO {
     private static Logger logger = Logger.getLogger(User.class.getName());
 
@@ -29,7 +28,6 @@ public class User extends UserDAO {
         this.setNationalId(requestAddUser.getNationalId());
         this.setPoliceCode(requestAddUser.getPoliceCode());
     }
-
 
     public static User getUser(Long fkUserId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
@@ -216,6 +214,70 @@ public class User extends UserDAO {
             if (entityManager != null && entityManager.isOpen())
                 entityManager.close();
         }
+    }
+
+    @Override
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ID_PH_USER")
+    public Long getId() {
+        return super.getId();
+    }
+
+    @Override
+    @Basic
+    @Column(name = "PASSWORD")
+    public String getPassword() {
+        return super.getPassword();
+    }
+
+    @Override
+    @Basic
+    @Column(name = "USERNAME")
+    public String getUsername() {
+        return super.getUsername();
+    }
+
+    @Override
+    @Basic
+    @Column(name = "IS_ACTIVE")
+    public Boolean getIsActive() {
+        return super.getIsActive();
+    }
+
+    @Override
+    @Basic
+    @Column(name = "PHONE_NUMBER")
+    public String getPhoneNumber() {
+        return super.getPhoneNumber();
+    }
+
+    @Override
+    @Basic
+    @Column(name = "FIRST_NAME")
+    public String getFirstName() {
+        return super.getFirstName();
+    }
+
+    @Override
+    @Basic
+    @Column(name = "LAST_NAME")
+    public String getLastName() {
+        return super.getLastName();
+    }
+
+    @Override
+    @Basic
+    @Column(name = "NATIONAL_ID")
+    public String getNationalId() {
+        return super.getNationalId();
+    }
+
+    @Override
+    @Basic
+    @Column(name = "POLICE_CODE")
+    public String getPoliceCode() {
+        return super.getPoliceCode();
     }
 
     public void checkKey(String systemName) throws Exception {

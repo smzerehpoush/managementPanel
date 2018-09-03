@@ -1,22 +1,11 @@
 package com.nrdc.managementPanel.model.dao;
 
-import com.nrdc.managementPanel.helper.Constants;
-import com.sun.istack.internal.NotNull;
-
-import javax.persistence.*;
-
-@Entity
-@Table(name = "TOKEN", schema = Constants.SCHEMA)
 public class TokenDAO extends BaseModel {
     private Long id;
     private Long fkUserId;
     private String token;
     private Long fkSystemId;
 
-    @NotNull
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID_TOKEN")
     public Long getId() {
         return id;
     }
@@ -25,8 +14,6 @@ public class TokenDAO extends BaseModel {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "FK_USER_ID")
     public Long getFkUserId() {
         return fkUserId;
     }
@@ -35,8 +22,6 @@ public class TokenDAO extends BaseModel {
         this.fkUserId = fkUserId;
     }
 
-    @Basic
-    @Column(name = "TOKEN")
     public String getToken() {
         return token;
     }
@@ -45,8 +30,6 @@ public class TokenDAO extends BaseModel {
         this.token = token;
     }
 
-    @Basic
-    @Column(name = "FK_SYSTEM_ID")
     public Long getFkSystemId() {
         return fkSystemId;
     }

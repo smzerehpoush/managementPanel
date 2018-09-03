@@ -5,8 +5,6 @@ import com.sun.istack.internal.NotNull;
 
 import javax.persistence.*;
 
-@Entity
-@Table(name = "SYSTEM", schema = Constants.SCHEMA)
 public class SystemDAO extends BaseModel {
     private Long id;
     private String systemName;
@@ -19,10 +17,6 @@ public class SystemDAO extends BaseModel {
     private String type;
 
 
-    @NotNull
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID_SYSTEM")
     public Long getId() {
         return id;
     }
@@ -31,8 +25,6 @@ public class SystemDAO extends BaseModel {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "SYSTEM_NAME", unique = true, table = "SYSTEM")
     public String getSystemName() {
         return systemName;
     }
@@ -41,8 +33,6 @@ public class SystemDAO extends BaseModel {
         this.systemName = systemName;
     }
 
-    @Basic
-    @Column(name = "SYSTEM_PATH", unique = true, table = "SYSTEM")
     public String getSystemPath() {
         return systemPath;
     }
@@ -51,8 +41,6 @@ public class SystemDAO extends BaseModel {
         this.systemPath = systemPath;
     }
 
-    @Basic
-    @Column(name = "PACKAGE_NAME", unique = true, table = "SYSTEM")
     public String getPackageName() {
         return packageName;
     }
@@ -61,8 +49,6 @@ public class SystemDAO extends BaseModel {
         this.packageName = packageName;
     }
 
-    @Basic
-    @Column(name = "ICON_PATH", unique = true, table = "SYSTEM")
     public String getIconPath() {
         return iconPath;
     }
@@ -71,8 +57,6 @@ public class SystemDAO extends BaseModel {
         this.iconPath = iconPath;
     }
 
-    @Basic
-    @Column(name = "DOWNLOAD_COUNT", unique = true, table = "SYSTEM")
     public Long getDownloadCount() {
         return downloadCount;
     }
@@ -81,8 +65,6 @@ public class SystemDAO extends BaseModel {
         this.downloadCount = downloadCount;
     }
 
-    @Basic
-    @Column(name = "DESCRIPTION", unique = true, table = "SYSTEM")
     public String getDescription() {
         return description;
     }
@@ -91,8 +73,6 @@ public class SystemDAO extends BaseModel {
         this.description = description;
     }
 
-    @Basic
-    @Column(name = "TITLE", unique = true, table = "SYSTEM")
     public String getTitle() {
         return title;
     }
@@ -101,8 +81,6 @@ public class SystemDAO extends BaseModel {
         this.title = title;
     }
 
-    @Basic
-    @Column(name = "TYPE", unique = true, table = "SYSTEM")
     public String getType() {
         return type;
     }
