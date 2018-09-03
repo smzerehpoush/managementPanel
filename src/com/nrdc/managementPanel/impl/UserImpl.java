@@ -86,8 +86,8 @@ public class UserImpl {
         String password = requestResetPassword.getNewPassword();
         if (password.length() < 8)
             return false;
-        if (!password.matches("[[a-z][0-9]]"))
-            return false;
+//        if (!password.matches("[[a-z][0-9]]"))
+//            return false;
         return true;
     }
 
@@ -118,8 +118,23 @@ public class UserImpl {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             Token.validateToken(token, SystemNames.MANAGEMENT_PANEL);
-            User user = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
-            user.checkPrivilege(PrivilegeNames.ACTIVATE_USER);
+            User user1 = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
+            System system = System.getSystem(request.getFkSystemId());
+            String privilegeName = "ACTIVE_" + system.getSystemName() + "_USERS";
+            user1.checkPrivilege(privilegeName);
+            User user2 = User.getUser(request.getFkUserId());
+            List<System> user2Systems = getUserSystems(user2);
+            if (!user2Systems.contains(system)) {
+                throw new Exception(Constants.USER_SYSTEM_ERROR);
+            }
+            try {
+                boolean b = user2.checkPrivilege(privilegeName);
+                if (b)
+                    throw new Exception(Constants.CANT_NOT_ACTIVE_THIS_USER);
+            } catch (Exception ex) {
+                if (ex.getMessage().equals(Constants.CANT_NOT_ACTIVE_THIS_USER))
+                    throw ex;
+            }
             if (transaction != null && !transaction.isActive())
                 transaction.begin();
             entityManager.createQuery("UPDATE User u SET u.isActive = true WHERE u.id = :fkUserId")
@@ -150,8 +165,23 @@ public class UserImpl {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             Token.validateToken(token, SystemNames.MANAGEMENT_PANEL);
-            User user = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
-            user.checkPrivilege(PrivilegeNames.ACTIVATE_USER);
+            User user1 = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
+            System system = System.getSystem(request.getFkSystemId());
+            String privilegeName = "DEACTIVE_" + system.getSystemName() + "_USERS";
+            user1.checkPrivilege(privilegeName);
+            User user2 = User.getUser(request.getFkUserId());
+            List<System> user2Systems = getUserSystems(user2);
+            if (!user2Systems.contains(system)) {
+                throw new Exception(Constants.USER_SYSTEM_ERROR);
+            }
+            try {
+                boolean b = user2.checkPrivilege(privilegeName);
+                if (b)
+                    throw new Exception(Constants.CANT_NOT_DEACTIVE_THIS_USER);
+            } catch (Exception ex) {
+                if (ex.getMessage().equals(Constants.CANT_NOT_DEACTIVE_THIS_USER))
+                    throw ex;
+            }
             if (transaction != null && !transaction.isActive())
                 transaction.begin();
             entityManager.createQuery("UPDATE User u SET u.isActive = false WHERE u.id = :fkUserId")
@@ -168,6 +198,8 @@ public class UserImpl {
         } catch (Exception ex) {
             if (transaction != null && transaction.isActive())
                 transaction.rollback();
+            if (entityManager.isOpen())
+                entityManager.close();
             return StandardResponse.getNOKExceptions(ex);
         } finally {
             if (entityManager.isOpen())
