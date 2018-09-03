@@ -60,6 +60,12 @@ public class Encryption {
         return decrypted;
     }
 
+    public static String decryptResponse(EncryptedResponse response, String key) throws Exception {
+        String decrypted = decryptOrNull(key, response.getData());
+        logger.debug(decrypted);
+        return decrypted;
+    }
+
     public static String decryptRequest(String data, String key) throws Exception {
         String decrypted = decryptOrNull(key, data);
         logger.debug(decrypted);
