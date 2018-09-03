@@ -22,7 +22,7 @@ public class RequestDeActiveUser {
 
     @Override
     public String toString() {
-        return "RequestActiveUser{" +
+        return "RequestDeActiveUser{" +
                 "fkUserId=" + fkUserId +
                 ", fkSystemId=" + fkSystemId +
                 '}';

@@ -1,6 +1,6 @@
 package com.nrdc.managementPanel.jsonModel.jsonRequest;
 
-public class RequestDeActiveUser {
+public class RequestActiveUser {
     private Long fkUserId;
     private Long fkSystemId;
 
