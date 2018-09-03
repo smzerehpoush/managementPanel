@@ -2,6 +2,8 @@ package com.nrdc.managementPanel.test;
 
 import com.nrdc.managementPanel.helper.Encryption;
 import com.nrdc.managementPanel.jsonModel.EncryptedRequest;
+import com.nrdc.managementPanel.jsonModel.EncryptedResponse;
+import com.nrdc.managementPanel.jsonModel.StandardResponse;
 import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestActiveUser;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -38,9 +40,16 @@ public class TestWebServices {
             stringBuilder.append("Test Activate User Service");
             RequestActiveUser requestActiveUser = new RequestActiveUser();
             requestActiveUser.setFkUserId(1L);
-            String response = sendPostRequest(baseUrl + "/user/activate", requestActiveUser, "key", "token");
+            StandardResponse response = sendPostRequest(baseUrl + "/user/activate", requestActiveUser, "key", "token");
             logger.info(response);
-            stringBuilder.append(response);
+            if (response.getResultCode() == 1) {
+                stringBuilder.append(": Passed ");
+            } else {
+                stringBuilder.append(": failed With reason :{")
+                        .append(response.getResultMessage())
+                        .append("}");
+            }
+
             return stringBuilder.toString();
         } catch (Exception ex) {
             return null;
@@ -48,7 +57,7 @@ public class TestWebServices {
 
     }
 
-    private String sendPostRequest(String path, Object request, String key, String token) {
+    private StandardResponse sendPostRequest(String path, Object request, String key, String token) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             EncryptedRequest encryptedRequest = new EncryptedRequest();
@@ -73,8 +82,9 @@ public class TestWebServices {
             while ((c = bufferedReader.read()) != -1)
                 output.append((char) c);
             String result = output.toString();
-
-            return Encryption.decryptRequest(result, key);
+            EncryptedResponse response = objectMapper.readValue(result, EncryptedResponse.class);
+            StandardResponse standardResponse = objectMapper.readValue(Encryption.decryptResponse(response, key), StandardResponse.class);
+            return standardResponse;
 
         } catch (Exception ex) {
             return null;
