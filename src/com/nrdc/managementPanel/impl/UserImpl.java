@@ -155,8 +155,7 @@ public class UserImpl {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
-            Token.validateToken(token, SystemNames.MANAGEMENT_PANEL);
-            User user1 = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
+            User user1 = User.validate(token, SystemNames.MANAGEMENT_PANEL);
             System system = System.getSystem(request.getFkSystemId());
             String privilegeName = "DEACTIVATE_" + system.getSystemName() + "_USERS";
             user1.checkPrivilege(privilegeName);
