@@ -21,7 +21,7 @@ public class UserServices {
 
     @Path("/activate")
     @POST
-    @Produces(MediaType.APPLICATION_JSON + "; charset=UTF-8")
+    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response activeUser(EncryptedRequest encryptedRequest) {
         logger.info("++================== activeUser SERVICE : START ==================++");
@@ -42,7 +42,7 @@ public class UserServices {
 
     @Path("/deActivate")
     @POST
-    @Produces(MediaType.APPLICATION_JSON + "; charset=UTF-8")
+    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response deActiveUser(EncryptedRequest encryptedRequest) {
         logger.info("++================== deActiveUser SERVICE : START ==================++");
