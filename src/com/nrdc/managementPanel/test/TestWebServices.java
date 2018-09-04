@@ -85,7 +85,8 @@ public class TestWebServices {
 
     }
 
-    private StandardResponse sendPostRequest(String path, Object request, String key, String token) {
+
+    private StandardResponse sendRequest(String path, String method, Object request, String key, String token) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             EncryptedRequest encryptedRequest = new EncryptedRequest();
@@ -95,23 +96,25 @@ public class TestWebServices {
             URL url = new URL(path);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
-            connection.setRequestMethod("POST");
+            connection.setRequestMethod(method);
             connection.setRequestProperty("Content-Type", "application/json");
             String input = new ObjectMapper().writeValueAsString(encryptedRequest);
-            OutputStream outputStream = connection.getOutputStream();
-            outputStream.write(input.getBytes());
-            outputStream.flush();
+            OutputStreamWriter wr = new OutputStreamWriter(connection.getOutputStream(), "UTF-8");
+            wr.write(input);
+            wr.flush();
+            wr.close();
             if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                throw new Exception("Error in Calling rest service");
+                throw new Exception("Error Code : " + connection.getResponseCode());
             }
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
             StringBuilder output = new StringBuilder();
             int c;
             while ((c = bufferedReader.read()) != -1)
                 output.append((char) c);
             String result = output.toString();
-            EncryptedResponse response = objectMapper.readValue(result, EncryptedResponse.class);
-            StandardResponse standardResponse = objectMapper.readValue(Encryption.decryptResponse(response, key), StandardResponse.class);
+            bufferedReader.close();
+            String encryptedData =result.substring(result.indexOf(":\"")+2,result.indexOf("\"}",result.indexOf(":\"")));
+            StandardResponse standardResponse = objectMapper.readValue(Encryption.decryptOrNull(key,encryptedData), StandardResponse.class);
             return standardResponse;
 
         } catch (Exception ex) {
