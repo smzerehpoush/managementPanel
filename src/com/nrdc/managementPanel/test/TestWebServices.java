@@ -132,8 +132,8 @@ public class TestWebServices {
                 output.append((char) c);
             String result = output.toString();
             bufferedReader.close();
-            String encryptedData =result.substring(result.indexOf(":\"")+2,result.indexOf("\"}",result.indexOf(":\"")));
-            StandardResponse standardResponse = objectMapper.readValue(Encryption.decryptOrNull(key,encryptedData), StandardResponse.class);
+            String encryptedData = objectMapper.readValue(result, EncryptedResponse.class).getData();
+            StandardResponse standardResponse = objectMapper.readValue(Encryption.decryptOrNull(key, encryptedData), StandardResponse.class);
             return standardResponse;
 
         } catch (Exception ex) {
