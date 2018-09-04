@@ -23,7 +23,7 @@ public class UserImpl {
         Operation operation = new Operation();
         Privilege privilege = Privilege.getPrivilege(PrivilegeNames.RESET_PASSWORD);
         operation.setFkPrivilegeId(privilege.getId());
-        User user = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
+        User user = User.validate(token, SystemNames.MANAGEMENT_PANEL);
         operation.setUserToken(token);
         operation.setFkUserId(user.getId());
         operation.setTime(new Date());
@@ -119,7 +119,7 @@ public class UserImpl {
         try {
             User user1 = User.validate(token, SystemNames.MANAGEMENT_PANEL);
             System system = System.getSystem(request.getFkSystemId());
-            String privilegeName = "ACTIVE_" + system.getSystemName() + "_USERS";
+            String privilegeName = "ACTIVATE_" + system.getSystemName() + "_USERS";
             user1.checkPrivilege(privilegeName);
             User user2 = User.getUser(request.getFkUserId());
             List<System> user2Systems = getUserSystems(user2);
