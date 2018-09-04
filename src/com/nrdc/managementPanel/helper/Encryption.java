@@ -379,9 +379,11 @@ public class Encryption {
 
     @Test
     public void testFarsiWords() throws NoSuchAlgorithmException {
-        String s = "{\"data\" : \"سلام\"}";
-        assert s.equals(decryptOrNull("k", encryptOrNull("k", s)));
-
+//        String s = "{\"data\" : \"سلام\"}";
+//        assert s.equals(decryptOrNull("k", encryptOrNull("k", s)));
+//        String d= encryptOrNull("key","سلام");
+//        System.out.println(decryptOrNull("key","zde0W/z2mrmRjzemhBJifA=="));
+        System.out.println(decryptOrNull("key",encryptOrNull("key","سلام")));
     }
 
 }
