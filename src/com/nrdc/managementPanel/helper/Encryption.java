@@ -42,6 +42,18 @@ public class Encryption {
         return encryptionBuilder.build();
     }
 
+    public static String encryptOrNull(String key, String data) throws NoSuchAlgorithmException {
+        encryption = getEncryption(key);
+        assert encryption != null;
+        return encryption.encryptOrNull(data).replace("\n", "");
+    }
+
+    public static String decryptOrNull(String key, String data) throws NoSuchAlgorithmException {
+        encryption = getEncryption(key);
+        assert encryption != null;
+        return encryption.decryptOrNull(data);
+    }
+
     private static String correctUTF8String(String oldData) {
         StringBuilder stringBuilder = new StringBuilder();
         for (char c : oldData.toCharArray()) {
