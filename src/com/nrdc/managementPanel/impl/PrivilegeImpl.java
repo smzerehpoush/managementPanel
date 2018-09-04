@@ -5,7 +5,6 @@ import com.nrdc.managementPanel.helper.SystemNames;
 import com.nrdc.managementPanel.jsonModel.StandardResponse;
 import com.nrdc.managementPanel.jsonModel.jsonResponse.ResponseGetPrivileges;
 import com.nrdc.managementPanel.model.dto.Privilege;
-import com.nrdc.managementPanel.model.dto.Token;
 import com.nrdc.managementPanel.model.dto.User;
 
 import javax.persistence.EntityManager;

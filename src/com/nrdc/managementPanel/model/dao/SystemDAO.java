@@ -1,9 +1,5 @@
 package com.nrdc.managementPanel.model.dao;
 
-import com.nrdc.managementPanel.helper.Constants;
-import com.sun.istack.internal.NotNull;
-
-import javax.persistence.*;
 import java.util.Objects;
 
 public class SystemDAO extends BaseModel {

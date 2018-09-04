@@ -381,7 +381,7 @@ public class Encryption {
         encryption = getEncryption(key);
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            String strEncrypted = encryptOrNull(key,objectMapper.writeValueAsString(response));
+            String strEncrypted = encryptOrNull(key, objectMapper.writeValueAsString(response));
             encryptedResponse.setData(strEncrypted);
             return encryptedResponse;
         } catch (IOException e) {
@@ -395,7 +395,7 @@ public class Encryption {
 //        assert s.equals(decryptOrNull("k", encryptOrNull("k", s)));
 //        String d= encryptOrNull("key","سلام");
 //        System.out.println(decryptOrNull("key","zde0W/z2mrmRjzemhBJifA=="));
-        System.out.println(decryptOrNull("key",encryptOrNull("key","سلام")));
+        System.out.println(decryptOrNull("key", encryptOrNull("key", "سلام")));
     }
 
 }

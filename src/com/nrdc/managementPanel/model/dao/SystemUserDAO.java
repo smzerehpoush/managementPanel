@@ -1,9 +1,5 @@
 package com.nrdc.managementPanel.model.dao;
 
-import com.nrdc.managementPanel.helper.Constants;
-
-import javax.persistence.*;
-
 public class SystemUserDAO extends BaseModel {
     private Long id;
     private Long fkUserId;

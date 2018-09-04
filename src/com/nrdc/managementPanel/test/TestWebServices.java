@@ -37,7 +37,7 @@ public class TestWebServices {
 
     @Path("/2")
     @GET
-    @Produces(MediaType.TEXT_PLAIN )
+    @Produces(MediaType.TEXT_PLAIN)
     public String test2() throws NoSuchAlgorithmException {
 
         return Encryption.encryptOrNull("key", "سلام");
@@ -50,6 +50,7 @@ public class TestWebServices {
 
         return Encryption.decryptOrNull("key", Encryption.encryptOrNull("key", "سلام"));
     }
+
     @Path("/4")
     @GET
     @Produces(MediaType.TEXT_PLAIN + "; charset=UTF-8")

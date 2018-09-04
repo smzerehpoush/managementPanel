@@ -18,21 +18,6 @@ public class Privilege extends PrivilegeDAO {
         this.setPrivilegeText(privilegeText);
     }
 
-    @Override
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID_PRIVILEGE")
-    public Long getId() {
-        return super.getId();
-    }
-
-    @Override
-    @Basic
-    @Column(name = "PRIVILEGE_TEXT")
-    public String getPrivilegeText() {
-        return super.getPrivilegeText();
-    }
-
     public static Privilege getPrivilege(String privilege) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
@@ -49,6 +34,21 @@ public class Privilege extends PrivilegeDAO {
 
     public static Privilege getPrivilege(PrivilegeNames privilegeName) throws Exception {
         return getPrivilege(privilegeName.name());
+    }
+
+    @Override
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ID_PRIVILEGE")
+    public Long getId() {
+        return super.getId();
+    }
+
+    @Override
+    @Basic
+    @Column(name = "PRIVILEGE_TEXT")
+    public String getPrivilegeText() {
+        return super.getPrivilegeText();
     }
 
 

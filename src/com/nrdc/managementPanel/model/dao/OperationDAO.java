@@ -1,8 +1,5 @@
 package com.nrdc.managementPanel.model.dao;
 
-import com.nrdc.managementPanel.helper.Constants;
-
-import javax.persistence.*;
 import java.util.Date;
 
 public class OperationDAO extends BaseModel {
