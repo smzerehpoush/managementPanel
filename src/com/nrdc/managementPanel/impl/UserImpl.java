@@ -160,6 +160,9 @@ public class UserImpl {
             String privilegeName = "DEACTIVATE_" + system.getSystemName() + "_USERS";
             user1.checkPrivilege(privilegeName);
             User user2 = User.getUser(request.getFkUserId());
+            if (user1.equals(user2)){
+                throw new Exception(Constants.CANT_DEACTIVE_YOURSELF);
+            }
             List<System> user2Systems = getUserSystems(user2);
             if (!user2Systems.contains(system)) {
                 throw new Exception(Constants.USER_SYSTEM_ERROR);
