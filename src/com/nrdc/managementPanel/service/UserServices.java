@@ -42,7 +42,7 @@ public class UserServices {
 
     @Path("/deActivate")
     @DELETE
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON + "; charset=UTF-8")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response deActiveUser(EncryptedRequest encryptedRequest) {
         logger.info("++================== deActiveUser SERVICE : START ==================++");
