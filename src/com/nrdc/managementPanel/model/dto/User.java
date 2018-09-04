@@ -122,7 +122,7 @@ public class User extends UserDAO {
         EntityManager entityManager = Database.getEntityManager();
         logger.info("User authentication");
         try {
-            return (User) entityManager.createQuery("SELECT u FROM User u WHERE u.id = (SELECT t.fkUserId FROM Token t WHERE t.token = :token AND t.fkSystemId = :fkSystemId)")
+            return (User) entityManager.createQuery("SELECT u FROM User u JOIN Token t ON t.fkUserId = u.id where t.token = :token AND t.fkSystemId = :fkSystemId")
                     .setParameter("token", token)
                     .setParameter("fkSystemId", systemId)
                     .getSingleResult();
