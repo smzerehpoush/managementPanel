@@ -29,6 +29,10 @@ public class User extends UserDAO {
         this.setPoliceCode(requestAddUser.getPoliceCode());
     }
 
+    public static User validate(String token, SystemNames systemName) throws Exception {
+        return validate(token, systemName.name());
+    }
+
     public static User validate(String token, String systemName) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
 
