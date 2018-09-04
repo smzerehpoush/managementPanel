@@ -4,6 +4,7 @@ import com.nrdc.managementPanel.helper.Constants;
 import com.sun.istack.internal.NotNull;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 public class SystemDAO extends BaseModel {
     private Long id;
@@ -103,5 +104,19 @@ public class SystemDAO extends BaseModel {
         sb.append(", type='").append(type).append('\'');
         sb.append('}');
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SystemDAO)) return false;
+        SystemDAO systemDAO = (SystemDAO) o;
+        return Objects.equals(getSystemName(), systemDAO.getSystemName()) &&
+                Objects.equals(getSystemPath(), systemDAO.getSystemPath());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getSystemName(), getSystemPath());
     }
 }
