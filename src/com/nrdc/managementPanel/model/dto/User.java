@@ -67,14 +67,18 @@ public class User extends UserDAO {
     }
 
     public static User getUser(String token, String systemName) throws Exception {
-        User.verify(token, systemName);
         EntityManager entityManager = Database.getEntityManager();
-        logger.info("User authentication");
+
         try {
+            Token.validateToken(token, systemName);
             return (User) entityManager.createQuery("SELECT u FROM User u WHERE u.id = (SELECT t.fkUserId FROM Token t WHERE t.token = :token AND t.fkSystemId = (SELECT s.id FROM System s WHERE s.systemName = :systemName))")
                     .setParameter("token", token)
                     .setParameter("systemName", systemName)
                     .getSingleResult();
+        } catch (NoResultException ex1) {
+            throw new Exception(Constants.INCORRECT_USERNAME_OR_PASSWORD);
+        } catch (NonUniqueResultException ex2) {
+            throw new Exception(Constants.NOT_VALID_USER);
         } finally {
             if (entityManager != null && entityManager.isOpen())
                 entityManager.close();
