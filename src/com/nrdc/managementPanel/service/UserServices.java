@@ -21,7 +21,7 @@ public class UserServices {
 
     @Path("/activate")
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON + "; charset=UTF-8")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response activeUser(EncryptedRequest encryptedRequest) {
         logger.info("++================== activeUser SERVICE : START ==================++");
