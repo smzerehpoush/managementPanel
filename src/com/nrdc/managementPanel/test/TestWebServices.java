@@ -42,6 +42,13 @@ public class TestWebServices {
         return Encryption.encryptOrNull("key", "سلام");
     }
 
+    @Path("/3")
+    @GET
+    @Produces(MediaType.TEXT_PLAIN + "; charset=UTF-8")
+    public String test3() throws NoSuchAlgorithmException {
+
+        return Encryption.decryptOrNull("key", Encryption.encryptOrNull("key", "سلام"));
+    }
     @Path("/4")
     @GET
     @Produces(MediaType.TEXT_PLAIN + "; charset=UTF-8")
