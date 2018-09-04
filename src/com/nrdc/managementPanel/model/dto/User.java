@@ -233,6 +233,25 @@ public class User extends UserDAO {
         }
     }
 
+    public static void checkActivation(String token, String systemName) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+
+        try {
+            Long size = (Long) entityManager.createQuery("SELECT count (t) FROM Token t JOIN System s ON s.id = t.fkSystemId JOIN User  u ON t.fkUserId = u.id WHERE t.token = :token AND s.systemName = :systemName AND u.isActive = true")
+                    .setParameter("systemName", systemName)
+                    .setParameter("token", token)
+                    .getSingleResult();
+            if (!size.equals(1L)) {
+                throw new Exception(Constants.NOT_ACTIVE_USER);
+            }
+        } finally {
+            if (entityManager != null && entityManager.isOpen())
+                entityManager.close();
+        }
+
+
+    }
+
     @Override
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
