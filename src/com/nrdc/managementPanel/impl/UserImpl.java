@@ -126,14 +126,6 @@ public class UserImpl {
             if (!user2Systems.contains(system)) {
                 throw new Exception(Constants.USER_SYSTEM_ERROR);
             }
-            try {
-                boolean b = user2.checkPrivilege(privilegeName);
-                if (b)
-                    throw new Exception(Constants.CANT_NOT_ACTIVE_THIS_USER);
-            } catch (Exception ex) {
-                if (ex.getMessage().equals(Constants.CANT_NOT_ACTIVE_THIS_USER))
-                    throw ex;
-            }
             if (transaction != null && !transaction.isActive())
                 transaction.begin();
             entityManager.createQuery("UPDATE User u SET u.isActive = true WHERE u.id = :fkUserId")
