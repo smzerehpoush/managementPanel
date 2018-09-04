@@ -41,7 +41,7 @@ public class UserServices {
     }
 
     @Path("/deActivate")
-    @DELETE
+    @POST
     @Produces(MediaType.APPLICATION_JSON + "; charset=UTF-8")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response deActiveUser(EncryptedRequest encryptedRequest) {
