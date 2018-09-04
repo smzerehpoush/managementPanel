@@ -16,8 +16,7 @@ public class RoleImpl {
     public StandardResponse getRoles(String token) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
-            Token.validateToken(token, SystemNames.MANAGEMENT_PANEL);
-            User user = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
+            User user = User.validate(token, SystemNames.MANAGEMENT_PANEL);
             user.checkPrivilege(PrivilegeNames.GET_ROLES);
             List roles = entityManager.createQuery("SELECT r FROM Role r")
                     .getResultList();
@@ -37,8 +36,7 @@ public class RoleImpl {
     public StandardResponse getPrivileges(String token, RequestGetRolePrivileges requestGetRolePrivileges) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
-            Token.validateToken(token, SystemNames.MANAGEMENT_PANEL);
-            User user = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
+            User user = User.validate(token, SystemNames.MANAGEMENT_PANEL);
             user.checkPrivilege(PrivilegeNames.GET_PRIVILEGES);
             List privileges = entityManager.createQuery("SELECT p FROM Privilege p JOIN RolePrivilege rp ON p.id = rp.fkPrivilegeId WHERE rp.fkRoleId = :fkRoleId")
                     .setParameter("fkRoleId", requestGetRolePrivileges.getFkRoleId())

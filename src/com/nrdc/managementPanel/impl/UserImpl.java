@@ -117,8 +117,7 @@ public class UserImpl {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
-            Token.validateToken(token, SystemNames.MANAGEMENT_PANEL);
-            User user1 = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
+            User user1 = User.validate(token, SystemNames.MANAGEMENT_PANEL);
             System system = System.getSystem(request.getFkSystemId());
             String privilegeName = "ACTIVE_" + system.getSystemName() + "_USERS";
             user1.checkPrivilege(privilegeName);
@@ -211,8 +210,7 @@ public class UserImpl {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
-            Token.validateToken(token, SystemNames.MANAGEMENT_PANEL);
-            User user = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
+            User user = User.validate(token, SystemNames.MANAGEMENT_PANEL);
             user.checkPrivilege(PrivilegeNames.ADD_USERS);
             if (!transaction.isActive())
                 transaction.begin();
@@ -250,8 +248,7 @@ public class UserImpl {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
-            Token.validateToken(token, SystemNames.MANAGEMENT_PANEL);
-            User user1 = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
+            User user1 = User.validate(token, SystemNames.MANAGEMENT_PANEL);
             System system = System.getSystem(requestEditUser.getFkSystemId());
             String privilegeName = "EDIT_" + system.getSystemName() + "_USERS";
             user1.checkPrivilege(privilegeName);
@@ -299,8 +296,7 @@ public class UserImpl {
     public StandardResponse getUsers(String token, RequestGetUsers requestAddUser) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
-            Token.validateToken(token, SystemNames.MANAGEMENT_PANEL);
-            User user = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
+            User user = User.validate(token, SystemNames.MANAGEMENT_PANEL);
             System system = System.getSystem(requestAddUser.getFkSystemId());
             String privilegeName = "GET_" + system.getSystemName() + "_USERS";
             user.checkPrivilege(privilegeName);
@@ -326,8 +322,7 @@ public class UserImpl {
     public StandardResponse filterUsers(String token, RequestFilterUsers requestFilterUsers) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
-            Token.validateToken(token, SystemNames.MANAGEMENT_PANEL);
-            User user = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
+            User user = User.validate(token, SystemNames.MANAGEMENT_PANEL);
             user.checkPrivilege(PrivilegeNames.FILTER_USERS);
             StringBuilder query = new StringBuilder();
             query.append("SELECT u FROM User u ");
@@ -396,8 +391,7 @@ public class UserImpl {
     public StandardResponse getRolesWithPrivileges(String token, RequestGetUserRolesWithPrivileges requestGetUserRolesWithPrivileges) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
-            Token.validateToken(token, SystemNames.MANAGEMENT_PANEL);
-            User user = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
+            User user = User.validate(token, SystemNames.MANAGEMENT_PANEL);
             user.checkPrivilege(PrivilegeNames.GET_PRIVILEGES);
             List<RoleWithPrivileges> rolesWithPrivileges = new LinkedList<>();
             List<Role> roles = entityManager.createQuery("SELECT r FROM Role r JOIN UserRole ur ON r.id = ur.fkRoleId WHERE ur.fkUserId = :fkUserId")
@@ -429,8 +423,7 @@ public class UserImpl {
     public StandardResponse getRoles(String token, RequestGetUserRolesWithPrivileges requestGetUserRolesWithPrivileges) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
-            Token.validateToken(token, SystemNames.MANAGEMENT_PANEL);
-            User user = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
+            User user = User.validate(token, SystemNames.MANAGEMENT_PANEL);
             user.checkPrivilege(PrivilegeNames.GET_ROLES);
             List roles = entityManager.createQuery("SELECT r FROM Role r JOIN UserRole ur ON r.id=ur.fkRoleId WHERE ur.fkUserId = :fkUserId")
                     .setParameter("fkUserId", requestGetUserRolesWithPrivileges.getFkUserId())

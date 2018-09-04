@@ -14,8 +14,7 @@ public class SystemImpl {
     public StandardResponse getSystems(String token) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
-            Token.validateToken(token, SystemNames.MANAGEMENT_PANEL);
-            User user = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
+            User user = User.validate(token, SystemNames.MANAGEMENT_PANEL);
             user.checkPrivilege(PrivilegeNames.GET_SYSTEMS);
             List systems = entityManager.createQuery("SELECT s FROM System s")
                     .getResultList();
