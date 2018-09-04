@@ -6,6 +6,7 @@ import com.nrdc.managementPanel.jsonModel.EncryptedResponse;
 import com.nrdc.managementPanel.model.dto.User;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -372,7 +373,6 @@ public class Encryption {
         return decrypted;
     }
 
-
     public static String decryptPassword(String key, String data) throws Exception {
         return decryptOrNull(key, data);
     }
@@ -382,7 +382,7 @@ public class Encryption {
         encryption = getEncryption(key);
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            String strEncrypted = encryption.encryptOrNull(objectMapper.writeValueAsString(response));
+            String strEncrypted = encryptOrNull(key,objectMapper.writeValueAsString(response));
             encryptedResponse.setData(strEncrypted.replace("\n", ""));
             return encryptedResponse;
         } catch (IOException e) {
