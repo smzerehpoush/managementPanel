@@ -76,23 +76,16 @@ public class TestWebServices {
 
     private String testDeActivateUserService() {
         try {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append("Test DeActivate User Service");
+            String result = ("Test DeActivate User Service");
             RequestDeActiveUser requestDeActiveUser = new RequestDeActiveUser();
             requestDeActiveUser.setFkUserId(1L);
-            StandardResponse response = sendPostRequest(baseUrl + "/user/deActivate", requestDeActiveUser, "key", "token");
+            requestDeActiveUser.setFkSystemId(4L);
+            StandardResponse response = sendRequest(baseUrl + "/user/deActivate", "POST", requestDeActiveUser, "key", "token");
             logger.info(response);
-            if (response.getResultCode() == 1) {
-                stringBuilder.append(": Passed ");
-            } else {
-                stringBuilder.append(": failed With reason :{")
-                        .append(response.getResultMessage())
-                        .append("}");
-            }
-
-            return stringBuilder.toString();
+            result += handleResponse(response);
+            return result;
         } catch (Exception ex) {
-            return null;
+            return ex.getMessage();
         }
 
     }
