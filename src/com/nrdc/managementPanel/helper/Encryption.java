@@ -13,16 +13,16 @@ import java.security.NoSuchAlgorithmException;
 
 
 public class Encryption {
+    private static Logger logger = Logger.getLogger(Encryption.class.getName());
     private static se.simbio.encryption.Encryption.Builder encryptionBuilder;
     private static se.simbio.encryption.Encryption encryption;
-    private static Logger logger = Logger.getLogger(Encryption.class.getName());
 
     private static se.simbio.encryption.Encryption getEncryption(String key) throws NoSuchAlgorithmException {
         return buildEncryption(key, "JVAaVhAiddKAaghraikhmaini");
     }
 
     private static se.simbio.encryption.Encryption getEncryption(String key, String salt) throws NoSuchAlgorithmException {
-        return buildEncryption(key, "JVAaVhAiddKAaghraikhmaini");
+        return buildEncryption(key, salt);
     }
 
     private static se.simbio.encryption.Encryption buildEncryption(String key, String salt) throws NoSuchAlgorithmException {
