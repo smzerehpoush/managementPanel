@@ -370,7 +370,7 @@ public class Encryption {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             String strEncrypted = encryptOrNull(key,objectMapper.writeValueAsString(response));
-            encryptedResponse.setData(strEncrypted.replace("\n", ""));
+            encryptedResponse.setData(strEncrypted);
             return encryptedResponse;
         } catch (IOException e) {
             throw e;
