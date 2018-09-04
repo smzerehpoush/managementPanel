@@ -174,7 +174,6 @@ public class User extends UserDAO {
     public static boolean checkPrivilege(String privilege, Long fkUserId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         Privilege p = Privilege.getPrivilege(privilege);
-        Operation operation = new Operation(fkUserId, p.getId());
         try {
             int size = entityManager.createQuery("SELECT p FROM Privilege p JOIN RolePrivilege rp ON p.id = rp.fkPrivilegeId JOIN UserRole ur ON rp.fkRoleId = ur.fkRoleId WHERE ur.fkUserId = :fkUserId AND p.privilegeText = :privilege")
                     .setParameter("fkUserId", fkUserId)
@@ -182,14 +181,11 @@ public class User extends UserDAO {
                     .getResultList()
                     .size();
             if (size < 1) {
-                operation.setStatusCode(-1L);
                 throw new Exception(Constants.PERMISSION_ERROR);
             }
-            operation.setStatusCode(1L);
             return true;
 
         } finally {
-            operation.persist();
             if (entityManager != null && entityManager.isOpen())
                 entityManager.close();
         }
