@@ -233,6 +233,10 @@ public class User extends UserDAO {
         }
     }
 
+    public static void checkActivation(String token, SystemNames systemName) throws Exception {
+        checkActivation(token, systemName.name());
+    }
+
     public static void checkActivation(String token, String systemName) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
 
