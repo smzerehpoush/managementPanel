@@ -2,6 +2,7 @@ package com.nrdc.managementPanel.helper;
 
 public class Constants {
     public static final String NOT_ACTIVE_USER = "چنین کاربری غیر فعال می باشد.لطفا کاربر را فعال کنید.";
+    public static final String CANT_DEACTIVE_YOURSELF = "نمی توانید خودتان را غیر فغال کنید.";
 
     public static final String NOT_VALID_TOKEN = "توکن معتبر نیست.";
     public static final String NOT_VALID_SYSTEM = "سیستم معتبر نمی باشد.";
