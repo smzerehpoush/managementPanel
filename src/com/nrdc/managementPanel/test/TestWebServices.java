@@ -26,8 +26,8 @@ public class TestWebServices {
     private static Logger logger = Logger.getLogger(TestWebServices.class.getName());
 
     @GET
-    @Produces(MediaType.TEXT_PLAIN + "; charset=UTF-8")
     public Response test() {
+    @Produces(MediaType.TEXT_PLAIN)
 
 //        String testDeActivateUserServiceResult = testDeActivateUserService();
         String testActivateUserServiceResult = testActivateUserService();
