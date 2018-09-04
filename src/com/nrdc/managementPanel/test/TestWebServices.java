@@ -6,7 +6,6 @@ import com.nrdc.managementPanel.jsonModel.EncryptedResponse;
 import com.nrdc.managementPanel.jsonModel.StandardResponse;
 import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestActiveUser;
 import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestDeActiveUser;
-import com.sun.org.apache.regexp.internal.RE;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -17,7 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -29,12 +28,11 @@ public class TestWebServices {
     @GET
     @Produces(MediaType.TEXT_PLAIN + "; charset=UTF-8")
     public Response test() {
-        StringBuilder stringBuilder = new StringBuilder();
-        String testDeActivateUserServiceResult = testDeActivateUserService();
+
+//        String testDeActivateUserServiceResult = testDeActivateUserService();
         String testActivateUserServiceResult = testActivateUserService();
-        stringBuilder.append(testDeActivateUserServiceResult);
-        stringBuilder.append(testActivateUserServiceResult);
-        Response finalResponse = Response.status(200).entity(stringBuilder.toString()).build();
+//        stringBuilder.append(testDeActivateUserServiceResult);
+        Response finalResponse = Response.status(200).entity(testActivateUserServiceResult).build();
         return finalResponse;
     }
 
