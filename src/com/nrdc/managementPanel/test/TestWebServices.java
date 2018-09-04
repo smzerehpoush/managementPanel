@@ -13,14 +13,14 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.NoSuchAlgorithmException;
 
-@Path("/test")
+@Path("/test")//sag toot!
 public class TestWebServices {
     private final static String baseUrl = "http://127.0.0.1:7001/managementPanel/api";
     private static Logger logger = Logger.getLogger(TestWebServices.class.getName());
