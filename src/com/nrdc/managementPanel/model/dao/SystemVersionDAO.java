@@ -1,24 +1,12 @@
-package com.nrdc.managementPanel.model;
+package com.nrdc.managementPanel.model.dao;
 
-import com.nrdc.managementPanel.helper.Constants;
-import com.sun.istack.internal.NotNull;
-
-import javax.persistence.*;
-import java.io.Serializable;
-
-@Entity
-@Table(name = "SYSTEM_VERSIONS", schema = Constants.SCHEMA)
-public class SystemVersion implements Serializable {
+public class SystemVersionDAO extends BaseModel {
     private Long id;
     private Long fkSystemId;
     private String versionName;
     private Long versionCode;
     private String apkPath;
 
-    @NotNull
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID_SYSTEM_VERSIONS")
     public Long getId() {
         return id;
     }
@@ -27,8 +15,6 @@ public class SystemVersion implements Serializable {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "FK_SYSTEM_ID", unique = true, table = "SYSTEM_VERSIONS")
     public Long getFkSystemId() {
         return fkSystemId;
     }
@@ -37,8 +23,6 @@ public class SystemVersion implements Serializable {
         this.fkSystemId = fkSystemId;
     }
 
-    @Basic
-    @Column(name = "VERSION_NAME", unique = true, table = "SYSTEM_VERSIONS")
     public String getVersionName() {
         return versionName;
     }
@@ -47,8 +31,6 @@ public class SystemVersion implements Serializable {
         this.versionName = versionName;
     }
 
-    @Basic
-    @Column(name = "VERSION_CODE", unique = true, table = "SYSTEM_VERSIONS")
     public Long getVersionCode() {
         return versionCode;
     }
@@ -57,13 +39,23 @@ public class SystemVersion implements Serializable {
         this.versionCode = versionCode;
     }
 
-    @Basic
-    @Column(name = "APK_PATH", unique = true, table = "SYSTEM_VERSIONS")
     public String getApkPath() {
         return apkPath;
     }
 
     public void setApkPath(String apkPath) {
         this.apkPath = apkPath;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("SystemVersionDAO{");
+        sb.append("id=").append(id);
+        sb.append(", fkSystemId=").append(fkSystemId);
+        sb.append(", versionName='").append(versionName).append('\'');
+        sb.append(", versionCode=").append(versionCode);
+        sb.append(", apkPath='").append(apkPath).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 }

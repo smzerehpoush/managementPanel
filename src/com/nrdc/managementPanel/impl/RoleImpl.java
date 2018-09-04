@@ -6,8 +6,7 @@ import com.nrdc.managementPanel.jsonModel.StandardResponse;
 import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestGetRolePrivileges;
 import com.nrdc.managementPanel.jsonModel.jsonResponse.ResponseGetPrivileges;
 import com.nrdc.managementPanel.jsonModel.jsonResponse.ResponseGetRoles;
-import com.nrdc.managementPanel.model.Token;
-import com.nrdc.managementPanel.model.User;
+import com.nrdc.managementPanel.model.dto.User;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -16,8 +15,7 @@ public class RoleImpl {
     public StandardResponse getRoles(String token) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
-            Token.validateToken(token, SystemNames.MANAGEMENT_PANEL);
-            User user = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
+            User user = User.validate(token, SystemNames.MANAGEMENT_PANEL);
             user.checkPrivilege(PrivilegeNames.GET_ROLES);
             List roles = entityManager.createQuery("SELECT r FROM Role r")
                     .getResultList();
@@ -37,8 +35,7 @@ public class RoleImpl {
     public StandardResponse getPrivileges(String token, RequestGetRolePrivileges requestGetRolePrivileges) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
-            Token.validateToken(token, SystemNames.MANAGEMENT_PANEL);
-            User user = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
+            User user = User.validate(token, SystemNames.MANAGEMENT_PANEL);
             user.checkPrivilege(PrivilegeNames.GET_PRIVILEGES);
             List privileges = entityManager.createQuery("SELECT p FROM Privilege p JOIN RolePrivilege rp ON p.id = rp.fkPrivilegeId WHERE rp.fkRoleId = :fkRoleId")
                     .setParameter("fkRoleId", requestGetRolePrivileges.getFkRoleId())

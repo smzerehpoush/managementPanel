@@ -1,13 +1,8 @@
-package com.nrdc.managementPanel.model;
+package com.nrdc.managementPanel.model.dao;
 
-import com.nrdc.managementPanel.helper.Constants;
-
-import javax.persistence.*;
 import java.util.Date;
 
-@Entity
-@Table(name = "OPERATION", schema = Constants.SCHEMA)
-public class Operation extends BaseModel {
+public class OperationDAO extends BaseModel {
     private Long id;
     private Long fkUserId;
     private Long fkPrivilegeId;
@@ -16,23 +11,7 @@ public class Operation extends BaseModel {
     private Long statusCode;
     private String userToken;
 
-    public Operation() {
-    }
 
-    public Operation(Long fkUserId, Long fkPrivilegeId) {
-        this.fkUserId = fkUserId;
-        this.fkPrivilegeId = fkPrivilegeId;
-    }
-
-    public Operation(User user, Privilege privilege, Long statusCode) {
-        this.fkUserId = user.getId();
-        this.fkPrivilegeId = privilege.getId();
-        this.statusCode = statusCode;
-    }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID_OPERATION")
     public Long getId() {
         return id;
     }
@@ -41,8 +20,6 @@ public class Operation extends BaseModel {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "FK_USER_ID")
     public Long getFkUserId() {
         return fkUserId;
     }
@@ -51,8 +28,6 @@ public class Operation extends BaseModel {
         this.fkUserId = fkUserId;
     }
 
-    @Basic
-    @Column(name = "FK_PRIVILEGE_ID")
     public Long getFkPrivilegeId() {
         return fkPrivilegeId;
     }
@@ -61,9 +36,6 @@ public class Operation extends BaseModel {
         this.fkPrivilegeId = fkPrivilegeId;
     }
 
-    @Basic
-    @Temporal(TemporalType.DATE)
-    @Column(name = "TIME")
     public Date getTime() {
         return time;
     }
@@ -72,8 +44,6 @@ public class Operation extends BaseModel {
         this.time = time;
     }
 
-    @Basic
-    @Column(name = "DESCRIPTION")
     public String getDescription() {
         return description;
     }
@@ -82,8 +52,6 @@ public class Operation extends BaseModel {
         this.description = description;
     }
 
-    @Basic
-    @Column(name = "STATUS_CODE")
     public Long getStatusCode() {
         return statusCode;
     }
@@ -92,13 +60,25 @@ public class Operation extends BaseModel {
         this.statusCode = statusCode;
     }
 
-    @Basic
-    @Column(name = "USER_TOKEN")
     public String getUserToken() {
         return userToken;
     }
 
     public void setUserToken(String userToken) {
         this.userToken = userToken;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("OperationDAO{");
+        sb.append("id=").append(id);
+        sb.append(", fkUserId=").append(fkUserId);
+        sb.append(", fkPrivilegeId=").append(fkPrivilegeId);
+        sb.append(", time=").append(time);
+        sb.append(", description='").append(description).append('\'');
+        sb.append(", statusCode=").append(statusCode);
+        sb.append(", userToken='").append(userToken).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 }

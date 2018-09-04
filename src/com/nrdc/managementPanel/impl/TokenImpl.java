@@ -4,9 +4,9 @@ import com.nrdc.managementPanel.helper.Constants;
 import com.nrdc.managementPanel.helper.SystemNames;
 import com.nrdc.managementPanel.jsonModel.StandardResponse;
 import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestRemoveToken;
-import com.nrdc.managementPanel.model.System;
-import com.nrdc.managementPanel.model.Token;
-import com.nrdc.managementPanel.model.User;
+import com.nrdc.managementPanel.model.dto.System;
+import com.nrdc.managementPanel.model.dto.Token;
+import com.nrdc.managementPanel.model.dto.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -16,8 +16,7 @@ public class TokenImpl {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
-            Token.validateToken(token, SystemNames.MANAGEMENT_PANEL);
-            User user = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
+            User user = User.validate(token, SystemNames.MANAGEMENT_PANEL);
             System us = System.getSystem(requestRemoveToken.getFkSystemId());
             Token.validateToken(requestRemoveToken.getToken(), us.getSystemName());
 

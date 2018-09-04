@@ -1,32 +1,12 @@
-package com.nrdc.managementPanel.model;
+package com.nrdc.managementPanel.model.dao;
 
-import com.nrdc.managementPanel.helper.Constants;
-
-import javax.persistence.*;
-import java.util.UUID;
-
-@Entity
-@Table(name = "KEYS", schema = Constants.SCHEMA)
-public class Key extends BaseModel {
+public class KeyDAO extends BaseModel {
 
     private Long id;
     private String key;
     private Long fkSystemId;
     private Long fkUserId;
 
-    public Key() {
-    }
-
-    public Key(User user, System system) throws Exception {
-        user.checkKey(system);
-        this.setKey(UUID.randomUUID().toString());
-        this.setFkSystemId(system.getId());
-        this.setFkUserId(user.getId());
-    }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID_KEYS")
     public Long getId() {
         return id;
     }
@@ -35,8 +15,6 @@ public class Key extends BaseModel {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "KEY", table = "KEYS")
     public String getKey() {
         return key;
     }
@@ -45,8 +23,6 @@ public class Key extends BaseModel {
         this.key = key;
     }
 
-    @Basic
-    @Column(name = "FK_SYSTEM_ID", table = "KEYS")
     public Long getFkSystemId() {
         return fkSystemId;
     }
@@ -55,8 +31,6 @@ public class Key extends BaseModel {
         this.fkSystemId = fkSystemId;
     }
 
-    @Basic
-    @Column(name = "FK_USER_ID", table = "KEYS")
     public Long getFkUserId() {
         return fkUserId;
     }
@@ -74,4 +48,5 @@ public class Key extends BaseModel {
                 ", fkUserId=" + fkUserId +
                 '}';
     }
+
 }

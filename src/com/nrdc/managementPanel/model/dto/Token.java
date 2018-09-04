@@ -1,42 +1,35 @@
-package com.nrdc.managementPanel.model;
+package com.nrdc.managementPanel.model.dto;
 
 import com.nrdc.managementPanel.helper.Constants;
 import com.nrdc.managementPanel.helper.SystemNames;
 import com.nrdc.managementPanel.impl.Database;
-import com.sun.istack.internal.NotNull;
+import com.nrdc.managementPanel.model.dao.TokenDAO;
 
 import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
 @Table(name = "TOKEN", schema = Constants.SCHEMA)
-public class Token extends BaseModel {
-    private Long id;
-    private Long fkUserId;
-    private String token;
-    private Long fkSystemId;
-
+public class Token extends TokenDAO {
     public Token() {
     }
 
-
     public Token(User user, System system) throws Exception {
         user.checkToken(system);
-        this.token = UUID.randomUUID().toString();
-        this.fkSystemId = system.getId();
-        this.fkUserId = user.getId();
+        this.setToken(UUID.randomUUID().toString());
+        this.setFkSystemId(system.getId());
+        this.setFkUserId(user.getId());
     }
 
     public static void validateToken(String token, String systemName) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
 
         try {
-            int size = entityManager.createQuery("SELECT t FROM Token t WHERE t.token = :token AND t.fkSystemId = (SELECT s.id FROM System s WHERE s.systemName = :systemName)")
+            Long size = (Long) entityManager.createQuery("SELECT count (t) FROM Token t JOIN System s ON s.id = t.fkSystemId WHERE t.token = :token AND s.systemName = :systemName")
                     .setParameter("systemName", systemName)
                     .setParameter("token", token)
-                    .getResultList()
-                    .size();
-            if (size != 1) {
+                    .getSingleResult();
+            if (!size.equals(1L)) {
                 throw new Exception(Constants.NOT_VALID_TOKEN);
             }
         } finally {
@@ -49,56 +42,33 @@ public class Token extends BaseModel {
         validateToken(token, systemName.name());
     }
 
-    @NotNull
+    @Override
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID_TOKEN")
     public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Basic
-    @Column(name = "FK_USER_ID")
-    public Long getFkUserId() {
-        return fkUserId;
-    }
-
-    public void setFkUserId(Long fkUserId) {
-        this.fkUserId = fkUserId;
-    }
-
-    @Basic
-    @Column(name = "TOKEN")
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    @Basic
-    @Column(name = "FK_SYSTEM_ID")
-    public Long getFkSystemId() {
-        return fkSystemId;
-    }
-
-    public void setFkSystemId(Long fkSystemId) {
-        this.fkSystemId = fkSystemId;
+        return super.getId();
     }
 
     @Override
-    public String toString() {
-        return "Token{" +
-                "id=" + id +
-                ", fkUserId=" + fkUserId +
-                ", token='" + token + '\'' +
-                ", fkSystemId=" + fkSystemId +
-                '}';
+    @Basic
+    @Column(name = "FK_USER_ID")
+    public Long getFkUserId() {
+        return super.getFkUserId();
+    }
+
+    @Override
+    @Basic
+    @Column(name = "TOKEN")
+    public String getToken() {
+        return super.getToken();
+    }
+
+    @Override
+    @Basic
+    @Column(name = "FK_SYSTEM_ID")
+    public Long getFkSystemId() {
+        return super.getFkSystemId();
     }
 }
 

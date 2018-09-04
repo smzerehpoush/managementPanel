@@ -2,6 +2,7 @@ package com.nrdc.managementPanel.helper;
 
 public class Constants {
     public static final String NOT_ACTIVE_USER = "چنین کاربری غیر فعال می باشد.لطفا کاربر را فعال کنید.";
+    public static final String CANT_DEACTIVE_YOURSELF = "نمی توانید خودتان را غیر فغال کنید.";
 
     public static final String NOT_VALID_TOKEN = "توکن معتبر نیست.";
     public static final String NOT_VALID_SYSTEM = "سیستم معتبر نمی باشد.";
@@ -25,7 +26,9 @@ public class Constants {
     public static final String PERMISSION_ERROR = "شما دسترسی استفاده از این خدمت را ندارید.";
 
     public static final String SCHEMA = "MANAGEMENT_PANEL";
-    public static final String CANT_NOT_EDIT_THIS_USER = "شما دسترسی تغییر کارری با";
+    public static final String CANT_NOT_EDIT_THIS_USER = "شما دسترسی تغییر کارری با چنین سیتمی را ندارید.";
+    public static final String CANT_NOT_ACTIVE_THIS_USER = "شما دسترسی فعال کردن کارری با چنین سیتمی را ندارید.";
+    public static final String CANT_NOT_DEACTIVE_THIS_USER = "شما دسترسی غیر فعال کردن کارری با چنین سیتمی را ندارید.";
     public static final String USER_SYSTEM_ERROR = "کاربر مربوط به سیستم وارد شده نمی باشد.";
     public static final String CAN_NOT_REMOVE_YOUR_TOKEN = "نمی توانید توکن خود را حذف کنید";
 

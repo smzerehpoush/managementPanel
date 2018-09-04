@@ -50,4 +50,14 @@ public class StandardResponse<T> {
     public void setResponse(T response) {
         this.response = response;
     }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("StandardResponse{");
+        sb.append("resultCode=").append(resultCode);
+        sb.append(", resultMessage='").append(resultMessage).append('\'');
+        sb.append(", response=").append(response);
+        sb.append('}');
+        return sb.toString();
+    }
 }
