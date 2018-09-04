@@ -29,6 +29,26 @@ public class User extends UserDAO {
         this.setPoliceCode(requestAddUser.getPoliceCode());
     }
 
+    public static User validate(String token, String systemName) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+
+        try {
+            Token.validateToken(token, systemName);
+            checkActivation(token, systemName);
+            return (User) entityManager.createQuery("SELECT u FROM User u WHERE u.id = (SELECT t.fkUserId FROM Token t WHERE t.token = :token AND t.fkSystemId = (SELECT s.id FROM System s WHERE s.systemName = :systemName))")
+                    .setParameter("token", token)
+                    .setParameter("systemName", systemName)
+                    .getSingleResult();
+        } catch (NoResultException ex1) {
+            throw new Exception(Constants.INCORRECT_USERNAME_OR_PASSWORD);
+        } catch (NonUniqueResultException ex2) {
+            throw new Exception(Constants.NOT_VALID_USER);
+        } finally {
+            if (entityManager != null && entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+
     public static User getUser(Long fkUserId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
