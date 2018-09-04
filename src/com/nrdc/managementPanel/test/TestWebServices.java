@@ -36,6 +36,15 @@ public class TestWebServices {
         return finalResponse;
     }
 
+    @Path("/4")
+    @GET
+    @Produces(MediaType.TEXT_PLAIN + "; charset=UTF-8")
+    public String test4() throws NoSuchAlgorithmException {
+
+        return "سلام";
+    }
+
+
     private String testActivateUserService() {
         try {
 
