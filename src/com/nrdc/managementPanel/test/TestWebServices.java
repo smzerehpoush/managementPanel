@@ -26,14 +26,15 @@ public class TestWebServices {
     private static Logger logger = Logger.getLogger(TestWebServices.class.getName());
 
     @GET
-    public Response test() {
     @Produces(MediaType.TEXT_PLAIN)
+    public String test() {
 
 //        String testDeActivateUserServiceResult = testDeActivateUserService();
         String testActivateUserServiceResult = testActivateUserService();
 //        stringBuilder.append(testDeActivateUserServiceResult);
-        Response finalResponse = Response.status(200).entity(testActivateUserServiceResult).build();
-        return finalResponse;
+        return testActivateUserServiceResult;
+    }
+
     @Path("/2")
     @GET
     @Produces(MediaType.TEXT_PLAIN )
