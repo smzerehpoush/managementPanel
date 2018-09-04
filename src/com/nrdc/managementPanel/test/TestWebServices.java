@@ -40,24 +40,18 @@ public class TestWebServices {
 
     private String testActivateUserService() {
         try {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append("Test Activate User Service");
+
+            String result = ("Test Activate User Service");
             RequestActiveUser requestActiveUser = new RequestActiveUser();
             requestActiveUser.setFkUserId(1L);
             requestActiveUser.setFkSystemId(4L);
-            StandardResponse response = sendPostRequest(baseUrl + "/user/activate", requestActiveUser, "key", "token");
+            StandardResponse response = sendRequest(baseUrl + "/user/activate", "POST", requestActiveUser, "key", "token");
             logger.info(response);
-            if (response.getResultCode() == 1) {
-                stringBuilder.append(": Passed ");
-            } else {
-                stringBuilder.append(": failed With reason :{")
-                        .append(response.getResultMessage())
-                        .append("}");
-            }
+            result += handleResponse(response);
 
-            return stringBuilder.toString();
+            return result;
         } catch (Exception ex) {
-            return null;
+            return ex.getMessage();
         }
 
     }
