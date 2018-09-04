@@ -114,19 +114,8 @@ public class User extends UserDAO {
         return getUser(token, systemName.name());
     }
 
-    public static User getUser(Token token, System system) throws Exception {
-        EntityManager entityManager = Database.getEntityManager();
-        logger.info("User authentication");
-        try {
-            return (User) entityManager.createQuery("SELECT u FROM User u WHERE u.id = (SELECT t.fkUserId FROM Token t WHERE t.id = :tokenId AND t.fkSystemId = :fkSystemId)")
-                    .setParameter("tokenId", token.getId())
-                    .setParameter("fkSystemId", system.getId())
-                    .getSingleResult();
-        } finally {
-            if (entityManager != null && entityManager.isOpen())
-                entityManager.close();
-        }
-
+    public static User getUser(Token token) throws Exception {
+        return getUser(token.getToken(), token.getFkSystemId());
     }
 
     public static User getUser(String token, Long systemId) throws Exception {
