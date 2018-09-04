@@ -62,6 +62,18 @@ public class TestWebServices {
 
     }
 
+    private String handleResponse(StandardResponse response) {
+        String result = "";
+        if (response.getResultCode() == 1) {
+            result += (": Passed ");
+        } else {
+            result += (": failed With reason :{");
+            result += (response.getResultMessage());
+            result += ("}");
+        }
+        return result;
+    }
+
     private String testDeActivateUserService() {
         try {
             StringBuilder stringBuilder = new StringBuilder();
