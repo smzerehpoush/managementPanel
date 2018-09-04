@@ -390,4 +390,11 @@ public class Encryption {
         }
     }
 
+    @Test
+    public void testFarsiWords() throws NoSuchAlgorithmException {
+        String s = "{\"data\" : \"سلام\"}";
+        assert s.equals(decryptOrNull("k", encryptOrNull("k", s)));
+
+    }
+
 }
