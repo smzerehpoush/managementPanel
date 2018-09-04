@@ -41,6 +41,158 @@ public class Encryption {
         return encryptionBuilder.build();
     }
 
+    private static String correctUTF8String(String oldData) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (char c : oldData.toCharArray()) {
+            switch (c) {
+                case 'ا':
+                    stringBuilder.append('À');
+                    break;
+
+                case 'ب':
+                    stringBuilder.append('Á');
+                    break;
+
+                case 'ة':
+                    stringBuilder.append('Â');
+                    break;
+
+                case 'ت':
+                    stringBuilder.append('Ã');
+                    break;
+
+                case 'ث':
+                    stringBuilder.append('Ä');
+                    break;
+
+                case 'ج':
+                    stringBuilder.append('Å');
+                    break;
+
+                case 'ح':
+                    stringBuilder.append('Æ');
+                    break;
+
+                case 'خ':
+                    stringBuilder.append('Ç');
+                    break;
+
+                case 'د':
+                    stringBuilder.append('È');
+                    break;
+
+                case 'ذ':
+                    stringBuilder.append('É');
+                    break;
+
+                case 'ر':
+                    stringBuilder.append('Ê');
+                    break;
+
+                case 'ز':
+                    stringBuilder.append('Ë');
+                    break;
+
+                case 'س':
+                    stringBuilder.append('Ì');
+                    break;
+
+                case 'ش':
+                    stringBuilder.append('Í');
+                    break;
+
+                case 'ص':
+                    stringBuilder.append('Î');
+                    break;
+
+                case 'ض':
+                    stringBuilder.append('Ï');
+                    break;
+
+                case 'ط':
+                    stringBuilder.append('Ð');
+                    break;
+
+                case 'ظ':
+                    stringBuilder.append('Ñ');
+                    break;
+
+                case 'ع':
+                    stringBuilder.append('Ò');
+                    break;
+
+                case 'غ':
+                    stringBuilder.append('Ó');
+                    break;
+
+                case 'ػ':
+                    stringBuilder.append('Ô');
+                    break;
+
+                case 'ؼ':
+                    stringBuilder.append('Õ');
+                    break;
+
+                case 'ؽ':
+                    stringBuilder.append('Ö');
+                    break;
+
+                case 'ؾ':
+                    stringBuilder.append('×');
+                    break;
+
+                case 'ؿ':
+                    stringBuilder.append('Ø');
+                    break;
+
+                case 'ف':
+                    stringBuilder.append('Ú');
+                    break;
+
+                case 'ق':
+                    stringBuilder.append('Û');
+                    break;
+
+                case 'ك':
+                    stringBuilder.append('Ü');
+                    break;
+
+                case 'ل':
+                    stringBuilder.append('Ý');
+                    break;
+
+                case 'م':
+                    stringBuilder.append('Þ');
+                    break;
+
+                case 'ن':
+                    stringBuilder.append('ß');
+                    break;
+
+                case 'ه':
+                    stringBuilder.append('à');
+                    break;
+
+                case 'و':
+                    stringBuilder.append('á');
+                    break;
+
+                case 'ى':
+                    stringBuilder.append('â');
+                    break;
+
+                case 'ي':
+                    stringBuilder.append('ã');
+                    break;
+                default:
+                    stringBuilder.append(c);
+                    break;
+
+            }
+        }
+        return stringBuilder.toString();
+    }
+
     private static String reverseUTF8String(String oldData) {
         StringBuilder stringBuilder = new StringBuilder();
         for (char c : oldData.toCharArray()) {
