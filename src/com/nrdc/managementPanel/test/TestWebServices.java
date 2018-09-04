@@ -34,6 +34,12 @@ public class TestWebServices {
 //        stringBuilder.append(testDeActivateUserServiceResult);
         Response finalResponse = Response.status(200).entity(testActivateUserServiceResult).build();
         return finalResponse;
+    @Path("/2")
+    @GET
+    @Produces(MediaType.TEXT_PLAIN )
+    public String test2() throws NoSuchAlgorithmException {
+
+        return Encryption.encryptOrNull("key", "سلام");
     }
 
     @Path("/4")
