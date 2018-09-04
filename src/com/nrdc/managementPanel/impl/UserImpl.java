@@ -158,7 +158,7 @@ public class UserImpl {
             Token.validateToken(token, SystemNames.MANAGEMENT_PANEL);
             User user1 = User.getUser(token, SystemNames.MANAGEMENT_PANEL);
             System system = System.getSystem(request.getFkSystemId());
-            String privilegeName = "DEACTIVE_" + system.getSystemName() + "_USERS";
+            String privilegeName = "DEACTIVATE_" + system.getSystemName() + "_USERS";
             user1.checkPrivilege(privilegeName);
             User user2 = User.getUser(request.getFkUserId());
             List<System> user2Systems = getUserSystems(user2);
