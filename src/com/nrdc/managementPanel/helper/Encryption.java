@@ -346,19 +346,6 @@ public class Encryption {
         return stringBuilder.toString();
     }
 
-    public static String encryptOrNull(String key, String data) throws NoSuchAlgorithmException {
-        encryption = getEncryption(key);
-        assert encryption != null;
-//        data = correctUTF8String(data);
-        return encryption.encryptOrNull(data).replace("\n", "");
-    }
-
-    public static String decryptOrNull(String key, String data) throws NoSuchAlgorithmException {
-        encryption = getEncryption(key);
-        assert encryption != null;
-//        return reverseUTF8String(encryption.decryptOrNull(data));
-        return encryption.decryptOrNull(data);
-    }
 
     public static String decryptRequest(EncryptedRequest request) throws Exception {
         String key = User.getKey(request.getToken(), SystemNames.MANAGEMENT_PANEL).getKey();
