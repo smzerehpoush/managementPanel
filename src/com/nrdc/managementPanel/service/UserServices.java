@@ -1,11 +1,13 @@
 package com.nrdc.managementPanel.service;
 
 import com.nrdc.managementPanel.helper.Encryption;
+import com.nrdc.managementPanel.impl.SystemImpl;
 import com.nrdc.managementPanel.impl.UserImpl;
 import com.nrdc.managementPanel.jsonModel.EncryptedRequest;
 import com.nrdc.managementPanel.jsonModel.EncryptedResponse;
 import com.nrdc.managementPanel.jsonModel.StandardResponse;
 import com.nrdc.managementPanel.jsonModel.jsonRequest.*;
+import com.nrdc.managementPanel.jsonModel.jsonResponse.ResponseGetSystems;
 import com.nrdc.managementPanel.model.dao.User;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -202,6 +204,23 @@ public class UserServices {
         } catch (Exception ex) {
             logger.error("++================== getPrivileges SERVICE : EXCEPTION ==================++");
             StandardResponse response = StandardResponse.getNOKExceptions(ex);
+            return Response.status(200).entity(response).build();
+        }
+    }
+    @Path("/system")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getSystems(RequestGetSystems requestGetSystems) {
+        logger.info("++================== getSystems SERVICE : START ==================++");
+        try {
+            StandardResponse<ResponseGetSystems> response = new SystemImpl().getSystems(requestGetSystems.getFkUserId());
+            Response finalResponse = Response.status(200).entity(response).build();
+            logger.info("++================== getSystems SERVICE : END ==================++");
+            return finalResponse;
+        } catch (Exception ex) {
+            logger.error("++================== getSystems SERVICE : EXCEPTION ==================++");
+            StandardResponse<ResponseGetSystems> response = new StandardResponse<ResponseGetSystems>().getNOKExceptions(ex.getMessage());
             return Response.status(200).entity(response).build();
         }
     }
