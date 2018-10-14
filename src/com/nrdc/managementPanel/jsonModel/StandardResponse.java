@@ -7,6 +7,8 @@ public class StandardResponse<T> {
     private T response;
 
     public StandardResponse() {
+        this.resultCode=1;
+        this.resultMessage="OK";
     }
 
     public static StandardResponse getNOKExceptions(String exceptionMessage) {
