@@ -21,11 +21,18 @@ public class LoginService {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response login(RequestLogin requestLogin) {
-        logger.info("++================== activeUser SERVICE : START ==================++");
+        logger.info("++================== login SERVICE : START ==================++");
         try {
             StandardResponse response = new LoginImpl().login(requestLogin);
             Response finalResponse = Response.status(200).entity(response).build();
-            logger.info("++================== activeUser SERVICE : END ==================++");
+            logger.info("++================== login SERVICE : END ==================++");
+            return finalResponse;
+        } catch (Exception ex) {
+            logger.error("++================== login SERVICE : EXCEPTION ==================++");
+            StandardResponse response = StandardResponse.getNOKExceptions(ex);
+            return Response.status(200).entity(response).build();
+        }
+    }
             return finalResponse;
         } catch (Exception ex) {
             logger.error("++================== activeUser SERVICE : EXCEPTION ==================++");
