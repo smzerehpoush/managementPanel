@@ -15,6 +15,12 @@ import javax.persistence.*;
 public class User extends UserDTO {
     private static Logger logger = Logger.getLogger(User.class.getName());
 
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+
     public User() {
     }
 
