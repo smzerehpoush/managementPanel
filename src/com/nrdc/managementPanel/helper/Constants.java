@@ -25,7 +25,7 @@ public class Constants {
 
     public static final String PERMISSION_ERROR = "شما دسترسی استفاده از این خدمت را ندارید.";
 
-    public static final String SCHEMA = "MANAGEMENT_PANEL";
+    public static final String SCHEMA = "POLICE_HAMRAH";
     public static final String CANT_NOT_EDIT_THIS_USER = "شما دسترسی تغییر کارری با چنین سیتمی را ندارید.";
     public static final String CANT_NOT_ACTIVE_THIS_USER = "شما دسترسی فعال کردن کارری با چنین سیتمی را ندارید.";
     public static final String CANT_NOT_DEACTIVE_THIS_USER = "شما دسترسی غیر فعال کردن کارری با چنین سیتمی را ندارید.";
