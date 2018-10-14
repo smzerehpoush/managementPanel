@@ -15,8 +15,7 @@ import javax.ws.rs.core.Response;
 
 @Path("/login")
 public class LoginService {
-    private static Logger logger = Logger.getLogger(UserServices.class.getName());
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private static Logger logger = Logger.getLogger(LoginService.class.getName());
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)

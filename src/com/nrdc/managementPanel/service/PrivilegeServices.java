@@ -6,7 +6,6 @@ import com.nrdc.managementPanel.jsonModel.EncryptedResponse;
 import com.nrdc.managementPanel.jsonModel.StandardResponse;
 import com.nrdc.managementPanel.model.dao.User;
 import org.apache.log4j.Logger;
-import org.codehaus.jackson.map.ObjectMapper;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -14,8 +13,7 @@ import javax.ws.rs.core.Response;
 
 @Path("/privilege")
 public class PrivilegeServices {
-    private static Logger logger = Logger.getLogger(UserServices.class.getName());
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private static Logger logger = Logger.getLogger(PrivilegeServices.class.getName());
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)

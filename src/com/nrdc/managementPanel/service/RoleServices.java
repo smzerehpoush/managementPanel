@@ -16,7 +16,7 @@ import javax.ws.rs.core.Response;
 
 @Path("/role")
 public class RoleServices {
-    private static Logger logger = Logger.getLogger(UserServices.class.getName());
+    private static Logger logger = Logger.getLogger(RoleServices.class.getName());
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @GET
