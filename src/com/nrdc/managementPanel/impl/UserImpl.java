@@ -20,29 +20,29 @@ import java.util.List;
 
 public class UserImpl {
     public StandardResponse resetPassword(String token, RequestResetPassword requestResetPassword) throws Exception {
-        Operation operation = new Operation();
+//        Operation operation = new Operation();
         Privilege privilege = Privilege.getPrivilege(PrivilegeNames.RESET_PASSWORD);
-        operation.setFkPrivilegeId(privilege.getId());
+//        operation.setFkPrivilegeId(privilege.getId());
         User user = User.validate(token, SystemNames.MANAGEMENT_PANEL);
-        operation.setUserToken(token);
-        operation.setFkUserId(user.getId());
-        operation.setTime(new Date());
+//        operation.setUserToken(token);
+//        operation.setFkUserId(user.getId());
+//        operation.setTime(new Date());
         try {
             if (!checkUserOldPassword(user.getUsername(), requestResetPassword))
                 throw new Exception(Constants.INCORRECT_USERNAME_OR_PASSWORD);
             checkPassword(requestResetPassword);
             setUserNewPassword(user.getUsername(), requestResetPassword);
             StandardResponse response = StandardResponse.getOKResponse();
-            operation.setStatusCode(1L);
+//            operation.setStatusCode(1L);
             String description = createResetPasswordLog(user);
-            operation.setDescription(description);
-            operation.persist();
+//            operation.setDescription(description);
+//            operation.persist();
             return response;
         } catch (Exception ex) {
-            operation.setStatusCode(-1L);
+//            operation.setStatusCode(-1L);
             String description = createResetPasswordLog(user, ex.getMessage());
-            operation.setDescription(description);
-            operation.persist();
+//            operation.setDescription(description);
+//            operation.persist();
             return StandardResponse.getNOKExceptions(ex);
         }
     }
@@ -161,7 +161,7 @@ public class UserImpl {
             user1.checkPrivilege(privilegeName);
             User user2 = User.getUser(request.getFkUserId());
             if (user1.equals(user2)) {
-                throw new Exception(Constants.CANT_DEACTIVE_YOURSELF);
+                throw new Exception(Constants.CANT_DE_ACTIVE_YOURSELF);
             }
             List<System> user2Systems = getUserSystems(user2);
             if (!user2Systems.contains(system)) {
