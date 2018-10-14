@@ -1,8 +1,8 @@
-package com.nrdc.managementPanel.model.dao;
+package com.nrdc.managementPanel.model.dto;
 
 import java.util.Date;
 
-public class OperationDAO extends BaseModel {
+public class OperationDTO extends BaseModel {
     private Long id;
     private Long fkUserId;
     private Long fkPrivilegeId;
@@ -70,7 +70,7 @@ public class OperationDAO extends BaseModel {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("OperationDAO{");
+        final StringBuffer sb = new StringBuffer("OperationDTO{");
         sb.append("id=").append(id);
         sb.append(", fkUserId=").append(fkUserId);
         sb.append(", fkPrivilegeId=").append(fkPrivilegeId);

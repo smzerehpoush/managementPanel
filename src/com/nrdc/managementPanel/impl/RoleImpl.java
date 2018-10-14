@@ -6,7 +6,7 @@ import com.nrdc.managementPanel.jsonModel.StandardResponse;
 import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestGetRolePrivileges;
 import com.nrdc.managementPanel.jsonModel.jsonResponse.ResponseGetPrivileges;
 import com.nrdc.managementPanel.jsonModel.jsonResponse.ResponseGetRoles;
-import com.nrdc.managementPanel.model.dto.User;
+import com.nrdc.managementPanel.model.dao.User;
 
 import javax.persistence.EntityManager;
 import java.util.List;

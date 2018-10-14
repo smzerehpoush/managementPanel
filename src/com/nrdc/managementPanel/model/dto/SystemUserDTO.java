@@ -1,6 +1,6 @@
-package com.nrdc.managementPanel.model.dao;
+package com.nrdc.managementPanel.model.dto;
 
-public class SystemUserDAO extends BaseModel {
+public class SystemUserDTO extends BaseModel {
     private Long id;
     private Long fkUserId;
     private Long fkSystemId;
@@ -32,7 +32,7 @@ public class SystemUserDAO extends BaseModel {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("SystemUserDAO{");
+        final StringBuffer sb = new StringBuffer("SystemUserDTO{");
         sb.append("id=").append(id);
         sb.append(", fkUserId=").append(fkUserId);
         sb.append(", fkSystemId=").append(fkSystemId);

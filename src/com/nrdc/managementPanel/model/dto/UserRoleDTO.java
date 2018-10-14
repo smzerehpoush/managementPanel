@@ -1,11 +1,11 @@
-package com.nrdc.managementPanel.model.dao;
+package com.nrdc.managementPanel.model.dto;
 
-public class UserRoleDAO extends BaseModel {
+public class UserRoleDTO extends BaseModel {
     private Long id;
     private Long fkUserId;
     private Long fkRoleId;
 
-    public UserRoleDAO() {
+    public UserRoleDTO() {
     }
 
     public Long getId() {
@@ -34,7 +34,7 @@ public class UserRoleDAO extends BaseModel {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("UserRoleDAO{");
+        final StringBuffer sb = new StringBuffer("UserRoleDTO{");
         sb.append("id=").append(id);
         sb.append(", fkUserId=").append(fkUserId);
         sb.append(", fkRoleId=").append(fkRoleId);

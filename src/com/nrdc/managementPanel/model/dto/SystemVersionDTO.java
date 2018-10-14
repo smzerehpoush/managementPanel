@@ -1,6 +1,6 @@
-package com.nrdc.managementPanel.model.dao;
+package com.nrdc.managementPanel.model.dto;
 
-public class SystemVersionDAO extends BaseModel {
+public class SystemVersionDTO extends BaseModel {
     private Long id;
     private Long fkSystemId;
     private String versionName;
@@ -49,7 +49,7 @@ public class SystemVersionDAO extends BaseModel {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("SystemVersionDAO{");
+        final StringBuffer sb = new StringBuffer("SystemVersionDTO{");
         sb.append("id=").append(id);
         sb.append(", fkSystemId=").append(fkSystemId);
         sb.append(", versionName='").append(versionName).append('\'');

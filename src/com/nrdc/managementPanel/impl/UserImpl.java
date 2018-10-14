@@ -9,8 +9,8 @@ import com.nrdc.managementPanel.jsonModel.jsonRequest.*;
 import com.nrdc.managementPanel.jsonModel.jsonResponse.ResponseGetRoles;
 import com.nrdc.managementPanel.jsonModel.jsonResponse.ResponseGetRolesWithPrivileges;
 import com.nrdc.managementPanel.jsonModel.jsonResponse.ResponseGetUsers;
-import com.nrdc.managementPanel.model.dto.*;
-import com.nrdc.managementPanel.model.dto.System;
+import com.nrdc.managementPanel.model.dao.*;
+import com.nrdc.managementPanel.model.dao.System;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;

@@ -1,6 +1,6 @@
-package com.nrdc.managementPanel.model.dao;
+package com.nrdc.managementPanel.model.dto;
 
-public class TokenDAO extends BaseModel {
+public class TokenDTO extends BaseModel {
     private Long id;
     private Long fkUserId;
     private String token;
@@ -40,7 +40,7 @@ public class TokenDAO extends BaseModel {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("TokenDAO{");
+        final StringBuffer sb = new StringBuffer("TokenDTO{");
         sb.append("id=").append(id);
         sb.append(", fkUserId=").append(fkUserId);
         sb.append(", token='").append(token).append('\'');

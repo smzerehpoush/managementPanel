@@ -1,6 +1,6 @@
-package com.nrdc.managementPanel.model.dao;
+package com.nrdc.managementPanel.model.dto;
 
-public class KeyDAO extends BaseModel {
+public class KeyDTO extends BaseModel {
 
     private Long id;
     private String key;

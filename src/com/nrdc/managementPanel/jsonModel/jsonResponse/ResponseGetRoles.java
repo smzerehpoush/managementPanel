@@ -1,6 +1,6 @@
 package com.nrdc.managementPanel.jsonModel.jsonResponse;
 
-import com.nrdc.managementPanel.model.dto.Role;
+import com.nrdc.managementPanel.model.dao.Role;
 
 import java.util.List;
 

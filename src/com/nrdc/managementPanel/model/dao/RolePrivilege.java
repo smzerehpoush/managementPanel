@@ -1,13 +1,13 @@
-package com.nrdc.managementPanel.model.dto;
+package com.nrdc.managementPanel.model.dao;
 
 import com.nrdc.managementPanel.helper.Constants;
-import com.nrdc.managementPanel.model.dao.RolePrivilegeDAO;
+import com.nrdc.managementPanel.model.dto.RolePrivilegeDTO;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "ROLE_PRIVILEGE", schema = Constants.SCHEMA)
-public class RolePrivilege extends RolePrivilegeDAO {
+public class RolePrivilege extends RolePrivilegeDTO {
 
     public RolePrivilege() {
     }

@@ -1,13 +1,13 @@
-package com.nrdc.managementPanel.model.dto;
+package com.nrdc.managementPanel.model.dao;
 
 import com.nrdc.managementPanel.helper.Constants;
-import com.nrdc.managementPanel.model.dao.RoleDAO;
+import com.nrdc.managementPanel.model.dto.RoleDTO;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "ROLE", schema = Constants.SCHEMA)
-public class Role extends RoleDAO {
+public class Role extends RoleDTO {
 
     public Role() {
     }

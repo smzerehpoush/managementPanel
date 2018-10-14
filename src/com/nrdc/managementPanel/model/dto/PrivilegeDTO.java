@@ -1,6 +1,6 @@
-package com.nrdc.managementPanel.model.dao;
+package com.nrdc.managementPanel.model.dto;
 
-public class PrivilegeDAO extends BaseModel {
+public class PrivilegeDTO extends BaseModel {
     private Long id;
     private String privilegeText;
 
@@ -23,7 +23,7 @@ public class PrivilegeDAO extends BaseModel {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("PrivilegeDAO{");
+        final StringBuffer sb = new StringBuffer("PrivilegeDTO{");
         sb.append("id=").append(id);
         sb.append(", privilegeText='").append(privilegeText).append('\'');
         sb.append('}');

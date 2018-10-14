@@ -1,8 +1,8 @@
-package com.nrdc.managementPanel.model.dao;
+package com.nrdc.managementPanel.model.dto;
 
 import java.util.Objects;
 
-public class SystemDAO extends BaseModel {
+public class SystemDTO extends BaseModel {
     private Long id;
     private String systemName;
     private String systemPath;
@@ -88,7 +88,7 @@ public class SystemDAO extends BaseModel {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("SystemDAO{");
+        final StringBuffer sb = new StringBuffer("SystemDTO{");
         sb.append("id=").append(id);
         sb.append(", systemName='").append(systemName).append('\'');
         sb.append(", systemPath='").append(systemPath).append('\'');
@@ -105,10 +105,10 @@ public class SystemDAO extends BaseModel {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof SystemDAO)) return false;
-        SystemDAO systemDAO = (SystemDAO) o;
-        return Objects.equals(getSystemName(), systemDAO.getSystemName()) &&
-                Objects.equals(getSystemPath(), systemDAO.getSystemPath());
+        if (!(o instanceof SystemDTO)) return false;
+        SystemDTO systemDTO = (SystemDTO) o;
+        return Objects.equals(getSystemName(), systemDTO.getSystemName()) &&
+                Objects.equals(getSystemPath(), systemDTO.getSystemPath());
     }
 
     @Override

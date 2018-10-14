@@ -1,6 +1,6 @@
-package com.nrdc.managementPanel.model.dao;
+package com.nrdc.managementPanel.model.dto;
 
-public class UserDAO extends BaseModel {
+public class UserDTO extends BaseModel {
 
     private Long id;
     private String password;
@@ -86,7 +86,7 @@ public class UserDAO extends BaseModel {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("UserDAO{");
+        final StringBuffer sb = new StringBuffer("UserDTO{");
         sb.append("id=").append(id);
         sb.append(", password='").append(password).append('\'');
         sb.append(", username='").append(username).append('\'');

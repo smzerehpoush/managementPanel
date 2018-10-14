@@ -1,13 +1,13 @@
-package com.nrdc.managementPanel.model.dto;
+package com.nrdc.managementPanel.model.dao;
 
 import com.nrdc.managementPanel.helper.Constants;
-import com.nrdc.managementPanel.model.dao.SystemVersionDAO;
+import com.nrdc.managementPanel.model.dto.SystemVersionDTO;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "SYSTEM_VERSIONS", schema = Constants.SCHEMA)
-public class SystemVersion extends SystemVersionDAO {
+public class SystemVersion extends SystemVersionDTO {
     @Override
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -1,13 +1,13 @@
-package com.nrdc.managementPanel.model.dto;
+package com.nrdc.managementPanel.model.dao;
 
 import com.nrdc.managementPanel.helper.Constants;
-import com.nrdc.managementPanel.model.dao.SystemUserDAO;
+import com.nrdc.managementPanel.model.dto.SystemUserDTO;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "USER_SYSTEM", schema = Constants.SCHEMA)
-public class SystemUser extends SystemUserDAO {
+public class SystemUser extends SystemUserDTO {
     @Override
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

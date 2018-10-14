@@ -1,15 +1,15 @@
-package com.nrdc.managementPanel.model.dto;
+package com.nrdc.managementPanel.model.dao;
 
 import com.nrdc.managementPanel.helper.Constants;
 import com.nrdc.managementPanel.helper.SystemNames;
-import com.nrdc.managementPanel.model.dao.SystemDAO;
+import com.nrdc.managementPanel.model.dto.SystemDTO;
 import org.apache.log4j.Logger;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "SYSTEM", schema = Constants.SCHEMA)
-public class System extends SystemDAO {
+public class System extends SystemDTO {
     private static Logger logger = Logger.getLogger(System.class.getName());
 
     public System() {

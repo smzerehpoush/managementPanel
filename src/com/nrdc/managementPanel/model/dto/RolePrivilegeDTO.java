@@ -1,6 +1,6 @@
-package com.nrdc.managementPanel.model.dao;
+package com.nrdc.managementPanel.model.dto;
 
-public class RolePrivilegeDAO extends BaseModel {
+public class RolePrivilegeDTO extends BaseModel {
     private Long id;
     private Long fkRoleId;
     private Long fkPrivilegeId;
@@ -32,7 +32,7 @@ public class RolePrivilegeDAO extends BaseModel {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("RolePrivilegeDAO{");
+        final StringBuffer sb = new StringBuffer("RolePrivilegeDTO{");
         sb.append("id=").append(id);
         sb.append(", fkRoleId=").append(fkRoleId);
         sb.append(", fkPrivilegeId=").append(fkPrivilegeId);

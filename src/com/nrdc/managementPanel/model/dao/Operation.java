@@ -1,14 +1,14 @@
-package com.nrdc.managementPanel.model.dto;
+package com.nrdc.managementPanel.model.dao;
 
 import com.nrdc.managementPanel.helper.Constants;
-import com.nrdc.managementPanel.model.dao.OperationDAO;
+import com.nrdc.managementPanel.model.dto.OperationDTO;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table(name = "OPERATION", schema = Constants.SCHEMA)
-public class Operation extends OperationDAO {
+public class Operation extends OperationDTO {
 
     public Operation() {
     }

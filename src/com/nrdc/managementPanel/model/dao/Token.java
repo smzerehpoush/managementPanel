@@ -1,16 +1,16 @@
-package com.nrdc.managementPanel.model.dto;
+package com.nrdc.managementPanel.model.dao;
 
 import com.nrdc.managementPanel.helper.Constants;
 import com.nrdc.managementPanel.helper.SystemNames;
 import com.nrdc.managementPanel.impl.Database;
-import com.nrdc.managementPanel.model.dao.TokenDAO;
+import com.nrdc.managementPanel.model.dto.TokenDTO;
 
 import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
 @Table(name = "TOKEN", schema = Constants.SCHEMA)
-public class Token extends TokenDAO {
+public class Token extends TokenDTO {
     public Token() {
     }
 

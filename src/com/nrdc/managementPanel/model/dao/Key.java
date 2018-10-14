@@ -1,14 +1,14 @@
-package com.nrdc.managementPanel.model.dto;
+package com.nrdc.managementPanel.model.dao;
 
 import com.nrdc.managementPanel.helper.Constants;
-import com.nrdc.managementPanel.model.dao.KeyDAO;
+import com.nrdc.managementPanel.model.dto.KeyDTO;
 
 import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
 @Table(name = "KEYS", schema = Constants.SCHEMA)
-public class Key extends KeyDAO {
+public class Key extends KeyDTO {
 
     public Key() {
     }

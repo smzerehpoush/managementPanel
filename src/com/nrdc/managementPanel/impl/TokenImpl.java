@@ -4,9 +4,9 @@ import com.nrdc.managementPanel.helper.Constants;
 import com.nrdc.managementPanel.helper.SystemNames;
 import com.nrdc.managementPanel.jsonModel.StandardResponse;
 import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestRemoveToken;
-import com.nrdc.managementPanel.model.dto.System;
-import com.nrdc.managementPanel.model.dto.Token;
-import com.nrdc.managementPanel.model.dto.User;
+import com.nrdc.managementPanel.model.dao.System;
+import com.nrdc.managementPanel.model.dao.Token;
+import com.nrdc.managementPanel.model.dao.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
