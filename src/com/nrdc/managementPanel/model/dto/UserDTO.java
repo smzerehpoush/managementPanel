@@ -99,6 +99,11 @@ public class UserDTO extends BaseModel {
         sb.append('}');
         return sb.toString();
     }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }
 
 
