@@ -48,13 +48,13 @@ public class LoginImpl {
             response.setResponse(responseLogin);
             operation.setFkUserId(user.getId());
             operation.setStatusCode(1L);
-            operation.persist();
+            entityManager.persist(operation);
             if (transaction.isActive())
                 transaction.commit();
             return response;
         } catch (Exception ex) {
             operation.setStatusCode(-1L);
-            operation.persist();
+            entityManager.persist(operation);
             if (transaction != null && transaction.isActive())
                 transaction.rollback();
             return StandardResponse.getNOKExceptions(ex);
