@@ -3,10 +3,9 @@ package com.nrdc.managementPanel.helper;
 
 import com.nrdc.managementPanel.jsonModel.EncryptedRequest;
 import com.nrdc.managementPanel.jsonModel.EncryptedResponse;
-import com.nrdc.managementPanel.model.dto.User;
+import com.nrdc.managementPanel.model.dao.User;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.junit.Test;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -387,15 +386,6 @@ public class Encryption {
         } catch (IOException e) {
             throw e;
         }
-    }
-
-    @Test
-    public void testFarsiWords() throws NoSuchAlgorithmException {
-//        String s = "{\"data\" : \"سلام\"}";
-//        assert s.equals(decryptOrNull("k", encryptOrNull("k", s)));
-//        String d= encryptOrNull("key","سلام");
-//        System.out.println(decryptOrNull("key","zde0W/z2mrmRjzemhBJifA=="));
-        System.out.println(decryptOrNull("key", encryptOrNull("key", "سلام")));
     }
 
 }
