@@ -7,8 +7,8 @@ import com.nrdc.managementPanel.helper.SystemNames;
 import com.nrdc.managementPanel.jsonModel.StandardResponse;
 import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestLogin;
 import com.nrdc.managementPanel.jsonModel.jsonResponse.ResponseLogin;
-import com.nrdc.managementPanel.model.dto.*;
-import com.nrdc.managementPanel.model.dto.System;
+import com.nrdc.managementPanel.model.dao.*;
+import com.nrdc.managementPanel.model.dao.System;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
