@@ -11,6 +11,9 @@ public class OperationDTO extends BaseModel {
     private Long statusCode;
     private String userToken;
 
+    public OperationDTO(){
+        this.time = new Date();
+    }
 
     public Long getId() {
         return id;
