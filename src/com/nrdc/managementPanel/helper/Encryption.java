@@ -359,7 +359,7 @@ public class Encryption {
 
 
     public static String decryptRequest(EncryptedRequest request) throws Exception {
-        String key = User.getKey(request.getToken(), SystemNames.MANAGEMENT_PANEL).getKey();
+        String key = User.getKey(request.getToken()).getKey();
         String decrypted = decryptOrNull(key, request.getData());
         logger.debug(decrypted);
         return decrypted;

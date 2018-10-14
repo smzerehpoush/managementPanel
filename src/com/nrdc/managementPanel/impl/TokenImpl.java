@@ -16,7 +16,7 @@ public class TokenImpl {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
-            User user = User.validate(token, SystemNames.MANAGEMENT_PANEL);
+            User user = User.validate(token);
             System us = System.getSystem(requestRemoveToken.getFkSystemId());
             Token.validateToken(requestRemoveToken.getToken(), us.getSystemName());
 

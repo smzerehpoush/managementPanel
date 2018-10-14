@@ -14,7 +14,7 @@ public class PrivilegeImpl {
     public StandardResponse getPrivileges(String token) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
-            User user = User.validate(token, SystemNames.MANAGEMENT_PANEL);
+            User user = User.validate(token);
             user.checkPrivilege(PrivilegeNames.GET_PRIVILEGES);
             List<Privilege> privileges = entityManager.createQuery("SELECT p FROM Privilege p")
                     .getResultList();

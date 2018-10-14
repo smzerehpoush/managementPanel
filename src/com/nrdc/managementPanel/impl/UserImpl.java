@@ -23,7 +23,7 @@ public class UserImpl {
 //        Operation operation = new Operation();
         Privilege privilege = Privilege.getPrivilege(PrivilegeNames.RESET_PASSWORD);
 //        operation.setFkPrivilegeId(privilege.getId());
-        User user = User.validate(token, SystemNames.MANAGEMENT_PANEL);
+        User user = User.validate(token);
 //        operation.setUserToken(token);
 //        operation.setFkUserId(user.getId());
 //        operation.setTime(new Date());
@@ -117,7 +117,7 @@ public class UserImpl {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
-            User user1 = User.validate(token, SystemNames.MANAGEMENT_PANEL);
+            User user1 = User.validate(token);
             System system = System.getSystem(request.getFkSystemId());
             String privilegeName = "ACTIVATE_" + system.getSystemName() + "_USERS";
             user1.checkPrivilege(privilegeName);
@@ -155,7 +155,7 @@ public class UserImpl {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
-            User user1 = User.validate(token, SystemNames.MANAGEMENT_PANEL);
+            User user1 = User.validate(token);
             System system = System.getSystem(request.getFkSystemId());
             String privilegeName = "DEACTIVATE_" + system.getSystemName() + "_USERS";
             user1.checkPrivilege(privilegeName);
@@ -196,7 +196,7 @@ public class UserImpl {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
-            User user = User.validate(token, SystemNames.MANAGEMENT_PANEL);
+            User user = User.validate(token);
             user.checkPrivilege(PrivilegeNames.ADD_USERS);
             if (!transaction.isActive())
                 transaction.begin();
@@ -234,7 +234,7 @@ public class UserImpl {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
-            User user1 = User.validate(token, SystemNames.MANAGEMENT_PANEL);
+            User user1 = User.validate(token);
             System system = System.getSystem(requestEditUser.getFkSystemId());
             String privilegeName = "EDIT_" + system.getSystemName() + "_USERS";
             user1.checkPrivilege(privilegeName);
@@ -282,7 +282,7 @@ public class UserImpl {
     public StandardResponse getUsers(String token, RequestGetUsers requestAddUser) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
-            User user = User.validate(token, SystemNames.MANAGEMENT_PANEL);
+            User user = User.validate(token);
             System system = System.getSystem(requestAddUser.getFkSystemId());
             String privilegeName = "GET_" + system.getSystemName() + "_USERS";
             user.checkPrivilege(privilegeName);
@@ -308,7 +308,7 @@ public class UserImpl {
     public StandardResponse filterUsers(String token, RequestFilterUsers requestFilterUsers) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
-            User user = User.validate(token, SystemNames.MANAGEMENT_PANEL);
+            User user = User.validate(token);
             user.checkPrivilege(PrivilegeNames.FILTER_USERS);
             StringBuilder query = new StringBuilder();
             query.append("SELECT u FROM User u ");
@@ -377,7 +377,7 @@ public class UserImpl {
     public StandardResponse getRolesWithPrivileges(String token, RequestGetUserRolesWithPrivileges requestGetUserRolesWithPrivileges) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
-            User user = User.validate(token, SystemNames.MANAGEMENT_PANEL);
+            User user = User.validate(token);
             user.checkPrivilege(PrivilegeNames.GET_PRIVILEGES);
             List<RoleWithPrivileges> rolesWithPrivileges = new LinkedList<>();
             List<Role> roles = entityManager.createQuery("SELECT r FROM Role r JOIN UserRole ur ON r.id = ur.fkRoleId WHERE ur.fkUserId = :fkUserId")
@@ -409,7 +409,7 @@ public class UserImpl {
     public StandardResponse getRoles(String token, RequestGetUserRolesWithPrivileges requestGetUserRolesWithPrivileges) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
-            User user = User.validate(token, SystemNames.MANAGEMENT_PANEL);
+            User user = User.validate(token);
             user.checkPrivilege(PrivilegeNames.GET_ROLES);
             List roles = entityManager.createQuery("SELECT r FROM Role r JOIN UserRole ur ON r.id=ur.fkRoleId WHERE ur.fkUserId = :fkUserId")
                     .setParameter("fkUserId", requestGetUserRolesWithPrivileges.getFkUserId())

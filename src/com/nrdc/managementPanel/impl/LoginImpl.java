@@ -35,7 +35,7 @@ public class LoginImpl {
             if (!transaction.isActive())
                 transaction.begin();
             User user = verifyUser(requestLogin.getUsername(), requestLogin.getPassword(), requestLogin.getPhoneNumber());
-            System system = System.getSystem(SystemNames.MANAGEMENT_PANEL);
+            System system = System.getSystem(SystemNames.POLICE_HAMRAH);
             Token token = new Token(user, system);
             entityManager.persist(token);
             Key key = new Key(user, system);
