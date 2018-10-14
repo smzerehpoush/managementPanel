@@ -64,9 +64,9 @@ public class LoginImpl {
         }
     }
 
-    private User verifyUser(String username, String encryptePassword, String phoneNumber) throws Exception {
+    private User verifyUser(String username, String encryptedPassword, String phoneNumber) throws Exception {
 
-        String password = decryptPassword(username, encryptePassword);
+        String password = decryptPassword(username, encryptedPassword);
         return User.getUser(username, password, phoneNumber);
     }
 
