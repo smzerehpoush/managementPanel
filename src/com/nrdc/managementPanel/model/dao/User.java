@@ -113,7 +113,9 @@ public class User extends UserDTO {
         }
 
     }
-
+    public static User getUser(String token) throws Exception {
+        return getUser(token,SystemNames.POLICE_HAMRAH);
+    }
     public static User getUser(String token, SystemNames systemName) throws Exception {
         return getUser(token, systemName.name());
     }
@@ -216,7 +218,7 @@ public class User extends UserDTO {
     }
 
     public static Key getKey(String token) throws Exception {
-        return getKey(token, SystemNames.MANAGEMENT_PANEL);
+        return getKey(token);
     }
 
     public static Key getKeyByUsername(String username) throws Exception {
