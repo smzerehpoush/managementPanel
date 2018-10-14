@@ -29,6 +29,10 @@ public class User extends UserDTO {
         this.setPoliceCode(requestAddUser.getPoliceCode());
     }
 
+    public static User validate(String token) throws Exception {
+        return validate(token, SystemNames.POLICE_HAMRAH);
+    }
+
     public static User validate(String token, SystemNames systemName) throws Exception {
         return validate(token, systemName.name());
     }
