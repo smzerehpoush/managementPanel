@@ -20,7 +20,7 @@ public class SystemServices {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getRoles(@QueryParam("token") String token) {
+    public Response getSystems(@QueryParam("token") String token) {
         logger.info("++================== getRoles SERVICE : START ==================++");
         try {
             StandardResponse response = new SystemImpl().getSystems(token);
