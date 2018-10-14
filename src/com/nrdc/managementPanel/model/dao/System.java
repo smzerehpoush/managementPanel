@@ -8,8 +8,9 @@ import org.apache.log4j.Logger;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "SYSTEM", schema = Constants.SCHEMA)
+@Table(name = "PH_SYSTEM", schema = Constants.SCHEMA)
 public class System extends SystemDTO {
+    public static final String tableName="PH_SYSTEM";
     private static Logger logger = Logger.getLogger(System.class.getName());
 
     public System() {
@@ -59,63 +60,63 @@ public class System extends SystemDTO {
     @Override
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID_SYSTEM")
+    @Column(name = "ID_PH_SYSTEM", table = tableName)
     public Long getId() {
         return super.getId();
     }
 
     @Override
     @Basic
-    @Column(name = "SYSTEM_NAME", unique = true, table = "SYSTEM")
+    @Column(name = "SYSTEM_NAME", unique = true, table = tableName)
     public String getSystemName() {
         return super.getSystemName();
     }
 
     @Override
     @Basic
-    @Column(name = "SYSTEM_PATH", unique = true, table = "SYSTEM")
+    @Column(name = "SYSTEM_PATH", table = tableName)
     public String getSystemPath() {
         return super.getSystemPath();
     }
 
     @Override
     @Basic
-    @Column(name = "PACKAGE_NAME", unique = true, table = "SYSTEM")
+    @Column(name = "PACKAGE_NAME", unique = true, table = tableName)
     public String getPackageName() {
         return super.getPackageName();
     }
 
     @Override
     @Basic
-    @Column(name = "ICON_PATH", unique = true, table = "SYSTEM")
+    @Column(name = "ICON_PATH", table = tableName)
     public String getIconPath() {
         return super.getIconPath();
     }
 
     @Override
     @Basic
-    @Column(name = "DOWNLOAD_COUNT", unique = true, table = "SYSTEM")
+    @Column(name = "DOWNLOAD_COUNT", unique = true, table = tableName)
     public Long getDownloadCount() {
         return super.getDownloadCount();
     }
 
     @Override
     @Basic
-    @Column(name = "DESCRIPTION", unique = true, table = "SYSTEM")
+    @Column(name = "DESCRIPTION", unique = true, table = tableName)
     public String getDescription() {
         return super.getDescription();
     }
 
     @Override
     @Basic
-    @Column(name = "TITLE", unique = true, table = "SYSTEM")
+    @Column(name = "TITLE", unique = true, table = tableName)
     public String getTitle() {
         return super.getTitle();
     }
 
     @Override
     @Basic
-    @Column(name = "TYPE", unique = true, table = "SYSTEM")
+    @Column(name = "TYPE", unique = true, table = tableName)
     public String getType() {
         return super.getType();
     }

@@ -9,8 +9,9 @@ import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
-@Table(name = "TOKEN", schema = Constants.SCHEMA)
+@Table(name = "PH_TOKEN", schema = Constants.SCHEMA)
 public class Token extends TokenDTO {
+    public static final String tableName="PH_TOKEN";
     public Token() {
     }
 
@@ -45,28 +46,28 @@ public class Token extends TokenDTO {
     @Override
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID_TOKEN")
+    @Column(name = "ID_PH_TOKEN",table = tableName)
     public Long getId() {
         return super.getId();
     }
 
     @Override
     @Basic
-    @Column(name = "FK_USER_ID")
+    @Column(name = "FK_USER_ID",table = tableName)
     public Long getFkUserId() {
         return super.getFkUserId();
     }
 
     @Override
     @Basic
-    @Column(name = "TOKEN")
+    @Column(name = "TOKEN",table = tableName)
     public String getToken() {
         return super.getToken();
     }
 
     @Override
     @Basic
-    @Column(name = "FK_SYSTEM_ID")
+    @Column(name = "FK_SYSTEM_ID",table = tableName)
     public Long getFkSystemId() {
         return super.getFkSystemId();
     }

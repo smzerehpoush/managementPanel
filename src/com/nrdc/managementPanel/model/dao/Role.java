@@ -6,9 +6,9 @@ import com.nrdc.managementPanel.model.dto.RoleDTO;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "ROLE", schema = Constants.SCHEMA)
+@Table(name = "PH_ROLE", schema = Constants.SCHEMA)
 public class Role extends RoleDTO {
-
+    public static final String tableName="PH_ROLE";
     public Role() {
     }
 
@@ -20,7 +20,7 @@ public class Role extends RoleDTO {
     @Override
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID_ROLE")
+    @Column(name = "ID_PH_ROLE")
     public Long getId() {
         return super.getId();
     }

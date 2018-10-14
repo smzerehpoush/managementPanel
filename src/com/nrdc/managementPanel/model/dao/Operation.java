@@ -7,9 +7,9 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "OPERATION", schema = Constants.SCHEMA)
+@Table(name = "PH_OPERATION", schema = Constants.SCHEMA)
 public class Operation extends OperationDTO {
-
+    public static final String tableName = "PH_OPERATION";
     public Operation() {
     }
 
@@ -27,21 +27,21 @@ public class Operation extends OperationDTO {
     @Override
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID_OPERATION")
+    @Column(name = "ID_OPERATION",table = tableName)
     public Long getId() {
         return super.getId();
     }
 
     @Override
     @Basic
-    @Column(name = "FK_USER_ID")
+    @Column(name = "FK_USER_ID",table = tableName)
     public Long getFkUserId() {
         return super.getFkUserId();
     }
 
     @Override
     @Basic
-    @Column(name = "FK_PRIVILEGE_ID")
+    @Column(name = "FK_PRIVILEGE_ID",table = tableName)
     public Long getFkPrivilegeId() {
         return super.getFkPrivilegeId();
     }
@@ -49,28 +49,28 @@ public class Operation extends OperationDTO {
     @Override
     @Basic
     @Temporal(TemporalType.DATE)
-    @Column(name = "TIME")
+    @Column(name = "TIME",table = tableName)
     public Date getTime() {
         return super.getTime();
     }
 
     @Override
     @Basic
-    @Column(name = "DESCRIPTION")
+    @Column(name = "DESCRIPTION",table = tableName)
     public String getDescription() {
         return super.getDescription();
     }
 
     @Override
     @Basic
-    @Column(name = "STATUS_CODE")
+    @Column(name = "STATUS_CODE",table = tableName)
     public Long getStatusCode() {
         return super.getStatusCode();
     }
 
     @Override
     @Basic
-    @Column(name = "USER_TOKEN")
+    @Column(name = "USER_TOKEN",table = tableName)
     public String getUserToken() {
         return super.getUserToken();
     }

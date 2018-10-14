@@ -8,8 +8,9 @@ import com.nrdc.managementPanel.model.dto.PrivilegeDTO;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "PRIVILEGE", schema = Constants.SCHEMA)
+@Table(name = "PH_PRIVILEGE", schema = Constants.SCHEMA)
 public class Privilege extends PrivilegeDTO {
+    public static final String tableName="PH_PRIVILEGE";
     public Privilege() {
     }
 
@@ -39,14 +40,14 @@ public class Privilege extends PrivilegeDTO {
     @Override
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID_PRIVILEGE")
+    @Column(name = "ID_PH_PRIVILEGE", table = tableName)
     public Long getId() {
         return super.getId();
     }
 
     @Override
     @Basic
-    @Column(name = "PRIVILEGE_TEXT")
+    @Column(name = "PRIVILEGE_TEXT",table = tableName)
     public String getPrivilegeText() {
         return super.getPrivilegeText();
     }

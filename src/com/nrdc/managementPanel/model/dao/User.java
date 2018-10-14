@@ -13,6 +13,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "PH_USER", schema = Constants.SCHEMA)
 public class User extends UserDTO {
+    public static final String tableName="PH_USER";
     private static Logger logger = Logger.getLogger(User.class.getName());
 
 
@@ -267,63 +268,63 @@ public class User extends UserDTO {
     @Override
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID_PH_USER")
+    @Column(name = "ID_PH_USER",table = tableName)
     public Long getId() {
         return super.getId();
     }
 
     @Override
     @Basic
-    @Column(name = "PASSWORD")
+    @Column(name = "PASSWORD",table = tableName)
     public String getPassword() {
         return super.getPassword();
     }
 
     @Override
     @Basic
-    @Column(name = "USERNAME")
+    @Column(name = "USERNAME",table = tableName)
     public String getUsername() {
         return super.getUsername();
     }
 
     @Override
     @Basic
-    @Column(name = "IS_ACTIVE")
+    @Column(name = "IS_ACTIVE",table = tableName)
     public Boolean getIsActive() {
         return super.getIsActive();
     }
 
     @Override
     @Basic
-    @Column(name = "PHONE_NUMBER")
+    @Column(name = "PHONE_NUMBER",table = tableName)
     public String getPhoneNumber() {
         return super.getPhoneNumber();
     }
 
     @Override
     @Basic
-    @Column(name = "FIRST_NAME")
+    @Column(name = "FIRST_NAME",table = tableName)
     public String getFirstName() {
         return super.getFirstName();
     }
 
     @Override
     @Basic
-    @Column(name = "LAST_NAME")
+    @Column(name = "LAST_NAME",table = tableName)
     public String getLastName() {
         return super.getLastName();
     }
 
     @Override
     @Basic
-    @Column(name = "NATIONAL_ID")
+    @Column(name = "NATIONAL_ID",table = tableName)
     public String getNationalId() {
         return super.getNationalId();
     }
 
     @Override
     @Basic
-    @Column(name = "POLICE_CODE")
+    @Column(name = "POLICE_CODE",table = tableName)
     public String getPoliceCode() {
         return super.getPoliceCode();
     }
