@@ -5,7 +5,7 @@ public class Constants {
     public static final String CANT_DE_ACTIVE_YOURSELF = "نمی توانید خودتان را غیر فغال کنید.";
 
     public static final String NOT_VALID_TOKEN = "توکن معتبر نیست.";
-    public static final String NOT_VALID_SYSTEM = "سیستم معتبر نمی باشد.";
+    public static final String NOT_VALID_SYSTEM = "سیستم معتبر نمی باشد. یا هنوز اضافه نشده است.";
     public static final String NOT_VALID_USER = "کاربر معتبر نمی باشد";
     public static final String NOT_VALID_PRIVILEGE = "سیستم معتبر نمی باشد";
 
