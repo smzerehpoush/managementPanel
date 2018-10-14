@@ -368,7 +368,10 @@ public class User extends UserDTO {
     public void checkToken(SystemNames system) throws Exception {
         checkToken(system.name());
     }
+    public void checkSystemAccess(System system) throws Exception {
+        checkSystemAccess(system.getId());
 
+    }
     public void checkSystemAccess(Long fkSystemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
