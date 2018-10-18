@@ -22,6 +22,11 @@ import javax.ws.rs.core.Response;
 public class LoginService {
     private static Logger logger = Logger.getLogger(LoginService.class.getName());
 
+    /***
+     *
+     * @param requestLogin request login for logging in PoliceHamrah system
+     * @return standardResponse
+     */
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
