@@ -1,17 +1,8 @@
 package com.nrdc.policeHamrah.jsonModel.jsonRequest;
 
 public class RequestLogout {
-    private String token;
-
     private Long fkSystemId;
 
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
 
     public Long getFkSystemId() {
         return fkSystemId;
@@ -23,9 +14,9 @@ public class RequestLogout {
 
     @Override
     public String toString() {
-        return "RequestLogout{" +
-                "token='" + token + '\'' +
-                ", fkSystemId=" + fkSystemId +
-                '}';
+        final StringBuilder sb = new StringBuilder("RequestLogout{");
+        sb.append("fkSystemId=").append(fkSystemId);
+        sb.append('}');
+        return sb.toString();
     }
 }
