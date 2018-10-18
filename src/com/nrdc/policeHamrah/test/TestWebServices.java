@@ -1,11 +1,11 @@
-package com.nrdc.managementPanel.test;
+package com.nrdc.policeHamrah.test;
 
-import com.nrdc.managementPanel.helper.Encryption;
-import com.nrdc.managementPanel.jsonModel.EncryptedRequest;
-import com.nrdc.managementPanel.jsonModel.EncryptedResponse;
-import com.nrdc.managementPanel.jsonModel.StandardResponse;
-import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestActiveUser;
-import com.nrdc.managementPanel.jsonModel.jsonRequest.RequestDeActiveUser;
+import com.nrdc.policeHamrah.helper.Encryption;
+import com.nrdc.policeHamrah.jsonModel.EncryptedRequest;
+import com.nrdc.policeHamrah.jsonModel.EncryptedResponse;
+import com.nrdc.policeHamrah.jsonModel.StandardResponse;
+import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestActiveUser;
+import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestDeActiveUser;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -22,7 +22,7 @@ import java.security.NoSuchAlgorithmException;
 
 @Path("/test")//sag toot!
 public class TestWebServices {
-    private final static String baseUrl = "http://127.0.0.1:7001/managementPanel/api";
+    private final static String baseUrl = "http://127.0.0.1:7001/policeHamrah/api";
     private static Logger logger = Logger.getLogger(TestWebServices.class.getName());
 
     @GET
