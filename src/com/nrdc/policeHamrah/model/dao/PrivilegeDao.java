@@ -52,5 +52,10 @@ public class PrivilegeDao extends com.nrdc.policeHamrah.model.dto.PrivilegeDto {
         return super.getPrivilegeText();
     }
 
-
+    @Override
+    @Basic
+    @Column(name = "FK_SYSTEM_ID", table = tableName)
+    public Long getFkSystemId() {
+        return super.getFkSystemId();
+    }
 }
