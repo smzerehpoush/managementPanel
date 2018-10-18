@@ -191,7 +191,7 @@ public class UserServices {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getPrivileges(EncryptedRequest encryptedRequest) {
+    public Response getRolesWithPrivileges(EncryptedRequest encryptedRequest) {
         logger.info("++================== getPrivileges SERVICE : START ==================++");
         try {
             RequestGetUserRolesWithPrivileges request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestGetUserRolesWithPrivileges.class);
