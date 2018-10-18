@@ -38,8 +38,8 @@ public class TokenImpl {
             if (transaction.isActive())
                 transaction.commit();
             StandardResponse response = new StandardResponse<>();
-            response.setResultCode(1);
-            response.setResultMessage("OK");
+
+
             return response;
         } catch (Exception ex) {
             if (transaction != null && transaction.isActive())

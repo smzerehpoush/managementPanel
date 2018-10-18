@@ -20,8 +20,6 @@ public class PrivilegeImpl {
             ResponseGetPrivileges responseGetPrivileges = new ResponseGetPrivileges();
             responseGetPrivileges.setPrivileges(privileges);
             StandardResponse response = new StandardResponse<>();
-            response.setResultCode(1);
-            response.setResultMessage("OK");
             response.setResponse(responseGetPrivileges);
             return response;
         } finally {

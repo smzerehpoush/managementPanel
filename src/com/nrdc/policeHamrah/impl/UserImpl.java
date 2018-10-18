@@ -136,8 +136,8 @@ public class UserImpl {
                 transaction.commit();
 
             StandardResponse response = new StandardResponse<>();
-            response.setResultCode(1);
-            response.setResultMessage("OK");
+
+
             return response;
 
         } catch (Exception ex) {
@@ -177,8 +177,8 @@ public class UserImpl {
                 transaction.commit();
 
             StandardResponse response = new StandardResponse<>();
-            response.setResultCode(1);
-            response.setResultMessage("OK");
+
+
             return response;
 
         } catch (Exception ex) {
@@ -206,8 +206,8 @@ public class UserImpl {
             if (transaction.isActive())
                 transaction.commit();
             StandardResponse response = new StandardResponse<>();
-            response.setResultCode(1);
-            response.setResultMessage("OK");
+
+
             return response;
         } catch (Exception ex) {
             if (transaction != null && transaction.isActive())
@@ -267,8 +267,8 @@ public class UserImpl {
             if (transaction.isActive())
                 transaction.commit();
             StandardResponse response = new StandardResponse<>();
-            response.setResultCode(1);
-            response.setResultMessage("OK");
+
+
             return response;
         } catch (Exception ex) {
             if (transaction != null && transaction.isActive())
@@ -296,8 +296,8 @@ public class UserImpl {
             ResponseGetUsers responseGetUsers = new ResponseGetUsers();
             responseGetUsers.setUsers(users);
             StandardResponse response = new StandardResponse<>();
-            response.setResultCode(1);
-            response.setResultMessage("OK");
+
+
             response.setResponse(responseGetUsers);
             return response;
         } finally {
@@ -365,8 +365,8 @@ public class UserImpl {
             ResponseGetUsers responseGetUsers = new ResponseGetUsers();
             responseGetUsers.setUsers(users);
             StandardResponse response = new StandardResponse<>();
-            response.setResultCode(1);
-            response.setResultMessage("OK");
+
+
             response.setResponse(responseGetUsers);
             return response;
         } finally {
@@ -397,8 +397,8 @@ public class UserImpl {
             ResponseGetRolesWithPrivileges responseGetRolesWithPrivileges = new ResponseGetRolesWithPrivileges();
             responseGetRolesWithPrivileges.setRoleWithPrivileges(rolesWithPrivileges);
             StandardResponse response = new StandardResponse<>();
-            response.setResultCode(1);
-            response.setResultMessage("OK");
+
+
             response.setResponse(responseGetRolesWithPrivileges);
             return response;
         } finally {
@@ -418,8 +418,8 @@ public class UserImpl {
             ResponseGetRoles responseGetRoles = new ResponseGetRoles();
             responseGetRoles.setRoles(roles);
             StandardResponse response = new StandardResponse<>();
-            response.setResultCode(1);
-            response.setResultMessage("OK");
+
+
             response.setResponse(responseGetRoles);
             return response;
         } finally {

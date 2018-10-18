@@ -25,8 +25,8 @@ public class SystemImpl {
             ResponseGetSystems responseGetSystems = new ResponseGetSystems();
             responseGetSystems.setSystemDtos(systems);
             StandardResponse response = new StandardResponse<>();
-            response.setResultCode(1);
-            response.setResultMessage("OK");
+
+
             response.setResponse(responseGetSystems);
             return response;
         } finally {
