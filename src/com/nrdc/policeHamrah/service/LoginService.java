@@ -43,6 +43,11 @@ public class LoginService {
             return Response.status(200).entity(response).build();
         }
     }
+
+    /**
+     * @param request {@link RequestLoginToSystems}
+     * @return
+     */
     @Path("/system")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
