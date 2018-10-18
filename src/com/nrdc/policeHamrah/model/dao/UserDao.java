@@ -222,7 +222,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
     }
 
     public static KeyDao getKey(String token) throws Exception {
-        return getKey(token);
+        return getKey(token, SystemNames.POLICE_HAMRAH);
     }
 
     public static KeyDao getKeyByUsername(String username) throws Exception {
