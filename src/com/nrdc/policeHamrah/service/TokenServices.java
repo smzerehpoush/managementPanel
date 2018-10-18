@@ -27,17 +27,17 @@ public class TokenServices {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response editUser(EncryptedRequest encryptedRequest) {
-        logger.info("++================== editUser SERVICE : START ==================++");
+        logger.info("++================== removeToken SERVICE : START ==================++");
         try {
             RequestRemoveToken request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestRemoveToken.class);
             StandardResponse response = new TokenImpl().removeToken(encryptedRequest.getToken(), request);
             String key = UserDao.getKey(encryptedRequest.getToken()).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
-            logger.info("++================== editUser SERVICE : END ==================++");
+            logger.info("++================== removeToken SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            logger.error("++================== editUser SERVICE : EXCEPTION ==================++");
+            logger.error("++================== removeToken SERVICE : EXCEPTION ==================++");
             StandardResponse response = StandardResponse.getNOKExceptions(ex);
             return Response.status(200).entity(response).build();
         }
