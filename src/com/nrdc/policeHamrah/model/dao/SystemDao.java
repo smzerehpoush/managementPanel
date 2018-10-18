@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "PH_SYSTEM", schema = Constants.SCHEMA)
 public class SystemDao extends SystemDto {
-    public static final String tableName="PH_SYSTEM";
+    public static final String tableName = "PH_SYSTEM";
     private static Logger logger = Logger.getLogger(SystemDao.class.getName());
 
     public SystemDao() {

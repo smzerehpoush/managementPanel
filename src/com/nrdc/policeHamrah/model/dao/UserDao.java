@@ -17,11 +17,6 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
     private static Logger logger = Logger.getLogger(UserDao.class.getName());
 
 
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
-
     public UserDao() {
     }
 
@@ -265,6 +260,11 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
         }
 
 
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 
     @Override

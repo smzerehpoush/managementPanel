@@ -7,7 +7,8 @@ import javax.persistence.*;
 @Entity
 @Table(name = "PH_ROLE", schema = Constants.SCHEMA)
 public class RoleDao extends com.nrdc.policeHamrah.model.dto.RoleDto {
-    public static final String tableName="PH_ROLE";
+    public static final String tableName = "PH_ROLE";
+
     public RoleDao() {
     }
 

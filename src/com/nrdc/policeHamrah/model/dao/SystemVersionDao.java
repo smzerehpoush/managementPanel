@@ -8,7 +8,8 @@ import javax.persistence.*;
 @Entity
 @Table(name = "PH_SYSTEM_VERSIONS", schema = Constants.SCHEMA)
 public class SystemVersionDao extends SystemVersionDto {
-    public static final String tableName="PH_SYSTEM_VERSION";
+    public static final String tableName = "PH_SYSTEM_VERSIONS";
+
     @Override
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

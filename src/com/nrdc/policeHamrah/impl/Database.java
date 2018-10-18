@@ -7,6 +7,7 @@ import javax.persistence.Persistence;
 
 public class Database {
     private static EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("policeHamrahJPA");
+
     public static EntityManager getEntityManager() {
         return entityManagerFactory.createEntityManager();
     }

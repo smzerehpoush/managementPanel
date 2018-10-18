@@ -5,7 +5,9 @@ public class RequestAddTokenKey {
     private String key;
     private Long fkUserId;
 
-    public RequestAddTokenKey(){}
+    public RequestAddTokenKey() {
+    }
+
     public RequestAddTokenKey(String token, String key, Long fkUserId) {
         this.token = token;
         this.key = key;
