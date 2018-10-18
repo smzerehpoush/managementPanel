@@ -5,6 +5,7 @@ import com.nrdc.policeHamrah.helper.PrivilegeNames;
 import com.nrdc.policeHamrah.jsonModel.StandardResponse;
 import com.nrdc.policeHamrah.jsonModel.customizedModel.RoleWithPrivileges;
 import com.nrdc.policeHamrah.jsonModel.jsonRequest.*;
+import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetPrivileges;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetRoles;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetRolesWithPrivileges;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetUsers;
@@ -12,6 +13,8 @@ import com.nrdc.policeHamrah.model.dao.PrivilegeDao;
 import com.nrdc.policeHamrah.model.dao.RoleDao;
 import com.nrdc.policeHamrah.model.dao.SystemDao;
 import com.nrdc.policeHamrah.model.dao.UserDao;
+import com.nrdc.policeHamrah.model.dto.PrivilegeDto;
+import com.nrdc.policeHamrah.model.dto.RoleDto;
 import com.nrdc.policeHamrah.model.dto.UserDto;
 
 import javax.persistence.EntityManager;
@@ -280,11 +283,11 @@ public class UserImpl {
         }
     }
 
-    public StandardResponse getUsers(String token, RequestGetUsers requestAddUser) throws Exception {
+    public StandardResponse getUsers(String token, Long fkSystemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
             UserDao user = UserDao.validate(token);
-            SystemDao systemDao = SystemDao.getSystem(requestAddUser.getFkSystemId());
+            SystemDao systemDao = SystemDao.getSystem(fkSystemId);
             String privilegeName = "GET_" + systemDao.getSystemName() + "_USERS";
             user.checkPrivilege(privilegeName);
             List<UserDto> users = entityManager.createQuery("SELECT u FROM UserDao u JOIN SystemUserDao us ON u.id = us.fkUserId WHERE us.fkSystemId = :fkSystemId")
@@ -375,14 +378,14 @@ public class UserImpl {
         }
     }
 
-    public StandardResponse getRolesWithPrivileges(String token, RequestGetUserRolesWithPrivileges requestGetUserRolesWithPrivileges) throws Exception {
+    public StandardResponse getRolesWithPrivileges(String token) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
             UserDao user = UserDao.validate(token);
             user.checkPrivilege(PrivilegeNames.GET_PRIVILEGES);
             List<RoleWithPrivileges> rolesWithPrivileges = new LinkedList<>();
             List<RoleDao> roles = entityManager.createQuery("SELECT r FROM RoleDao r JOIN UserRoleDao ur ON r.id = ur.fkRoleId WHERE ur.fkUserId = :fkUserId")
-                    .setParameter("fkUserId", requestGetUserRolesWithPrivileges.getFkUserId())
+                    .setParameter("fkUserId", user.getId())
                     .getResultList();
             RoleWithPrivileges roleWithPrivileges;
             for (RoleDao role : roles) {
@@ -407,13 +410,13 @@ public class UserImpl {
         }
     }
 
-    public StandardResponse getRoles(String token, RequestGetUserRolesWithPrivileges requestGetUserRolesWithPrivileges) throws Exception {
+    public StandardResponse getRoles(String token) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
             UserDao user = UserDao.validate(token);
             user.checkPrivilege(PrivilegeNames.GET_ROLES);
-            List roles = entityManager.createQuery("SELECT r FROM RoleDao r JOIN UserRoleDao ur ON r.id=ur.fkRoleId WHERE ur.fkUserId = :fkUserId")
-                    .setParameter("fkUserId", requestGetUserRolesWithPrivileges.getFkUserId())
+            List<RoleDto> roles = entityManager.createQuery("SELECT r FROM RoleDao r JOIN UserRoleDao ur ON r.id = ur.fkRoleId WHERE ur.fkUserId = :fkUserId")
+                    .setParameter("fkUserId", user.getId())
                     .getResultList();
             ResponseGetRoles responseGetRoles = new ResponseGetRoles();
             responseGetRoles.setRoles(roles);
@@ -421,6 +424,34 @@ public class UserImpl {
 
 
             response.setResponse(responseGetRoles);
+            return response;
+        } finally {
+            if (entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+
+
+    public StandardResponse getPrivileges(String token, Long fkSystemId) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        try {
+            UserDao user = UserDao.validate(token);
+            user.checkPrivilege(PrivilegeNames.GET_PRIVILEGES);
+            List<PrivilegeDto> privileges = entityManager.createQuery("SELECT distinct (p) " +
+                    "FROM PrivilegeDao p " +
+                    "JOIN RolePrivilegeDao rp ON p.id=rp.fkPrivilegeId " +
+                    "JOIN UserRoleDao ur ON rp.fkRoleId=ur.fkRoleId " +
+                    "WHERE ur.fkUserId = :fkUserId " +
+                    "AND p.fkSystemId = :fkSystemId")
+                    .setParameter("fkUserId", user.getId())
+                    .setParameter("fkSystemId", fkSystemId)
+                    .getResultList();
+            ResponseGetPrivileges responseGetPrivileges = new ResponseGetPrivileges();
+            responseGetPrivileges.setPrivileges(privileges);
+            StandardResponse response = new StandardResponse<>();
+
+
+            response.setResponse(responseGetPrivileges);
             return response;
         } finally {
             if (entityManager.isOpen())
