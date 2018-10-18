@@ -47,7 +47,7 @@ public class LoginService {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response login(EncryptedRequest request) {
+    public Response loginToSystem(EncryptedRequest request) {
         logger.info("++================== login-to-system SERVICE : START ==================++");
         ObjectMapper objectMapper = new ObjectMapper();
         try {
