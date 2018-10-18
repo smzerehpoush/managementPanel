@@ -1,6 +1,6 @@
 package com.nrdc.policeHamrah.model.dto;
 
-public abstract class PrivilegeDto extends BaseModel {
+public abstract class PrivilegeDto implements BaseModel {
     private Long id;
     private String privilegeText;
 

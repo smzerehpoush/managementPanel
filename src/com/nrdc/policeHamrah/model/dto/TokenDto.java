@@ -1,6 +1,6 @@
 package com.nrdc.policeHamrah.model.dto;
 
-public abstract class TokenDto extends BaseModel {
+public abstract class TokenDto implements BaseModel {
     private Long id;
     private Long fkUserId;
     private String token;

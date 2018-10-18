@@ -25,8 +25,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class LoginImpl {
+    private static Logger logger = Logger.getLogger(LoginImpl.class.getName());
 
-    public StandardResponse login(RequestLogin requestLogin) throws Exception {
+    /**
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         OperationDto operation = new OperationDao();

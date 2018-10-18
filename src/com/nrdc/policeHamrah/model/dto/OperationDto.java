@@ -2,7 +2,7 @@ package com.nrdc.policeHamrah.model.dto;
 
 import java.util.Date;
 
-public abstract class OperationDto extends BaseModel {
+public abstract class OperationDto implements BaseModel {
     private Long id;
     private Long fkUserId;
     private Long fkPrivilegeId;

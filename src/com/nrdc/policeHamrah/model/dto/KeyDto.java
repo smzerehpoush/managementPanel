@@ -1,6 +1,6 @@
 package com.nrdc.policeHamrah.model.dto;
 
-public abstract class KeyDto extends BaseModel{
+public abstract class KeyDto implements BaseModel{
 
     private Long id;
     private String key;

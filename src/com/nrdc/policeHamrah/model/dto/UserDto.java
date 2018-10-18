@@ -1,6 +1,6 @@
 package com.nrdc.policeHamrah.model.dto;
 
-public class UserDto extends BaseModel {
+public class UserDto implements BaseModel {
 
     private Long id;
     private String password;

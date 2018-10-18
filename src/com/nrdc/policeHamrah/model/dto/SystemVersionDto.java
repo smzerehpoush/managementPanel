@@ -1,6 +1,6 @@
 package com.nrdc.policeHamrah.model.dto;
 
-public abstract class SystemVersionDto extends BaseModel {
+public abstract class SystemVersionDto implements BaseModel {
     private Long id;
     private Long fkSystemId;
     private String versionName;

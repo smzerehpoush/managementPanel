@@ -1,6 +1,6 @@
 package com.nrdc.policeHamrah.model.dto;
 
-public abstract class UserRoleDto extends BaseModel {
+public abstract class UserRoleDto implements BaseModel {
     private Long id;
     private Long fkUserId;
     private Long fkRoleId;

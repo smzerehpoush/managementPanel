@@ -2,7 +2,7 @@ package com.nrdc.policeHamrah.model.dto;
 
 import java.util.Objects;
 
-public  abstract class SystemDto extends BaseModel {
+public  abstract class SystemDto implements BaseModel {
     private Long id;
     private String systemName;
     private String systemPath;
