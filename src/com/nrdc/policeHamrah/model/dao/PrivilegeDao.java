@@ -9,7 +9,8 @@ import javax.persistence.*;
 @Entity
 @Table(name = "PH_PRIVILEGE", schema = Constants.SCHEMA)
 public class PrivilegeDao extends com.nrdc.policeHamrah.model.dto.PrivilegeDto {
-    public static final String tableName="PH_PRIVILEGE";
+    public static final String tableName = "PH_PRIVILEGE";
+
     public PrivilegeDao() {
     }
 
@@ -46,7 +47,7 @@ public class PrivilegeDao extends com.nrdc.policeHamrah.model.dto.PrivilegeDto {
 
     @Override
     @Basic
-    @Column(name = "PRIVILEGE_TEXT",table = tableName)
+    @Column(name = "PRIVILEGE_TEXT", table = tableName)
     public String getPrivilegeText() {
         return super.getPrivilegeText();
     }
