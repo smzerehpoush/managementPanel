@@ -26,7 +26,7 @@ public class TokenServices {
     @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response editUser(EncryptedRequest encryptedRequest) {
+    public Response removeToken(EncryptedRequest encryptedRequest) {
         logger.info("++================== removeToken SERVICE : START ==================++");
         try {
             RequestRemoveToken request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestRemoveToken.class);
@@ -42,5 +42,4 @@ public class TokenServices {
             return Response.status(200).entity(response).build();
         }
     }
-    // TODO: 2018-10-18 add key services
 }

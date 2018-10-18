@@ -20,17 +20,17 @@ public class PrivilegeServices {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getPrivileges(@QueryParam("token") String token) {
-        logger.info("++================== getPrivileges SERVICE : START ==================++");
+    public Response getUserPrivileges(@QueryParam("token") String token) {
+        logger.info("++================== getUserPrivileges SERVICE : START ==================++");
         try {
             StandardResponse response = new PrivilegeImpl().getPrivileges(token);
             String key = UserDao.getKey(token).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
-            logger.info("++================== getPrivileges SERVICE : END ==================++");
+            logger.info("++================== getUserPrivileges SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            logger.error("++================== getPrivileges SERVICE : EXCEPTION ==================++");
+            logger.error("++================== getUserPrivileges SERVICE : EXCEPTION ==================++");
             StandardResponse response = StandardResponse.getNOKExceptions(ex);
             return Response.status(200).entity(response).build();
         }

@@ -39,15 +39,15 @@ public class SystemServices {
     @Path("/versions")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getSystems(@QueryParam("token") String token) {
-        logger.info("++================== getSystemVersions SERVICE : START ==================++");
+    public Response getSystemWithVersion(@QueryParam("token") String token) {
+        logger.info("++================== getSystemWithVersion SERVICE : START ==================++");
         try {
             StandardResponse<ResponseGetSystemWithVersions> response = new SystemImpl().getSystemVersions(token);
             Response finalResponse = Response.status(200).entity(response).build();
-            logger.info("++================== getSystemVersions SERVICE : END ==================++");
+            logger.info("++================== getSystemWithVersion SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            logger.error("++================== getSystemVersions SERVICE : EXCEPTION ==================++");
+            logger.error("++================== getSystemWithVersion SERVICE : EXCEPTION ==================++");
             StandardResponse response = StandardResponse.getNOKExceptions(ex.getMessage());
             return Response.status(200).entity(response).build();
         }
