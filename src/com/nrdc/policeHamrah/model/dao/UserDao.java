@@ -5,6 +5,7 @@ import com.nrdc.policeHamrah.helper.PrivilegeNames;
 import com.nrdc.policeHamrah.helper.SystemNames;
 import com.nrdc.policeHamrah.impl.Database;
 import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestAddUser;
+import com.nrdc.policeHamrah.model.dto.PrivilegeDto;
 import com.nrdc.policeHamrah.model.dto.UserDto;
 import org.apache.log4j.Logger;
 
@@ -188,6 +189,24 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
             int size = entityManager.createQuery("SELECT p FROM PrivilegeDao p JOIN RolePrivilegeDao rp ON p.id = rp.fkPrivilegeId JOIN UserRoleDao ur ON rp.fkRoleId = ur.fkRoleId WHERE ur.fkUserId = :fkUserId AND p.privilegeText = :privilege")
                     .setParameter("fkUserId", fkUserId)
                     .setParameter("privilege", privilege)
+                    .getResultList()
+                    .size();
+            if (size < 1) {
+                throw new Exception(Constants.PERMISSION_ERROR);
+            }
+            return true;
+
+        } finally {
+            if (entityManager != null && entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+    public boolean checkPrivilege(PrivilegeDto privilege) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        try {
+            int size = entityManager.createQuery("SELECT p FROM PrivilegeDao p JOIN RolePrivilegeDao rp ON p.id = rp.fkPrivilegeId JOIN UserRoleDao ur ON rp.fkRoleId = ur.fkRoleId WHERE ur.fkUserId = :fkUserId AND p.id = :privilegeId")
+                    .setParameter("fkUserId", this.getId())
+                    .setParameter("privilegeId", privilege.getId())
                     .getResultList()
                     .size();
             if (size < 1) {
@@ -402,7 +421,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
         }
     }
 
-    public boolean checkPrivilege(String privilege, UserDao user) throws Exception {
+    public static boolean checkPrivilege(String privilege, UserDao user) throws Exception {
         return checkPrivilege(privilege, user.getId());
     }
 
