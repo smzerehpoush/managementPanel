@@ -5,6 +5,7 @@ import com.nrdc.policeHamrah.helper.PrivilegeNames;
 import com.nrdc.policeHamrah.helper.SystemNames;
 import com.nrdc.policeHamrah.impl.Database;
 import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestAddUser;
+import com.nrdc.policeHamrah.model.dto.UserDto;
 import org.apache.log4j.Logger;
 
 import javax.persistence.*;
@@ -414,8 +415,8 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
         checkPrivilege(privilegeName.name());
     }
 
-    public UserDao createCustomUser() throws CloneNotSupportedException {
-        UserDao user = (UserDao) this.clone();
+    public UserDto createCustomUser() throws CloneNotSupportedException {
+        UserDto user = (UserDto) this.clone();
         user.setPassword("");
         return user;
     }
