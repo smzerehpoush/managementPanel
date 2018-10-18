@@ -8,17 +8,17 @@
     <persistence-unit name="policeHamrahJPA" transaction-type="JTA">
         <jta-data-source>policeHamrahDataSource</jta-data-source>
 
-        <class>com.nrdc.managementPanel.model.dao.Key</class>
-        <class>com.nrdc.managementPanel.model.dao.Privilege</class>
-        <class>com.nrdc.managementPanel.model.dao.Role</class>
-        <class>com.nrdc.managementPanel.model.dao.RolePrivilege</class>
-        <class>com.nrdc.managementPanel.model.dao.System</class>
-        <class>com.nrdc.managementPanel.model.dao.SystemVersion</class>
-        <class>com.nrdc.managementPanel.model.dao.Token</class>
-        <class>com.nrdc.managementPanel.model.dao.User</class>
-        <class>com.nrdc.managementPanel.model.dao.UserRole</class>
-        <class>com.nrdc.managementPanel.model.dao.SystemUser</class>
-        <class>com.nrdc.managementPanel.model.dao.Operation</class>
+        <class>com.nrdc.policeHamrah.model.dao.KeyDao</class>
+        <class>com.nrdc.policeHamrah.model.dao.PrivilegeDao</class>
+        <class>com.nrdc.policeHamrah.model.dao.RoleDao</class>
+        <class>com.nrdc.policeHamrah.model.dao.RolePrivilegeDao</class>
+        <class>com.nrdc.policeHamrah.model.dao.SystemDao</class>
+        <class>com.nrdc.policeHamrah.model.dao.SystemVersionDao</class>
+        <class>com.nrdc.policeHamrah.model.dao.TokenDao</class>
+        <class>com.nrdc.policeHamrah.model.dao.UserDao</class>
+        <class>com.nrdc.policeHamrah.model.dao.UserRoleDao</class>
+        <class>com.nrdc.policeHamrah.model.dao.SystemUserDao</class>
+        <class>com.nrdc.policeHamrah.model.dao.OperationDao</class>
 
     </persistence-unit>
 
