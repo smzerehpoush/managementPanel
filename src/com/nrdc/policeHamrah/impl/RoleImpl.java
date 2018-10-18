@@ -2,7 +2,6 @@ package com.nrdc.policeHamrah.impl;
 
 import com.nrdc.policeHamrah.helper.PrivilegeNames;
 import com.nrdc.policeHamrah.jsonModel.StandardResponse;
-import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestGetRolePrivileges;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetPrivileges;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetRoles;
 import com.nrdc.policeHamrah.model.dao.UserDao;
@@ -31,13 +30,13 @@ public class RoleImpl {
         }
     }
 
-    public StandardResponse getPrivileges(String token, RequestGetRolePrivileges requestGetRolePrivileges) throws Exception {
+    public StandardResponse getPrivileges(String token) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
             UserDao user = UserDao.validate(token);
             user.checkPrivilege(PrivilegeNames.GET_PRIVILEGES);
             List privileges = entityManager.createQuery("SELECT p FROM PrivilegeDao p JOIN RolePrivilegeDao rp ON p.id = rp.fkPrivilegeId WHERE rp.fkRoleId = :fkRoleId")
-                    .setParameter("fkRoleId", requestGetRolePrivileges.getFkRoleId())
+                    .setParameter("fkRoleId", user.getId())
                     .getResultList();
             ResponseGetPrivileges responseGetPrivileges = new ResponseGetPrivileges();
             responseGetPrivileges.setPrivileges(privileges);
