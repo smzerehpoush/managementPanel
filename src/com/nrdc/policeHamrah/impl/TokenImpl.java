@@ -29,6 +29,10 @@ public class TokenImpl {
                     .setParameter("fkUserId", requestRemoveToken.getFkUserId())
                     .setParameter("fkSystemId", requestRemoveToken.getFkSystemId())
                     .executeUpdate();
+            entityManager.createQuery("DELETE FROM KeyDao k WHERE k.fkUserId = :fkUserId AND k.fkSystemId = :fkSystemId")
+                    .setParameter("fkUserId", requestRemoveToken.getFkUserId())
+                    .setParameter("fkSystemId", requestRemoveToken.getFkSystemId())
+                    .executeUpdate();
             if (transaction.isActive())
                 transaction.commit();
             StandardResponse response = new StandardResponse<>();
