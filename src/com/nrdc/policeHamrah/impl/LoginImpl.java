@@ -10,10 +10,10 @@ import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestLogin;
 import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestLoginToSystems;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseLogin;
 import com.nrdc.policeHamrah.model.dao.*;
-import com.nrdc.policeHamrah.model.dto.OperationDto;
 import com.nrdc.policeHamrah.model.dto.PrivilegeDto;
 import com.nrdc.policeHamrah.model.dto.TokenDto;
 import com.nrdc.policeHamrah.model.dto.UserDto;
+import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import javax.persistence.EntityManager;
@@ -28,11 +28,16 @@ public class LoginImpl {
     private static Logger logger = Logger.getLogger(LoginImpl.class.getName());
 
     /**
+     * @param requestLogin username, phoneNumber, password to login into Police Hamrah
+     * @return StandardResponse with value of {@link ResponseLogin}
+     */
+    public StandardResponse login(RequestLogin requestLogin) {
         EntityManager entityManager = Database.getEntityManager();
+        EntityManager operationEntityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
-        OperationDto operation = new OperationDao();
-        PrivilegeDto privilege = PrivilegeDao.getPrivilege(PrivilegeNames.LOGIN);
-        operation.setFkPrivilegeId(privilege.getId());
+        EntityTransaction operationTransaction = operationEntityManager.getTransaction();
+        OperationDao operation = new OperationDao();
+        operation.setPrivilegeName(PrivilegeNames.LOGIN.name());
         String description = new StringBuilder().append("someone wants to login with Username : ")
                 .append(requestLogin.getUsername())
                 .append(" ,Password : ")
@@ -44,7 +49,12 @@ public class LoginImpl {
         try {
             if (!transaction.isActive())
                 transaction.begin();
-            UserDao user = verifyUser(requestLogin.getUsername(), requestLogin.getPassword(), requestLogin.getPhoneNumber());
+            if (!operationTransaction.isActive())
+                operationTransaction.begin();
+
+            PrivilegeDto privilege = PrivilegeDao.getPrivilege(PrivilegeNames.LOGIN);
+            operation.setFkPrivilegeId(privilege.getId());
+            UserDao user = verifyUser(requestLogin);
             SystemDao systemDao = SystemDao.getSystem(SystemNames.POLICE_HAMRAH);
             TokenDto token = new TokenDao(user, systemDao);
             entityManager.persist(token);
@@ -58,19 +68,22 @@ public class LoginImpl {
             response.setResponse(responseLogin);
             operation.setFkUserId(user.getId());
             operation.setStatusCode(1L);
-            entityManager.persist(operation);
             if (transaction.isActive())
                 transaction.commit();
             return response;
         } catch (Exception ex) {
             operation.setStatusCode(-1L);
-            entityManager.persist(operation);
             if (transaction != null && transaction.isActive())
                 transaction.rollback();
             return StandardResponse.getNOKExceptions(ex);
         } finally {
+            operationEntityManager.persist(operation);
+            if (operationTransaction.isActive())
+                operationTransaction.commit();
             if (entityManager.isOpen())
                 entityManager.close();
+            if (operationEntityManager.isOpen())
+                operationEntityManager.close();
         }
     }
 
@@ -171,8 +184,10 @@ public class LoginImpl {
 
     }
 
-    private UserDao verifyUser(String username, String encryptedPassword, String phoneNumber) throws Exception {
-
+    private UserDao verifyUser(RequestLogin requestLogin) throws Exception {
+        String username = requestLogin.getUsername();
+        String encryptedPassword = requestLogin.getPassword();
+        String phoneNumber = requestLogin.getPhoneNumber();
         String password = decryptPassword(username, encryptedPassword);
         return UserDao.getUser(username, password, phoneNumber);
     }
