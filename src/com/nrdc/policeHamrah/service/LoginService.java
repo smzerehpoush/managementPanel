@@ -24,7 +24,7 @@ public class LoginService {
 
     /***
      *
-     * @param requestLogin request login for logging in PoliceHamrah system
+     * @param requestLogin {@link RequestLogin} for logging in PoliceHamrah system
      * @return standardResponse
      */
     @POST
