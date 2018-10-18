@@ -45,8 +45,9 @@ public class LoginService {
     }
 
     /**
+     * setvice to login into different systems
      * @param request {@link RequestLoginToSystems}
-     * @return
+     * @return StandardResponse with {@link com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseLogin}
      */
     @Path("/system")
     @POST

@@ -83,15 +83,14 @@ public class UserServices {
         }
     }
 
-    @POST
+    @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUsers(EncryptedRequest encryptedRequest) {
+    public Response getUsers(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) {
         logger.info("++================== getUsers SERVICE : START ==================++");
         try {
-            RequestGetUsers request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestGetUsers.class);
-            StandardResponse response = new UserImpl().getUsers(encryptedRequest.getToken(), request);
-            String key = UserDao.getKey(encryptedRequest.getToken()).getKey();
+            StandardResponse response = new UserImpl().getUsers(token, fkSystemId);
+            String key = UserDao.getKey(token).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
             logger.info("++================== getUsers SERVICE : END ==================++");
@@ -166,16 +165,20 @@ public class UserServices {
         }
     }
 
+    /**
+     * {@link GET} service with {@link QueryParam token} to return all roles of current user
+     *
+     * @param token token of currentUser
+     * @return all roles of current user
+     */
     @Path("/roles")
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getRoles(EncryptedRequest encryptedRequest) {
+    public Response getRoles(@QueryParam("token") String token) {
         logger.info("++================== getRoles SERVICE : START ==================++");
         try {
-            RequestGetUserRolesWithPrivileges request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestGetUserRolesWithPrivileges.class);
-            StandardResponse response = new UserImpl().getRoles(encryptedRequest.getToken(), request);
-            String key = UserDao.getKey(encryptedRequest.getToken()).getKey();
+            StandardResponse response = new UserImpl().getRoles(token);
+            String key = UserDao.getKey(token).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
             logger.info("++================== getRoles SERVICE : END ==================++");
@@ -187,16 +190,42 @@ public class UserServices {
         }
     }
 
+
+    /**
+     * {@link GET} service with {@link QueryParam token} to return all privileges of current user in specific system
+     *
+     * @param token token of current User
+     * @param fkSystemId fk system id of current User
+     * @return all privileges of currentUser in specific system
+     */
+    @Path("/privileges")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPrivileges(@QueryParam("token") String token, @QueryParam("fkSystemID") Long fkSystemId) {
+        logger.info("++================== getPrivileges SERVICE : START ==================++");
+        try {
+            StandardResponse response = new UserImpl().getPrivileges(token, fkSystemId);
+            String key = UserDao.getKey(token).getKey();
+            EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
+            Response finalResponse = Response.status(200).entity(encryptedResponse).build();
+            logger.info("++================== getPrivileges SERVICE : END ==================++");
+            return finalResponse;
+        } catch (Exception ex) {
+            logger.error("++================== getPrivileges SERVICE : EXCEPTION ==================++");
+            StandardResponse response = StandardResponse.getNOKExceptions(ex);
+            return Response.status(200).entity(response).build();
+        }
+    }
+
     @Path("/roles/privileges")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getRolesWithPrivileges(EncryptedRequest encryptedRequest) {
+    public Response getRolesWithPrivileges(@QueryParam("token") String token) {
         logger.info("++================== getPrivileges SERVICE : START ==================++");
         try {
-            RequestGetUserRolesWithPrivileges request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestGetUserRolesWithPrivileges.class);
-            StandardResponse response = new UserImpl().getRolesWithPrivileges(encryptedRequest.getToken(), request);
-            String key = UserDao.getKey(encryptedRequest.getToken()).getKey();
+            StandardResponse response = new UserImpl().getRolesWithPrivileges(token);
+            String key = UserDao.getKey(token).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
             logger.info("++================== getPrivileges SERVICE : END ==================++");
