@@ -5,8 +5,8 @@
              http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
              version="2.1">
 
-    <persistence-unit name="managementPanelJPA" transaction-type="JTA">
-        <jta-data-source>managementPanelDataSource</jta-data-source>
+    <persistence-unit name="policeHamrahJPA" transaction-type="JTA">
+        <jta-data-source>policeHamrahDataSource</jta-data-source>
 
         <class>com.nrdc.managementPanel.model.dao.Key</class>
         <class>com.nrdc.managementPanel.model.dao.Privilege</class>
