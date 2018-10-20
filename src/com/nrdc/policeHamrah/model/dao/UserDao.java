@@ -10,6 +10,7 @@ import com.nrdc.policeHamrah.model.dto.UserDto;
 import org.apache.log4j.Logger;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "PH_USER", schema = Constants.SCHEMA)
@@ -201,24 +202,6 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
                 entityManager.close();
         }
     }
-    public boolean checkPrivilege(PrivilegeDto privilege) throws Exception {
-        EntityManager entityManager = Database.getEntityManager();
-        try {
-            int size = entityManager.createQuery("SELECT p FROM PrivilegeDao p JOIN RolePrivilegeDao rp ON p.id = rp.fkPrivilegeId JOIN UserRoleDao ur ON rp.fkRoleId = ur.fkRoleId WHERE ur.fkUserId = :fkUserId AND p.id = :privilegeId")
-                    .setParameter("fkUserId", this.getId())
-                    .setParameter("privilegeId", privilege.getId())
-                    .getResultList()
-                    .size();
-            if (size < 1) {
-                throw new Exception(Constants.PERMISSION_ERROR);
-            }
-            return true;
-
-        } finally {
-            if (entityManager != null && entityManager.isOpen())
-                entityManager.close();
-        }
-    }
 
     public static KeyDao getKey(String token, String systemName) throws Exception {
         TokenDao.validateToken(token, systemName);
@@ -279,6 +262,42 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
         }
 
 
+    }
+
+    public static boolean checkPrivilege(String privilege, UserDao user) throws Exception {
+        return checkPrivilege(privilege, user.getId());
+    }
+
+    public List<SystemDao> systems() {
+        EntityManager entityManager = Database.getEntityManager();
+        try {
+            List<SystemDao> systemDaoList = entityManager.createQuery("SELECT s FROM SystemDao s JOIN SystemUserDao su ON s.id = su.fkSystemId WHERE su.fkUserId = :fkUserId")
+                    .setParameter("fkUserId", this.getId())
+                    .getResultList();
+            return systemDaoList;
+        } finally {
+            if (entityManager != null && entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+
+    public boolean checkPrivilege(PrivilegeDto privilege) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        try {
+            int size = entityManager.createQuery("SELECT p FROM PrivilegeDao p JOIN RolePrivilegeDao rp ON p.id = rp.fkPrivilegeId JOIN UserRoleDao ur ON rp.fkRoleId = ur.fkRoleId WHERE ur.fkUserId = :fkUserId AND p.id = :privilegeId")
+                    .setParameter("fkUserId", this.getId())
+                    .setParameter("privilegeId", privilege.getId())
+                    .getResultList()
+                    .size();
+            if (size < 1) {
+                throw new Exception(Constants.PERMISSION_ERROR);
+            }
+            return true;
+
+        } finally {
+            if (entityManager != null && entityManager.isOpen())
+                entityManager.close();
+        }
     }
 
     @Override
@@ -419,10 +438,6 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
             if (entityManager != null && entityManager.isOpen())
                 entityManager.close();
         }
-    }
-
-    public static boolean checkPrivilege(String privilege, UserDao user) throws Exception {
-        return checkPrivilege(privilege, user.getId());
     }
 
     public boolean checkPrivilege(String privilege) throws Exception {
