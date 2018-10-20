@@ -10,8 +10,10 @@ import com.nrdc.policeHamrah.model.dao.UserDao;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import java.util.List;
 
 public class TokenImpl {
+
     public StandardResponse removeToken(String token, RequestRemoveToken requestRemoveToken) {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -20,9 +22,10 @@ public class TokenImpl {
             if (user.getId().equals(requestRemoveToken.getFkUserId())) {
                 throw new Exception(Constants.CAN_NOT_DELETE_TOKEN);
             }
-            SystemDao systemOfRemovingToken = SystemDao.getSystem(requestRemoveToken.getFkSystemId());
-            // TODO: 2018-10-18 باید به نحوی باشد که برود سیستم های کاربر را چک کند و درصورتیکه جزو سیستم ها بود حذف کند
-            PrivilegeDao privilege = PrivilegeDao.getPrivilege(PrivilegeNames.REMOVE_TOKEN, systemOfRemovingToken.getId());
+            SystemDao inputSystem = SystemDao.getSystem(requestRemoveToken.getFkSystemId());
+            List<SystemDao> userSystems = user.systems();
+            checkUserSystems(inputSystem, userSystems);
+            PrivilegeDao privilege = PrivilegeDao.getPrivilege(PrivilegeNames.REMOVE_TOKEN, inputSystem.getId());
             user.checkPrivilege(privilege);
 
             entityManager.createQuery("DELETE FROM TokenDao t WHERE t.fkUserId = :fkUserId AND t.fkSystemId = :fkSystemId")
@@ -47,6 +50,14 @@ public class TokenImpl {
             if (entityManager.isOpen())
                 entityManager.close();
         }
+    }
+
+    private void checkUserSystems(SystemDao inputSystem, List<SystemDao> userSystems) throws Exception {
+        for (SystemDao system : userSystems) {
+            if (system.getId().equals(inputSystem.getId()))
+                return;
+        }
+        throw new Exception(Constants.USER_SYSTEM_ERROR);
     }
 
 }
