@@ -20,7 +20,7 @@ public class VerifyService {
         logger.info("++================== VERIFY SERVICE : START ==================++");
 
         ResponseVerify response = new ResponseVerify();
-        response.setName("Management Panel");
+        response.setName("Police Hamrah");
         response.setStatusCode(200);
         response.setStatusMessage("OK");
         response.setTime(new Date().toString());
