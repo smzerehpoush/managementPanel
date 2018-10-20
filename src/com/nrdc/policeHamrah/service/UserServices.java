@@ -194,7 +194,7 @@ public class UserServices {
     /**
      * {@link GET} service with {@link QueryParam token} to return all privileges of current user in specific system
      *
-     * @param token token of current User
+     * @param token      token of current User
      * @param fkSystemId fk system id of current User
      * @return all privileges of currentUser in specific system
      */
@@ -243,7 +243,7 @@ public class UserServices {
      */
     @Path("/systems")
     @GET
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getUserSystems(@QueryParam("token") String token) {
         logger.info("++================== getUserSystems SERVICE : START ==================++");
         try {
