@@ -8,10 +8,7 @@ import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestLogout;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -23,12 +20,11 @@ public class LogoutService {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response login(EncryptedRequest encryptedRequest) {
+    public Response login(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) {
         logger.info("++================== logout SERVICE : START ==================++");
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            RequestLogout requestLogout = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestLogout.class);
-            StandardResponse response = new LogoutImpl().logout(encryptedRequest.getToken(), requestLogout);
+            StandardResponse response = new LogoutImpl().logout(token, fkSystemId);
             Response finalResponse = Response.status(200).entity(response).build();
             logger.info("++================== logout SERVICE : END ==================++");
             return finalResponse;
