@@ -15,7 +15,7 @@ import javax.persistence.EntityTransaction;
 
 public class LogoutImpl {
 
-    public StandardResponse logout(String token, RequestLogout request) throws Exception {
+    public StandardResponse logout(String token, Long fkSystemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         EntityManager operationEntityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -26,7 +26,7 @@ public class LogoutImpl {
         String description = new StringBuilder().append("someone wants to logout with token : ")
                 .append(token)
                 .append(" ,systemId : ")
-                .append(request.getFkSystemId())
+                .append(fkSystemId)
                 .toString();
         operation.setDescription(description);
         try {
@@ -37,8 +37,8 @@ public class LogoutImpl {
             PrivilegeDto privilege = PrivilegeDao.getPrivilege(PrivilegeNames.LOGOUT);
             operation.setFkPrivilegeId(privilege.getId());
             UserDao user = UserDao.getUser(token);
-            if (request.getFkSystemId() != null) {
-                SystemDao systemDao = SystemDao.getSystem(request.getFkSystemId());
+            if (fkSystemId != null) {
+                SystemDao systemDao = SystemDao.getSystem(fkSystemId);
                 if (systemDao.getSystemName().equals(SystemNames.POLICE_HAMRAH.name())) {
                     logoutFromPH(user, entityManager);
                 } else {
