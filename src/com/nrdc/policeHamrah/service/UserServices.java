@@ -1,5 +1,6 @@
 package com.nrdc.policeHamrah.service;
 
+import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.Encryption;
 import com.nrdc.policeHamrah.impl.SystemImpl;
 import com.nrdc.policeHamrah.impl.UserImpl;
@@ -201,9 +202,12 @@ public class UserServices {
     @Path("/privileges")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getPrivileges(@QueryParam("token") String token, @QueryParam("fkSystemID") Long fkSystemId) {
+    public Response getPrivileges(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) {
         logger.info("++================== getPrivileges SERVICE : START ==================++");
         try {
+            if(token == null || fkSystemId== null){
+                throw new Exception(Constants.NOT_VALID_REQUEST);
+            }
             StandardResponse response = new UserImpl().getPrivileges(token, fkSystemId);
             String key = UserDao.getKey(token).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
