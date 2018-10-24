@@ -12,8 +12,8 @@ public class RoleDao extends com.nrdc.policeHamrah.model.dto.RoleDto {
     public RoleDao() {
     }
 
-    public RoleDao(Long id, String role) {
-        this.setId(id);
+    public RoleDao(Long creatorId, String role) {
+        this.setFkCreatorId(creatorId);
         this.setRole(role);
     }
 
