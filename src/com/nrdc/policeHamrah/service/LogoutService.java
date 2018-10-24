@@ -17,9 +17,8 @@ import javax.ws.rs.core.Response;
 public class LogoutService {
     private static Logger logger = Logger.getLogger(LogoutService.class.getName());
 
-    @POST
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
     public Response login(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) {
         logger.info("++================== logout SERVICE : START ==================++");
         ObjectMapper objectMapper = new ObjectMapper();
