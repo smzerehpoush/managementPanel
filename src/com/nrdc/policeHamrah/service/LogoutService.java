@@ -1,14 +1,14 @@
 package com.nrdc.policeHamrah.service;
 
-import com.nrdc.policeHamrah.helper.Encryption;
 import com.nrdc.policeHamrah.impl.LogoutImpl;
-import com.nrdc.policeHamrah.jsonModel.EncryptedRequest;
 import com.nrdc.policeHamrah.jsonModel.StandardResponse;
-import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestLogout;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 

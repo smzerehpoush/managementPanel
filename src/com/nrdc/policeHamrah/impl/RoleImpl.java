@@ -6,7 +6,6 @@ import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestAddRole;
 import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestEditRole;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetPrivileges;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetRoles;
-import com.nrdc.policeHamrah.model.dao.PrivilegeDao;
 import com.nrdc.policeHamrah.model.dao.RoleDao;
 import com.nrdc.policeHamrah.model.dao.RolePrivilegeDao;
 import com.nrdc.policeHamrah.model.dao.UserDao;

@@ -3,7 +3,6 @@ package com.nrdc.policeHamrah.impl;
 import com.nrdc.policeHamrah.helper.PrivilegeNames;
 import com.nrdc.policeHamrah.helper.SystemNames;
 import com.nrdc.policeHamrah.jsonModel.StandardResponse;
-import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestLogout;
 import com.nrdc.policeHamrah.model.dao.OperationDao;
 import com.nrdc.policeHamrah.model.dao.PrivilegeDao;
 import com.nrdc.policeHamrah.model.dao.SystemDao;

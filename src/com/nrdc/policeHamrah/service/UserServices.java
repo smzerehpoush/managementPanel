@@ -205,7 +205,7 @@ public class UserServices {
     public Response getPrivileges(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) {
         logger.info("++================== getPrivileges SERVICE : START ==================++");
         try {
-            if(token == null || fkSystemId== null){
+            if (token == null || fkSystemId == null) {
                 throw new Exception(Constants.NOT_VALID_REQUEST);
             }
             StandardResponse response = new UserImpl().getPrivileges(token, fkSystemId);
