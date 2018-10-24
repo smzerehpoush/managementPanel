@@ -6,25 +6,108 @@ import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestAddRole;
 import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestEditRole;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetPrivileges;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetRoles;
+import com.nrdc.policeHamrah.model.dao.PrivilegeDao;
+import com.nrdc.policeHamrah.model.dao.RoleDao;
+import com.nrdc.policeHamrah.model.dao.RolePrivilegeDao;
 import com.nrdc.policeHamrah.model.dao.UserDao;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import java.util.List;
 
 public class RoleImpl {
-    public StandardResponse addRole(String token, RequestAddRole requestAddRole) {
-        // TODO: 10/20/2018 Implement add role service
-        return null;
+    public StandardResponse addRole(String token, RequestAddRole requestAddRole) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            UserDao user = UserDao.validate(token);
+            user.checkPrivilege(PrivilegeNames.ADD_ROLE);
+            RoleDao role = new RoleDao(user.getId(), requestAddRole.getRoleText());
+            Long roleId = (Long) (entityManager.createQuery("SELECT MAX (r.id) FROM RoleDao r")
+                    .getSingleResult())
+                    + 1;
+            role.setId(roleId);
+            if (!transaction.isActive())
+                transaction.begin();
+
+            entityManager.persist(role);
+            for (Long privilegeId : requestAddRole.getPrivileges()) {
+                RolePrivilegeDao rp = new RolePrivilegeDao();
+                rp.setFkRoleId(roleId);
+                rp.setFkPrivilegeId(privilegeId);
+                entityManager.persist(rp);
+            }
+            if (transaction.isActive())
+                transaction.commit();
+            return new StandardResponse();
+        } catch (Exception ex) {
+            if (transaction != null && transaction.isActive())
+                transaction.rollback();
+            throw ex;
+        } finally {
+            if (entityManager.isOpen())
+                entityManager.close();
+        }
     }
 
-    public StandardResponse editRole(String token, RequestEditRole requestEditRole) {
-        // TODO: 10/20/2018 Implement edit role service
-        return null;
+    public StandardResponse editRole(String token, RequestEditRole requestEditRole) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            UserDao user = UserDao.validate(token);
+            user.checkPrivilege(PrivilegeNames.EDIT_ROLE);
+            if (!transaction.isActive())
+                transaction.begin();
+            //delete all privileges of roll and add new privileges
+            entityManager.createQuery("DELETE FROM RolePrivilegeDao rp WHERE rp.fkRoleId = :fkRoleId")
+                    .setParameter("fkRoleId", requestEditRole.getFkRoleId())
+                    .executeUpdate();
+
+            for (Long privilegeId : requestEditRole.getPrivileges()) {
+                RolePrivilegeDao rp = new RolePrivilegeDao();
+                rp.setFkRoleId(requestEditRole.getFkRoleId());
+                rp.setFkPrivilegeId(privilegeId);
+                entityManager.persist(rp);
+            }
+            if (transaction.isActive())
+                transaction.commit();
+            return new StandardResponse();
+        } catch (Exception ex) {
+            if (transaction != null && transaction.isActive())
+                transaction.rollback();
+            throw ex;
+        } finally {
+            if (entityManager.isOpen())
+                entityManager.close();
+        }
     }
 
-    public StandardResponse removeRole(String token, Long fkRoleId) {
-        // TODO: 10/20/2018 Implement remove role service
-        return null;
+    public StandardResponse removeRole(String token, Long fkRoleId) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            UserDao user = UserDao.validate(token);
+            user.checkPrivilege(PrivilegeNames.REMOVE_ROLE);
+            if (!transaction.isActive())
+                transaction.begin();
+            entityManager.createQuery("DELETE FROM RoleDao r WHERE r.id = :roleId")
+                    .setParameter("roleId", fkRoleId)
+                    .executeUpdate();
+            entityManager.createQuery("DELETE FROM RolePrivilegeDao rp WHERE rp.fkRoleId = :fkRoleId")
+                    .setParameter("fkRoleId", fkRoleId)
+                    .executeUpdate();
+
+            if (transaction.isActive())
+                transaction.commit();
+            return new StandardResponse();
+        } catch (Exception ex) {
+            if (transaction != null && transaction.isActive())
+                transaction.rollback();
+            throw ex;
+        } finally {
+            if (entityManager.isOpen())
+                entityManager.close();
+        }
     }
 
     public StandardResponse getRoles(String token) throws Exception {
