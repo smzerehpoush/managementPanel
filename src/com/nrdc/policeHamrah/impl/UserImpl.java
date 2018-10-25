@@ -4,7 +4,10 @@ import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.PrivilegeNames;
 import com.nrdc.policeHamrah.jsonModel.StandardResponse;
 import com.nrdc.policeHamrah.jsonModel.customizedModel.RoleWithPrivileges;
-import com.nrdc.policeHamrah.jsonModel.jsonRequest.*;
+import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestAddUser;
+import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestEditUser;
+import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestFilterUsers;
+import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestResetPassword;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetPrivileges;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetRoles;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetRolesWithPrivileges;
@@ -117,15 +120,15 @@ public class UserImpl {
     }
 
 
-    public StandardResponse activeUser(String token, RequestActiveUser request) throws Exception {
+    public StandardResponse activeUser(String token, Long fkUserId, Long fkSystemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             UserDao user1 = UserDao.validate(token);
-            SystemDao systemDao = SystemDao.getSystem(request.getFkSystemId());
+            SystemDao systemDao = SystemDao.getSystem(fkSystemId);
             String privilegeName = "ACTIVATE_" + systemDao.getSystemName() + "_USERS";
             user1.checkPrivilege(privilegeName);
-            UserDao user2 = UserDao.getUser(request.getFkUserId());
+            UserDao user2 = UserDao.getUser(fkUserId);
             List<SystemDao> user2SystemDaos = getUserSystems(user2);
             if (!user2SystemDaos.contains(systemDao)) {
                 throw new Exception(Constants.USER_SYSTEM_ERROR);
@@ -133,7 +136,7 @@ public class UserImpl {
             if (transaction != null && !transaction.isActive())
                 transaction.begin();
             entityManager.createQuery("UPDATE UserDao u SET u.isActive = true WHERE u.id = :fkUserId")
-                    .setParameter("fkUserId", request.getFkUserId())
+                    .setParameter("fkUserId", fkUserId)
                     .executeUpdate();
             if (transaction != null && transaction.isActive())
                 transaction.commit();
@@ -155,15 +158,15 @@ public class UserImpl {
         }
     }
 
-    public StandardResponse deActiveUser(String token, RequestDeActiveUser request) throws Exception {
+    public StandardResponse deActiveUser(String token, Long fkUserId, Long fkSystemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             UserDao user1 = UserDao.validate(token);
-            SystemDao systemDao = SystemDao.getSystem(request.getFkSystemId());
+            SystemDao systemDao = SystemDao.getSystem(fkSystemId);
             String privilegeName = "DEACTIVATE_" + systemDao.getSystemName() + "_USERS";
             user1.checkPrivilege(privilegeName);
-            UserDao user2 = UserDao.getUser(request.getFkUserId());
+            UserDao user2 = UserDao.getUser(fkUserId);
             if (user1.equals(user2)) {
                 throw new Exception(Constants.CANT_DE_ACTIVE_YOURSELF);
             }
@@ -174,7 +177,7 @@ public class UserImpl {
             if (transaction != null && !transaction.isActive())
                 transaction.begin();
             entityManager.createQuery("UPDATE UserDao u SET u.isActive = false WHERE u.id = :fkUserId")
-                    .setParameter("fkUserId", request.getFkUserId())
+                    .setParameter("fkUserId", fkUserId)
                     .executeUpdate();
             if (transaction != null && transaction.isActive())
                 transaction.commit();
@@ -283,33 +286,8 @@ public class UserImpl {
         }
     }
 
-    public StandardResponse getUsers(String token, Long fkSystemId) throws Exception {
-        EntityManager entityManager = Database.getEntityManager();
-        try {
-            UserDao user = UserDao.validate(token);
-            SystemDao systemDao = SystemDao.getSystem(fkSystemId);
-            String privilegeName = "GET_" + systemDao.getSystemName() + "_USERS";
-            user.checkPrivilege(privilegeName);
-            List<UserDto> users = entityManager.createQuery("SELECT u FROM UserDao u JOIN SystemUserDao us ON u.id = us.fkUserId WHERE us.fkSystemId = :fkSystemId")
-                    .setParameter("fkSystemId", systemDao.getId())
-                    .getResultList();
-            for (UserDto u : users) {
-                u.setPassword(null);
-            }
-            ResponseGetUsers responseGetUsers = new ResponseGetUsers();
-            responseGetUsers.setUsers(users);
-            StandardResponse response = new StandardResponse<>();
 
-
-            response.setResponse(responseGetUsers);
-            return response;
-        } finally {
-            if (entityManager.isOpen())
-                entityManager.close();
-        }
-    }
-
-    public StandardResponse filterUsers(String token, RequestFilterUsers requestFilterUsers) throws Exception {
+    public StandardResponse<ResponseGetUsers> filterUsers(String token, RequestFilterUsers requestFilterUsers) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
             UserDao user = UserDao.validate(token);
@@ -367,7 +345,7 @@ public class UserImpl {
             }
             ResponseGetUsers responseGetUsers = new ResponseGetUsers();
             responseGetUsers.setUsers(users);
-            StandardResponse response = new StandardResponse<>();
+            StandardResponse<ResponseGetUsers> response = new StandardResponse<>();
 
 
             response.setResponse(responseGetUsers);
@@ -378,9 +356,10 @@ public class UserImpl {
         }
     }
 
-    public StandardResponse getRolesWithPrivileges(String token) throws Exception {
+    public StandardResponse<ResponseGetRolesWithPrivileges> getRolesWithPrivileges(String token, Long fkSystemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
+            // TODO: 10/25/2018 change impl add systemID
             UserDao user = UserDao.validate(token);
             user.checkPrivilege(PrivilegeNames.GET_PRIVILEGES);
             List<RoleWithPrivileges> rolesWithPrivileges = new LinkedList<>();
@@ -399,7 +378,7 @@ public class UserImpl {
             }
             ResponseGetRolesWithPrivileges responseGetRolesWithPrivileges = new ResponseGetRolesWithPrivileges();
             responseGetRolesWithPrivileges.setRoleWithPrivileges(rolesWithPrivileges);
-            StandardResponse response = new StandardResponse<>();
+            StandardResponse<ResponseGetRolesWithPrivileges> response = new StandardResponse<>();
 
 
             response.setResponse(responseGetRolesWithPrivileges);
@@ -410,7 +389,7 @@ public class UserImpl {
         }
     }
 
-    public StandardResponse getRoles(String token) throws Exception {
+    public StandardResponse getUserRoles(String token) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
             UserDao user = UserDao.validate(token);
