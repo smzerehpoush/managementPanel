@@ -14,6 +14,9 @@ import java.util.Date;
 public class VerifyService {
     private static Logger logger = Logger.getLogger(VerifyService.class.getName());
 
+    /**
+     * @return simple json data to handle state
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response verifyRESTService() {
