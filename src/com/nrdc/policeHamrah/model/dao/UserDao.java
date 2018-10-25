@@ -164,6 +164,11 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
         }
     }
 
+    public static void verify(String token) throws Exception {
+        SystemDao systemDao = SystemDao.getSystem(SystemNames.POLICE_HAMRAH);
+        verify(token, systemDao);
+    }
+
     public static void verify(String token, String systemName) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
 
