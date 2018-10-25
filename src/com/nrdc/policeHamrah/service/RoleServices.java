@@ -19,31 +19,18 @@ import javax.ws.rs.core.Response;
 public class RoleServices {
     private static Logger logger = Logger.getLogger(RoleServices.class.getName());
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserRolePrivileges(@QueryParam("token") String token) {
-        logger.info("++================== getUserRolePrivileges SERVICE : START ==================++");
-        try {
-            StandardResponse response = new RoleImpl().getRoles(token);
-            String key = UserDao.getKey(token).getKey();
-            EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
-            Response finalResponse = Response.status(200).entity(encryptedResponse).build();
-            logger.info("++================== getUserRolePrivileges SERVICE : END ==================++");
-            return finalResponse;
-        } catch (Exception ex) {
-            logger.error("++================== getUserRolePrivileges SERVICE : EXCEPTION ==================++");
-            StandardResponse response = StandardResponse.getNOKExceptions(ex);
-            return Response.status(200).entity(response).build();
-        }
-    }
-
+    /**
+     * @param token    user token
+     * @param fkRoleId id of role
+     * @return list of privileges of a role
+     */
     @Path("/privileges")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getRolePrivileges(@QueryParam("token") String token) {
+    public Response getRolePrivileges(@QueryParam("token") String token, @QueryParam("fkRoleId") Long fkRoleId) {
         logger.info("++================== getRolePrivileges SERVICE : START ==================++");
         try {
-            StandardResponse response = new RoleImpl().getPrivileges(token);
+            StandardResponse response = new RoleImpl().getRolePrivileges(token, fkRoleId);
             String key = UserDao.getKey(token).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
@@ -57,6 +44,12 @@ public class RoleServices {
         }
     }
 
+    /**
+     * add a role
+     *
+     * @param encryptedRequest RequestAddRole
+     * @return simple StandardResponse to handle state
+     */
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -76,6 +69,12 @@ public class RoleServices {
         }
     }
 
+    /**
+     * edit a role
+     *
+     * @param encryptedRequest RequestEditRole
+     * @return simple StandardResponse to handle state
+     */
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -95,12 +94,16 @@ public class RoleServices {
         }
     }
 
+    /**
+     * @param token    user token
+     * @param fkRoleId id of role
+     * @return simple StandardResponse to handle state
+     */
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response removeRole(@QueryParam("token") String token, @QueryParam("fkRoleId") Long fkRoleId) {
         logger.info("++================== removeRole SERVICE : START ==================++");
-        ObjectMapper objectMapper = new ObjectMapper();
         try {
             StandardResponse response = new RoleImpl().removeRole(token, fkRoleId);
             Response finalResponse = Response.status(200).entity(response).build();
@@ -113,8 +116,5 @@ public class RoleServices {
         }
     }
 
-
-//    @DELETE
-//    remove role
 }
 
