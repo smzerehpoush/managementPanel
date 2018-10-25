@@ -2,8 +2,11 @@ package com.nrdc.policeHamrah.impl;
 
 import com.nrdc.policeHamrah.jsonModel.StandardResponse;
 import com.nrdc.policeHamrah.jsonModel.customizedModel.SystemWithVersion;
+import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetPrivileges;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetSystemWithVersions;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetSystems;
+import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetUsers;
+import com.nrdc.policeHamrah.model.dao.SystemDao;
 import com.nrdc.policeHamrah.model.dao.UserDao;
 import com.nrdc.policeHamrah.model.dto.SystemDto;
 import com.nrdc.policeHamrah.model.dto.SystemVersionDto;
@@ -56,6 +59,11 @@ public class SystemImpl {
         }
     }
 
+    public StandardResponse<ResponseGetPrivileges> getSystemPrivileges(String token, Long fkSystemId) {
+        // TODO: 10/25/2018 implement service
+        return null;
+    }
+
     private List<SystemWithVersion> createSystemWithVersions(List<SystemDto> systemDtos) {
         List<SystemWithVersion> systemWithVersions = new LinkedList<>();
         SystemWithVersion systemWithVersion;
@@ -76,6 +84,32 @@ public class SystemImpl {
             return (SystemVersionDto) entityManager.createQuery("SELECT v FROM SystemVersionDao v WHERE v.fkSystemId = :fkSystemId AND v.versionCode = (SELECT MAX (s.versionCode) FROM SystemVersionDao s WHERE s.fkSystemId = :fkSystemId)")
                     .setParameter("fkSystemId", fkSystemId)
                     .getSingleResult();
+        } finally {
+            if (entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+
+    public StandardResponse<ResponseGetUsers> getSystemUsers(String token, Long fkSystemId) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        try {
+            UserDao user = UserDao.validate(token);
+            SystemDao systemDao = SystemDao.getSystem(fkSystemId);
+            String privilegeName = "GET_" + systemDao.getSystemName() + "_USERS";
+            user.checkPrivilege(privilegeName);
+            List<UserDto> users = entityManager.createQuery("SELECT u FROM UserDao u JOIN SystemUserDao us ON u.id = us.fkUserId WHERE us.fkSystemId = :fkSystemId")
+                    .setParameter("fkSystemId", systemDao.getId())
+                    .getResultList();
+            for (UserDto u : users) {
+                u.setPassword(null);
+            }
+            ResponseGetUsers responseGetUsers = new ResponseGetUsers();
+            responseGetUsers.setUsers(users);
+            StandardResponse<ResponseGetUsers> response = new StandardResponse<>();
+
+
+            response.setResponse(responseGetUsers);
+            return response;
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();
