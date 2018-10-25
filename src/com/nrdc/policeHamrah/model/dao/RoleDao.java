@@ -27,7 +27,7 @@ public class RoleDao extends com.nrdc.policeHamrah.model.dto.RoleDto {
 
     @Override
     @Basic
-    @Column(name = "ROLE")
+    @Column(name = "ROLE_TEXT")
     public String getRole() {
         return super.getRole();
     }
