@@ -10,7 +10,7 @@ import javax.persistence.EntityManager;
 import java.util.List;
 
 public class PrivilegeImpl {
-    public StandardResponse getPrivileges(String token) throws Exception {
+    public StandardResponse<ResponseGetPrivileges> getPrivileges(String token) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
             UserDao user = UserDao.validate(token);
@@ -19,7 +19,7 @@ public class PrivilegeImpl {
                     .getResultList();
             ResponseGetPrivileges responseGetPrivileges = new ResponseGetPrivileges();
             responseGetPrivileges.setPrivileges(privileges);
-            StandardResponse response = new StandardResponse<>();
+            StandardResponse<ResponseGetPrivileges> response = new StandardResponse<>();
             response.setResponse(responseGetPrivileges);
             return response;
         } finally {
