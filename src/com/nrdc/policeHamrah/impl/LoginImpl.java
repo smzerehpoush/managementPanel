@@ -7,7 +7,6 @@ import com.nrdc.policeHamrah.helper.SystemNames;
 import com.nrdc.policeHamrah.jsonModel.StandardResponse;
 import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestAddTokenKey;
 import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestLogin;
-import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestLoginToSystems;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseLogin;
 import com.nrdc.policeHamrah.model.dao.*;
 import com.nrdc.policeHamrah.model.dto.PrivilegeDto;
@@ -52,10 +51,10 @@ public class LoginImpl {
             if (!operationTransaction.isActive())
                 operationTransaction.begin();
 
-            PrivilegeDto privilege = PrivilegeDao.getPrivilege(PrivilegeNames.LOGIN);
-            operation.setFkPrivilegeId(privilege.getId());
             UserDao user = verifyUser(requestLogin);
             SystemDao systemDao = SystemDao.getSystem(SystemNames.POLICE_HAMRAH);
+            PrivilegeDto privilege = PrivilegeDao.getPrivilege(PrivilegeNames.LOGIN, systemDao.getId());
+            operation.setFkPrivilegeId(privilege.getId());
             TokenDto token = new TokenDao(user, systemDao);
             entityManager.persist(token);
             KeyDao key = new KeyDao(user, systemDao);
@@ -87,7 +86,7 @@ public class LoginImpl {
         }
     }
 
-    public StandardResponse loginToSystem(String token, RequestLoginToSystems requestLogin) throws Exception {
+    public StandardResponse<ResponseLogin> loginToSystem(String token, Long fkSystemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
@@ -96,8 +95,12 @@ public class LoginImpl {
                 entityManager.getEntityManagerFactory().getCache().evictAll();
             }
             UserDao user = UserDao.getUser(token);
-            SystemDao systemDao = SystemDao.getSystem(requestLogin.getFkSystemId());
-            StandardResponse response = login(user, systemDao);
+            if (!user.getIsActive())
+                throw new Exception(Constants.NOT_ACTIVE_USER);
+            SystemDao systemDao = SystemDao.getSystem(fkSystemId);
+            PrivilegeDao privilege = PrivilegeDao.getPrivilege(PrivilegeNames.LOGIN, systemDao.getId());
+            user.checkPrivilege(privilege);
+            StandardResponse<ResponseLogin> response = loginToSystem(user, systemDao);
             if (transaction != null && transaction.isActive())
                 transaction.commit();
             return response;
@@ -111,8 +114,7 @@ public class LoginImpl {
         }
     }
 
-    private StandardResponse login(UserDao user, SystemDao systemDao) throws Exception {
-        user.checkSystemAccess(systemDao.getId());
+    private StandardResponse<ResponseLogin> loginToSystem(UserDao user, SystemDao systemDao) throws Exception {
         user.checkKey(systemDao);
         user.checkToken(systemDao);
         KeyDao key = new KeyDao(user, systemDao);
@@ -130,7 +132,7 @@ public class LoginImpl {
             entityManager.persist(token);
             if (transaction != null && transaction.isActive())
                 transaction.commit();
-            StandardResponse response = createResponseLogin(user, systemDao, key, token);
+            StandardResponse<ResponseLogin> response = createResponseLogin(user, systemDao, key, token);
             return response;
 
         } catch (Exception ex) {
@@ -150,17 +152,17 @@ public class LoginImpl {
         responseLogin.setKey(key.getKey());
         responseLogin.setToken(token.getToken());
         UserDto user = (UserDao) dbUser.clone();
-        if (systemDao.getSystemName().equals(SystemNames.VEHICLE_TICKET.name())) {
-            user.setPassword("");
-            responseLogin.setUser(user);
-
-        } else {
-            throw new Exception(Constants.NOT_VALID_SYSTEM);
-        }
+//        if (systemDao.getSystemName().equals(SystemNames.VEHICLE_TICKET.name())) {
+//            user.setPassword("");
+//
+//        } else {
+//            throw new Exception(Constants.NOT_VALID_SYSTEM);
+//        }
+        responseLogin.setUser(user);
         return response;
     }
 
-    public StandardResponse sendTokenKeyToSystem(UserDao user, TokenDao token, KeyDao key, SystemDao systemDao) throws Exception {
+    private StandardResponse sendTokenKeyToSystem(UserDao user, TokenDao token, KeyDao key, SystemDao systemDao) throws Exception {
         RequestAddTokenKey requestAddTokenKey = new RequestAddTokenKey(token.getToken(), key.getKey(), user.getId());
         URL url = new URL(systemDao.getSystemPath() + "/addTokenKey");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -172,7 +174,7 @@ public class LoginImpl {
         outputStream.write(input.getBytes());
         outputStream.flush();
         if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-            throw new RuntimeException(Constants.CAN_NOT_RETRIEVE_DATA_FROM_NAJA + " : " + connection.getResponseCode());
+            throw new Exception("Can not add token to system : " + connection.getResponseCode());
         }
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
         StringBuilder output = new StringBuilder();
@@ -189,7 +191,11 @@ public class LoginImpl {
         String encryptedPassword = requestLogin.getPassword();
         String phoneNumber = requestLogin.getPhoneNumber();
         String password = decryptPassword(username, encryptedPassword);
-        return UserDao.getUser(username, password, phoneNumber);
+        UserDao user = UserDao.getUser(username, password, phoneNumber);
+        if (user.getIsActive())
+            return user;
+        else
+            throw new Exception(Constants.NOT_ACTIVE_USER);
     }
 
     private String decryptPassword(String username, String encryptedPassword) throws Exception {
