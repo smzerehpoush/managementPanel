@@ -4,6 +4,7 @@ import com.nrdc.policeHamrah.helper.Encryption;
 import com.nrdc.policeHamrah.impl.PrivilegeImpl;
 import com.nrdc.policeHamrah.jsonModel.EncryptedResponse;
 import com.nrdc.policeHamrah.jsonModel.StandardResponse;
+import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetPrivileges;
 import com.nrdc.policeHamrah.model.dao.UserDao;
 import org.apache.log4j.Logger;
 
@@ -19,12 +20,18 @@ import javax.ws.rs.core.Response;
 public class PrivilegeServices {
     private static Logger logger = Logger.getLogger(PrivilegeServices.class.getName());
 
+    /**
+     * get privileges of a user with token
+     *
+     * @param token user token
+     * @return ResponseGetPrivileges
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUserPrivileges(@QueryParam("token") String token) {
         logger.info("++================== getUserPrivileges SERVICE : START ==================++");
         try {
-            StandardResponse response = new PrivilegeImpl().getPrivileges(token);
+            StandardResponse<ResponseGetPrivileges> response = new PrivilegeImpl().getPrivileges(token);
             String key = UserDao.getKey(token).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
