@@ -356,15 +356,14 @@ public class UserImpl {
         }
     }
 
-    public StandardResponse<ResponseGetRolesWithPrivileges> getRolesWithPrivileges(String token, Long fkSystemId) throws Exception {
+    public StandardResponse<ResponseGetRolesWithPrivileges> getUserRolesWithPrivileges(String token, Long fkSystemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
-            // TODO: 10/25/2018 change impl add systemID
             UserDao user = UserDao.validate(token);
-            user.checkPrivilege(PrivilegeNames.GET_PRIVILEGES);
             List<RoleWithPrivileges> rolesWithPrivileges = new LinkedList<>();
-            List<RoleDao> roles = entityManager.createQuery("SELECT r FROM RoleDao r JOIN UserRoleDao ur ON r.id = ur.fkRoleId WHERE ur.fkUserId = :fkUserId")
+            List<RoleDao> roles = entityManager.createQuery("SELECT r FROM RoleDao r JOIN UserRoleDao ur ON r.id = ur.fkRoleId WHERE ur.fkUserId = :fkUserId AND r.fkSystemId = :fkSystemId")
                     .setParameter("fkUserId", user.getId())
+                    .setParameter("fkSystemId", fkSystemId)
                     .getResultList();
             RoleWithPrivileges roleWithPrivileges;
             for (RoleDao role : roles) {
