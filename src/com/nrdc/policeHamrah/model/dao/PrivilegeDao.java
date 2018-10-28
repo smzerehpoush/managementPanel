@@ -34,23 +34,6 @@ public class PrivilegeDao extends com.nrdc.policeHamrah.model.dto.PrivilegeDto {
         }
     }
 
-    public static PrivilegeDao getPrivilege(String privilege) throws Exception {
-        EntityManager entityManager = Database.getEntityManager();
-        try {
-            return (PrivilegeDao) entityManager.createQuery("SELECT p FROM PrivilegeDao p WHERE p.privilegeText = :privilegeText")
-                    .setParameter("privilegeText", privilege)
-                    .getSingleResult();
-        } catch (Exception ex) {
-            throw new Exception(Constants.NOT_VALID_PRIVILEGE);
-        } finally {
-            if (entityManager != null && entityManager.isOpen())
-                entityManager.close();
-        }
-    }
-
-    public static PrivilegeDao getPrivilege(PrivilegeNames privilegeName) throws Exception {
-        return getPrivilege(privilegeName.name());
-    }
 
     public static PrivilegeDao getPrivilege(PrivilegeNames privilegeName, Long fkSystemId) throws Exception {
         return getPrivilege(privilegeName.name(), fkSystemId);
@@ -69,12 +52,5 @@ public class PrivilegeDao extends com.nrdc.policeHamrah.model.dto.PrivilegeDto {
     @Column(name = "PRIVILEGE_TEXT", table = tableName)
     public String getPrivilegeText() {
         return super.getPrivilegeText();
-    }
-
-    @Override
-    @Basic
-    @Column(name = "FK_SYSTEM_ID", table = tableName)
-    public Long getFkSystemId() {
-        return super.getFkSystemId();
     }
 }
