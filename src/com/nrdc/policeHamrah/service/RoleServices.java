@@ -80,7 +80,7 @@ public class RoleServices {
     public Response removeRole(@QueryParam("token") String token, @QueryParam("fkRoleId") Long fkRoleId, @QueryParam("fkSystemId") Long fkSystemId) {
         logger.info("++================== removeRole SERVICE : START ==================++");
         try {
-            StandardResponse response = new RoleImpl().removeRole(token, fkRoleId,fkSystemId);
+            StandardResponse response = new RoleImpl().removeRole(token, fkRoleId, fkSystemId);
             Response finalResponse = Response.status(200).entity(response).build();
             logger.info("++================== removeRole SERVICE : END ==================++");
             return finalResponse;
@@ -99,10 +99,10 @@ public class RoleServices {
     @Path("/privileges")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getRolePrivileges(@QueryParam("token") String token, @QueryParam("fkRoleId") Long fkRoleId,@QueryParam("fkSystemId")Long fkSystemId) {
+    public Response getRolePrivileges(@QueryParam("token") String token, @QueryParam("fkRoleId") Long fkRoleId, @QueryParam("fkSystemId") Long fkSystemId) {
         logger.info("++================== getRolePrivileges SERVICE : START ==================++");
         try {
-            StandardResponse response = new RoleImpl().getRolePrivileges(token, fkRoleId,fkSystemId);
+            StandardResponse response = new RoleImpl().getRolePrivileges(token, fkRoleId, fkSystemId);
             String key = UserDao.getKey(token).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
