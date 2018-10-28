@@ -9,8 +9,8 @@ import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestAddTokenKey;
 import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestLogin;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseLogin;
 import com.nrdc.policeHamrah.model.dao.*;
+import com.nrdc.policeHamrah.model.dto.AuthDto;
 import com.nrdc.policeHamrah.model.dto.PrivilegeDto;
-import com.nrdc.policeHamrah.model.dto.TokenDto;
 import com.nrdc.policeHamrah.model.dto.UserDto;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -93,8 +93,7 @@ public class LoginImpl {
                 entityManager.getEntityManagerFactory().getCache().evictAll();
             }
             UserDao user = UserDao.getUser(token);
-            if (!user.getIsActive())
-                throw new Exception(Constants.NOT_ACTIVE_USER);
+            user.isActive();
             SystemDao systemDao = SystemDao.getSystem(fkSystemId);
             PrivilegeDao privilege = PrivilegeDao.getPrivilege(PrivilegeNames.LOGIN, systemDao.getId());
             user.checkPrivilege(privilege, fkSystemId);
