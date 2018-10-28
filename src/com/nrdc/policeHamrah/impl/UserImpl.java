@@ -125,12 +125,11 @@ public class UserImpl {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             UserDao user1 = UserDao.validate(token);
+            user1.checkPrivilege(PrivilegeNames.ACTIVE_USER, fkSystemId);
             SystemDao systemDao = SystemDao.getSystem(fkSystemId);
-            String privilegeName = "ACTIVATE_" + systemDao.getSystemName() + "_USERS";
-            user1.checkPrivilege(privilegeName, fkSystemId);
             UserDao user2 = UserDao.getUser(fkUserId);
-            List<SystemDao> user2SystemDaos = getUserSystems(user2);
-            if (!user2SystemDaos.contains(systemDao)) {
+            List<SystemDao> user2SystemList = getUserSystems(user2);
+            if (!user2SystemList.contains(systemDao)) {
                 throw new Exception(Constants.USER_SYSTEM_ERROR);
             }
             if (transaction != null && !transaction.isActive())
@@ -163,15 +162,11 @@ public class UserImpl {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             UserDao user1 = UserDao.validate(token);
+            user1.checkPrivilege(PrivilegeNames.DE_ACTIVE_USER, fkSystemId);
             SystemDao systemDao = SystemDao.getSystem(fkSystemId);
-            String privilegeName = "DEACTIVATE_" + systemDao.getSystemName() + "_USERS";
-            user1.checkPrivilege(privilegeName, fkSystemId);
             UserDao user2 = UserDao.getUser(fkUserId);
-            if (user1.equals(user2)) {
-                throw new Exception(Constants.CANT_DE_ACTIVE_YOURSELF);
-            }
-            List<SystemDao> user2SystemDaos = getUserSystems(user2);
-            if (!user2SystemDaos.contains(systemDao)) {
+            List<SystemDao> user2SystemList = getUserSystems(user2);
+            if (!user2SystemList.contains(systemDao)) {
                 throw new Exception(Constants.USER_SYSTEM_ERROR);
             }
             if (transaction != null && !transaction.isActive())
@@ -198,6 +193,7 @@ public class UserImpl {
                 entityManager.close();
         }
     }
+
 
     public StandardResponse addUser(String token, RequestAddUser requestAddUser) {
         EntityManager entityManager = Database.getEntityManager();
