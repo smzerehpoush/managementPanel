@@ -96,7 +96,7 @@ public class SystemImpl {
             UserDao user = UserDao.validate(token);
             SystemDao systemDao = SystemDao.getSystem(fkSystemId);
             String privilegeName = "GET_" + systemDao.getSystemName() + "_USERS";
-            user.checkPrivilege(privilegeName);
+            user.checkPrivilege(privilegeName, fkSystemId);
             List<UserDto> users = entityManager.createQuery("SELECT u FROM UserDao u JOIN SystemUserDao us ON u.id = us.fkUserId WHERE us.fkSystemId = :fkSystemId")
                     .setParameter("fkSystemId", systemDao.getId())
                     .getResultList();
