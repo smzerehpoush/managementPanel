@@ -241,17 +241,18 @@ public class UserImpl {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
-            UserDao user1 = UserDao.validate(token);
+            //admin user
+            UserDao adminUser = UserDao.validate(token);
+
             SystemDao systemDao = SystemDao.getSystem(requestEditUser.getFkSystemId());
-            String privilegeName = "EDIT_" + systemDao.getSystemName() + "_USERS";
-            user1.checkPrivilege(privilegeName);
-            UserDao user2 = UserDao.getUser(requestEditUser.getFkUserId());
-            List<SystemDao> user2SystemDaos = getUserSystems(user2);
-            if (!user2SystemDaos.contains(systemDao)) {
+            adminUser.checkPrivilege(PrivilegeNames.EDIT_USER, requestEditUser.getFkSystemId());
+            UserDao user = UserDao.getUser(requestEditUser.getFkUserId());
+            List<SystemDao> userSystemList = getUserSystems(user);
+            if (!userSystemList.contains(systemDao)) {
                 throw new Exception(Constants.USER_SYSTEM_ERROR);
             }
             try {
-                boolean b = user2.checkPrivilege(privilegeName);
+                boolean b = user.checkPrivilege(PrivilegeNames.EDIT_USER, requestEditUser.getFkSystemId());
                 if (b)
                     throw new Exception(Constants.CANT_NOT_EDIT_THIS_USER);
             } catch (Exception ex) {
