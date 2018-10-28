@@ -244,16 +244,16 @@ public class UserServices {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getRolesWithPrivileges(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) {
-        logger.info("++================== getRolesWithPrivileges SERVICE : START ==================++");
+        logger.info("++================== getUserRolesWithPrivileges SERVICE : START ==================++");
         try {
-            StandardResponse<ResponseGetRolesWithPrivileges> response = new UserImpl().getRolesWithPrivileges(token, fkSystemId);
+            StandardResponse<ResponseGetRolesWithPrivileges> response = new UserImpl().getUserRolesWithPrivileges(token, fkSystemId);
             String key = UserDao.getKey(token).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
-            logger.info("++================== getRolesWithPrivileges SERVICE : END ==================++");
+            logger.info("++================== getUserRolesWithPrivileges SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            logger.error("++================== getRolesWithPrivileges SERVICE : EXCEPTION ==================++");
+            logger.error("++================== getUserRolesWithPrivileges SERVICE : EXCEPTION ==================++");
             StandardResponse response = StandardResponse.getNOKExceptions(ex);
             return Response.status(200).entity(response).build();
         }
