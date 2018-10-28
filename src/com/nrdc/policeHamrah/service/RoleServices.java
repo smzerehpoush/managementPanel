@@ -80,7 +80,7 @@ public class RoleServices {
     public Response removeRole(@QueryParam("token") String token, @QueryParam("fkRoleId") Long fkRoleId, @QueryParam("fkSystemId") Long fkSystemId) {
         logger.info("++================== removeRole SERVICE : START ==================++");
         try {
-            StandardResponse response = new RoleImpl().removeRole(token, fkRoleId);
+            StandardResponse response = new RoleImpl().removeRole(token, fkRoleId,fkSystemId);
             Response finalResponse = Response.status(200).entity(response).build();
             logger.info("++================== removeRole SERVICE : END ==================++");
             return finalResponse;
