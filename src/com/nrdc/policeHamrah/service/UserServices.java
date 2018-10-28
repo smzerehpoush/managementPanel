@@ -84,7 +84,7 @@ public class UserServices {
     @Path("/active")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response activeUser(@QueryParam("token") String token, @QueryParam("fkUserID") Long fkUserId, @QueryParam("fkSystemId") Long fkSystemId) {
+    public Response activeUser(@QueryParam("token") String token, @QueryParam("fkUserId") Long fkUserId, @QueryParam("fkSystemId") Long fkSystemId) {
         logger.info("++================== activeUser SERVICE : START ==================++");
         try {
             StandardResponse response = new UserImpl().activeUser(token, fkUserId, fkSystemId);
