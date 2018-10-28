@@ -31,7 +31,7 @@ public class PrivilegeServices {
     public Response getUserPrivileges(@QueryParam("token") String token, @QueryParam("fkSystemId")Long fkSystemId) {
         logger.info("++================== getUserPrivileges SERVICE : START ==================++");
         try {
-            StandardResponse<ResponseGetPrivileges> response = new PrivilegeImpl().getPrivileges(token);
+            StandardResponse<ResponseGetPrivileges> response = new PrivilegeImpl().getPrivileges(token,fkSystemId);
             String key = UserDao.getKey(token).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
