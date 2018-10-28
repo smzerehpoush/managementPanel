@@ -30,7 +30,9 @@ public class SystemServices {
         logger.info("++================== getSystemWithVersion SERVICE : START ==================++");
         try {
             StandardResponse<ResponseGetSystemWithVersions> response = new SystemImpl().getSystemVersions(token);
-            Response finalResponse = Response.status(200).entity(response).build();
+            String key = UserDao.getKey(token).getKey();
+            EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
+            Response finalResponse = Response.status(200).entity(encryptedResponse).build();
             logger.info("++================== getSystemWithVersion SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
