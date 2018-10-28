@@ -53,7 +53,10 @@ public class RoleImpl {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             UserDao user = UserDao.validate(token);
-            user.checkPrivilege(PrivilegeNames.EDIT_ROLE, requestEditRole.getFkSystemId());
+            Long fkSystemId = (Long) entityManager.createQuery("SELECT r.fkSystemId FROM RoleDao r WHERE r.id = :fkRoleId ")
+                    .setParameter("fkRoleId", requestEditRole.getFkRoleId())
+                    .getSingleResult();
+            user.checkPrivilege(PrivilegeNames.EDIT_ROLE, fkSystemId);
             if (!transaction.isActive())
                 transaction.begin();
             //delete all privileges of roll and add new privileges
@@ -80,11 +83,14 @@ public class RoleImpl {
         }
     }
 
-    public StandardResponse removeRole(String token, Long fkRoleId, Long fkSystemId) throws Exception {
+    public StandardResponse removeRole(String token, Long fkRoleId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             UserDao user = UserDao.validate(token);
+            Long fkSystemId = (Long) entityManager.createQuery("SELECT r.fkSystemId FROM RoleDao r WHERE r.id = :fkRoleId")
+                    .setParameter("fkRoleId", fkRoleId)
+                    .getSingleResult();
             user.checkPrivilege(PrivilegeNames.REMOVE_ROLE, fkSystemId);
             if (!transaction.isActive())
                 transaction.begin();
