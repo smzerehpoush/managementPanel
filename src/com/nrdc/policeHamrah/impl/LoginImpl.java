@@ -107,7 +107,7 @@ public class LoginImpl {
                 transaction.rollback();
             return StandardResponse.getNOKExceptions(exception);
         } finally {
-            if (entityManager != null && entityManager.isOpen())
+            if (entityManager.isOpen())
                 entityManager.close();
         }
     }
