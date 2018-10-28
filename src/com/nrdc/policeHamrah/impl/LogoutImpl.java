@@ -33,7 +33,7 @@ public class LogoutImpl {
                 transaction.begin();
             if (!operationTransaction.isActive())
                 operationTransaction.begin();
-            PrivilegeDto privilege = PrivilegeDao.getPrivilege(PrivilegeNames.LOGOUT, fkSystemId);
+            PrivilegeDto privilege = PrivilegeDao.getPrivilege(PrivilegeNames.LOGOUT);
             operation.setFkPrivilegeId(privilege.getId());
             UserDao user = UserDao.getUser(token);
             if (fkSystemId != null) {
