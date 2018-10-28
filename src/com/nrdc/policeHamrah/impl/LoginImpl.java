@@ -53,7 +53,7 @@ public class LoginImpl {
 
             UserDao user = verifyUser(requestLogin);
             SystemDao systemDao = SystemDao.getSystem(SystemNames.POLICE_HAMRAH);
-            PrivilegeDto privilege = PrivilegeDao.getPrivilege(PrivilegeNames.LOGIN, systemDao.getId());
+            PrivilegeDto privilege = PrivilegeDao.getPrivilege(PrivilegeNames.LOGIN);
             operation.setFkPrivilegeId(privilege.getId());
             AuthDto auth = new AuthDao(user, systemDao);
             entityManager.persist(auth);
@@ -95,7 +95,7 @@ public class LoginImpl {
             UserDao user = UserDao.getUser(token);
             user.isActive();
             SystemDao systemDao = SystemDao.getSystem(fkSystemId);
-            PrivilegeDao privilege = PrivilegeDao.getPrivilege(PrivilegeNames.LOGIN, systemDao.getId());
+            PrivilegeDao privilege = PrivilegeDao.getPrivilege(PrivilegeNames.LOGIN);
             user.checkPrivilege(privilege, fkSystemId);
             StandardResponse<ResponseLogin> response = loginToSystem(user, systemDao);
             if (transaction != null && transaction.isActive())
