@@ -92,7 +92,7 @@ public class RoleServices {
     }
 
     /**
-     * @param token user token
+     * @param token    user token
      * @param fkRoleId id of role
      * @return list of privileges of a role
      */
