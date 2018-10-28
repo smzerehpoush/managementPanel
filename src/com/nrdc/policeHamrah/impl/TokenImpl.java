@@ -27,7 +27,7 @@ public class TokenImpl {
             PrivilegeDao privilege = PrivilegeDao.getPrivilege(PrivilegeNames.REMOVE_TOKEN, inputSystem.getId());
             user.checkPrivilege(privilege, fkSystemId);
 
-            entityManager.createQuery("DELETE FROM TokenDao t WHERE t.fkUserId = :fkUserId AND t.fkSystemId = :fkSystemId")
+            entityManager.createQuery("DELETE FROM AuthDao t WHERE t.fkUserId = :fkUserId AND t.fkSystemId = :fkSystemId")
                     .setParameter("fkUserId", fkUserId)
                     .setParameter("fkSystemId", fkSystemId)
                     .executeUpdate();
