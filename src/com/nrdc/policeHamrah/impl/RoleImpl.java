@@ -1,13 +1,14 @@
 package com.nrdc.policeHamrah.impl;
 
+import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.PrivilegeNames;
 import com.nrdc.policeHamrah.jsonModel.StandardResponse;
 import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestAddRole;
 import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestEditRole;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetPrivileges;
-import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetRoles;
 import com.nrdc.policeHamrah.model.dao.RoleDao;
 import com.nrdc.policeHamrah.model.dao.RolePrivilegeDao;
+import com.nrdc.policeHamrah.model.dao.SystemDao;
 import com.nrdc.policeHamrah.model.dao.UserDao;
 
 import javax.persistence.EntityManager;
@@ -20,8 +21,13 @@ public class RoleImpl {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             UserDao user = UserDao.validate(token);
-            user.checkPrivilege(PrivilegeNames.ADD_ROLE);
-            RoleDao role = new RoleDao(user.getId(), requestAddRole.getRoleText());
+            SystemDao systemDao = SystemDao.getSystem(requestAddRole.getFkSystemId());
+            List<SystemDao> userSystems = user.systems();
+            if (!userSystems.contains(systemDao))
+                throw new Exception(Constants.USER_SYSTEM_ERROR);
+
+            user.checkPrivilege(PrivilegeNames.ADD_ROLE, requestAddRole.getFkSystemId());
+            RoleDao role = new RoleDao(requestAddRole.getRoleText(), requestAddRole.getFkSystemId(), user.getId());
             Long roleId = (Long) (entityManager.createQuery("SELECT MAX (r.id) FROM RoleDao r")
                     .getSingleResult())
                     + 1;
@@ -54,7 +60,10 @@ public class RoleImpl {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             UserDao user = UserDao.validate(token);
-            user.checkPrivilege(PrivilegeNames.EDIT_ROLE);
+            Long fkSystemId = (Long) entityManager.createQuery("SELECT r.fkSystemId FROM RoleDao r WHERE r.id = :fkRoleId ")
+                    .setParameter("fkRoleId", requestEditRole.getFkRoleId())
+                    .getSingleResult();
+            user.checkPrivilege(PrivilegeNames.EDIT_ROLE, fkSystemId);
             if (!transaction.isActive())
                 transaction.begin();
             //delete all privileges of roll and add new privileges
@@ -86,7 +95,10 @@ public class RoleImpl {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             UserDao user = UserDao.validate(token);
-            user.checkPrivilege(PrivilegeNames.REMOVE_ROLE);
+            Long fkSystemId = (Long) entityManager.createQuery("SELECT r.fkSystemId FROM RoleDao r WHERE r.id = :fkRoleId")
+                    .setParameter("fkRoleId", fkRoleId)
+                    .getSingleResult();
+            user.checkPrivilege(PrivilegeNames.REMOVE_ROLE, fkSystemId);
             if (!transaction.isActive())
                 transaction.begin();
             entityManager.createQuery("DELETE FROM RoleDao r WHERE r.id = :roleId")
@@ -109,39 +121,17 @@ public class RoleImpl {
         }
     }
 
-    public StandardResponse getSystemRoles(String token) throws Exception {
-        EntityManager entityManager = Database.getEntityManager();
-        try {
-            UserDao user = UserDao.validate(token);
-            user.checkPrivilege(PrivilegeNames.GET_ROLES);
-            List roles = entityManager.createQuery("SELECT r FROM RoleDao r")
-                    .getResultList();
-            ResponseGetRoles responseGetRoles = new ResponseGetRoles();
-            responseGetRoles.setRoles(roles);
-            StandardResponse response = new StandardResponse<>();
-
-
-            response.setResponse(responseGetRoles);
-            return response;
-        } finally {
-            if (entityManager.isOpen())
-                entityManager.close();
-        }
-    }
 
     public StandardResponse getRolePrivileges(String token, Long fkRoleId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
-            UserDao user = UserDao.validate(token);
-            user.checkPrivilege(PrivilegeNames.GET_PRIVILEGES);
+            UserDao.validate(token);
             List privileges = entityManager.createQuery("SELECT p FROM PrivilegeDao p JOIN RolePrivilegeDao rp ON p.id = rp.fkPrivilegeId WHERE rp.fkRoleId = :fkRoleId")
                     .setParameter("fkRoleId", fkRoleId)
                     .getResultList();
             ResponseGetPrivileges responseGetPrivileges = new ResponseGetPrivileges();
             responseGetPrivileges.setPrivileges(privileges);
-            StandardResponse response = new StandardResponse<>();
-
-
+            StandardResponse<ResponseGetPrivileges> response = new StandardResponse<>();
             response.setResponse(responseGetPrivileges);
             return response;
         } finally {

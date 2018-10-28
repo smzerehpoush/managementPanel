@@ -8,16 +8,17 @@ import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
-@Table(name = "PH_TOKEN", schema = Constants.SCHEMA)
-public class TokenDao extends com.nrdc.policeHamrah.model.dto.TokenDto {
-    public static final String tableName = "PH_TOKEN";
+@Table(name = "PH_AUTH", schema = Constants.SCHEMA)
+public class AuthDao extends com.nrdc.policeHamrah.model.dto.AuthDto {
+    public static final String tableName = "PH_AUTH";
 
-    public TokenDao() {
+    public AuthDao() {
     }
 
-    public TokenDao(UserDao user, SystemDao systemDao) throws Exception {
+    public AuthDao(UserDao user, SystemDao systemDao) throws Exception {
         user.checkToken(systemDao);
         this.setToken(UUID.randomUUID().toString());
+        this.setKey(UUID.randomUUID().toString());
         this.setFkSystemId(systemDao.getId());
         this.setFkUserId(user.getId());
     }
@@ -26,7 +27,7 @@ public class TokenDao extends com.nrdc.policeHamrah.model.dto.TokenDto {
         EntityManager entityManager = Database.getEntityManager();
 
         try {
-            Long size = (Long) entityManager.createQuery("SELECT count (t) FROM TokenDao t JOIN SystemDao s ON s.id = t.fkSystemId WHERE t.token = :token AND s.systemName = :systemName")
+            Long size = (Long) entityManager.createQuery("SELECT count (t) FROM AuthDao t JOIN SystemDao s ON s.id = t.fkSystemId WHERE t.token = :token AND s.systemName = :systemName")
                     .setParameter("systemName", systemName)
                     .setParameter("token", token)
                     .getSingleResult();
@@ -70,6 +71,13 @@ public class TokenDao extends com.nrdc.policeHamrah.model.dto.TokenDto {
     @Column(name = "FK_SYSTEM_ID", table = tableName)
     public Long getFkSystemId() {
         return super.getFkSystemId();
+    }
+
+    @Override
+    @Basic
+    @Column(name = "KEY", table = tableName)
+    public String getKey() {
+        return super.getKey();
     }
 }
 

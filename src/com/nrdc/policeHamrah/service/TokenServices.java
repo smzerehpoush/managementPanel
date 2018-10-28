@@ -21,7 +21,6 @@ public class TokenServices {
      * @param fkUserId   id of user
      * @return simple StandardResponse to handle state
      */
-    @Path("/remove")
     @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

@@ -20,31 +20,6 @@ public class RoleServices {
     private static Logger logger = Logger.getLogger(RoleServices.class.getName());
 
     /**
-     * @param token    user token
-     * @param fkRoleId id of role
-     * @return list of privileges of a role
-     */
-    @Path("/privileges")
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getRolePrivileges(@QueryParam("token") String token, @QueryParam("fkRoleId") Long fkRoleId) {
-        logger.info("++================== getRolePrivileges SERVICE : START ==================++");
-        try {
-            StandardResponse response = new RoleImpl().getRolePrivileges(token, fkRoleId);
-            String key = UserDao.getKey(token).getKey();
-            EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
-            Response finalResponse = Response.status(200).entity(encryptedResponse).build();
-            logger.info("++================== getRolePrivileges SERVICE : END ==================++");
-            return finalResponse;
-        } catch (Exception ex) {
-            logger.error("++================== getRolePrivileges SERVICE : EXCEPTION ==================++");
-            StandardResponse response = StandardResponse.getNOKExceptions(ex);
-            return Response.status(200).entity(response).build();
-
-        }
-    }
-
-    /**
      * add a role
      *
      * @param encryptedRequest RequestAddRole
@@ -116,5 +91,29 @@ public class RoleServices {
         }
     }
 
+    /**
+     * @param token    user token
+     * @param fkRoleId id of role
+     * @return list of privileges of a role
+     */
+    @Path("/privileges")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getRolePrivileges(@QueryParam("token") String token, @QueryParam("fkRoleId") Long fkRoleId) {
+        logger.info("++================== getRolePrivileges SERVICE : START ==================++");
+        try {
+            StandardResponse response = new RoleImpl().getRolePrivileges(token, fkRoleId);
+            String key = UserDao.getKey(token).getKey();
+            EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
+            Response finalResponse = Response.status(200).entity(encryptedResponse).build();
+            logger.info("++================== getRolePrivileges SERVICE : END ==================++");
+            return finalResponse;
+        } catch (Exception ex) {
+            logger.error("++================== getRolePrivileges SERVICE : EXCEPTION ==================++");
+            StandardResponse response = StandardResponse.getNOKExceptions(ex);
+            return Response.status(200).entity(response).build();
+
+        }
+    }
 }
 

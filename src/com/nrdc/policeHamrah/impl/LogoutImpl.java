@@ -41,8 +41,7 @@ public class LogoutImpl {
                 if (systemDao.getSystemName().equals(SystemNames.POLICE_HAMRAH.name())) {
                     logoutFromPH(user, entityManager);
                 } else {
-                    deleteToken(user, systemDao, entityManager);
-                    deleteKey(user, systemDao, entityManager);
+                    deleteTokenAndKey(user, systemDao, entityManager);
                 }
             } else {
                 logoutFromPH(user, entityManager);
@@ -70,27 +69,17 @@ public class LogoutImpl {
 
     private void logoutFromPH(UserDao user, EntityManager entityManager) {
 
-        entityManager.createQuery("DELETE FROM TokenDao WHERE fkUserId = :fkUserId ")
-                .setParameter("fkUserId", user.getId())
-                .executeUpdate();
-        entityManager.createQuery("DELETE FROM KeyDao WHERE fkUserId = :fkUserId ")
+        entityManager.createQuery("DELETE FROM AuthDao WHERE fkUserId = :fkUserId ")
                 .setParameter("fkUserId", user.getId())
                 .executeUpdate();
     }
 
-    private void deleteToken(UserDao user, SystemDao systemDao, EntityManager entityManager) {
-        entityManager.createQuery("DELETE FROM TokenDao WHERE fkUserId = :fkUserId AND fkSystemId = :fkSystemId")
+    private void deleteTokenAndKey(UserDao user, SystemDao systemDao, EntityManager entityManager) {
+        entityManager.createQuery("DELETE FROM AuthDao WHERE fkUserId = :fkUserId AND fkSystemId = :fkSystemId")
                 .setParameter("fkUserId", user.getId())
                 .setParameter("fkSystemId", systemDao.getId())
                 .executeUpdate();
 
     }
 
-    private void deleteKey(UserDao user, SystemDao systemDao, EntityManager entityManager) throws Exception {
-        entityManager.createQuery("DELETE FROM KeyDao WHERE fkUserId = :fkUserId AND fkSystemId = :fkSystemId")
-                .setParameter("fkSystemId", systemDao.getId())
-                .setParameter("fkUserId", user.getId())
-                .executeUpdate();
-
-    }
 }

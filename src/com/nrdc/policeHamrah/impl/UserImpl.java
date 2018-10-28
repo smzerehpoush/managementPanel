@@ -125,12 +125,11 @@ public class UserImpl {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             UserDao user1 = UserDao.validate(token);
+            user1.checkPrivilege(PrivilegeNames.ACTIVE_USER, fkSystemId);
             SystemDao systemDao = SystemDao.getSystem(fkSystemId);
-            String privilegeName = "ACTIVATE_" + systemDao.getSystemName() + "_USERS";
-            user1.checkPrivilege(privilegeName);
             UserDao user2 = UserDao.getUser(fkUserId);
-            List<SystemDao> user2SystemDaos = getUserSystems(user2);
-            if (!user2SystemDaos.contains(systemDao)) {
+            List<SystemDao> user2SystemList = getUserSystems(user2);
+            if (!user2SystemList.contains(systemDao)) {
                 throw new Exception(Constants.USER_SYSTEM_ERROR);
             }
             if (transaction != null && !transaction.isActive())
@@ -163,15 +162,11 @@ public class UserImpl {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             UserDao user1 = UserDao.validate(token);
+            user1.checkPrivilege(PrivilegeNames.DE_ACTIVE_USER, fkSystemId);
             SystemDao systemDao = SystemDao.getSystem(fkSystemId);
-            String privilegeName = "DEACTIVATE_" + systemDao.getSystemName() + "_USERS";
-            user1.checkPrivilege(privilegeName);
             UserDao user2 = UserDao.getUser(fkUserId);
-            if (user1.equals(user2)) {
-                throw new Exception(Constants.CANT_DE_ACTIVE_YOURSELF);
-            }
-            List<SystemDao> user2SystemDaos = getUserSystems(user2);
-            if (!user2SystemDaos.contains(systemDao)) {
+            List<SystemDao> user2SystemList = getUserSystems(user2);
+            if (!user2SystemList.contains(systemDao)) {
                 throw new Exception(Constants.USER_SYSTEM_ERROR);
             }
             if (transaction != null && !transaction.isActive())
@@ -199,12 +194,13 @@ public class UserImpl {
         }
     }
 
+
     public StandardResponse addUser(String token, RequestAddUser requestAddUser) {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             UserDao user = UserDao.validate(token);
-            user.checkPrivilege(PrivilegeNames.ADD_USERS);
+            user.checkPrivilege(PrivilegeNames.ADD_USERS, requestAddUser.getFkSystemId());
             if (!transaction.isActive())
                 transaction.begin();
             UserDao u = new UserDao(requestAddUser);
@@ -241,17 +237,18 @@ public class UserImpl {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
-            UserDao user1 = UserDao.validate(token);
+            //admin user
+            UserDao adminUser = UserDao.validate(token);
+
             SystemDao systemDao = SystemDao.getSystem(requestEditUser.getFkSystemId());
-            String privilegeName = "EDIT_" + systemDao.getSystemName() + "_USERS";
-            user1.checkPrivilege(privilegeName);
-            UserDao user2 = UserDao.getUser(requestEditUser.getFkUserId());
-            List<SystemDao> user2SystemDaos = getUserSystems(user2);
-            if (!user2SystemDaos.contains(systemDao)) {
+            adminUser.checkPrivilege(PrivilegeNames.EDIT_USER, requestEditUser.getFkSystemId());
+            UserDao user = UserDao.getUser(requestEditUser.getFkUserId());
+            List<SystemDao> userSystemList = getUserSystems(user);
+            if (!userSystemList.contains(systemDao)) {
                 throw new Exception(Constants.USER_SYSTEM_ERROR);
             }
             try {
-                boolean b = user2.checkPrivilege(privilegeName);
+                boolean b = user.checkPrivilege(PrivilegeNames.EDIT_USER, requestEditUser.getFkSystemId());
                 if (b)
                     throw new Exception(Constants.CANT_NOT_EDIT_THIS_USER);
             } catch (Exception ex) {
@@ -291,7 +288,7 @@ public class UserImpl {
         EntityManager entityManager = Database.getEntityManager();
         try {
             UserDao user = UserDao.validate(token);
-            user.checkPrivilege(PrivilegeNames.FILTER_USERS);
+            user.checkPrivilege(PrivilegeNames.FILTER_USERS, requestFilterUsers.getFkSystemId());
             StringBuilder query = new StringBuilder();
             query.append("SELECT u FROM UserDao u ");
             if (requestFilterUsers.getFkSystemId() != null) {
@@ -356,15 +353,14 @@ public class UserImpl {
         }
     }
 
-    public StandardResponse<ResponseGetRolesWithPrivileges> getRolesWithPrivileges(String token, Long fkSystemId) throws Exception {
+    public StandardResponse<ResponseGetRolesWithPrivileges> getUserRolesWithPrivileges(String token, Long fkSystemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
-            // TODO: 10/25/2018 change impl add systemID
             UserDao user = UserDao.validate(token);
-            user.checkPrivilege(PrivilegeNames.GET_PRIVILEGES);
             List<RoleWithPrivileges> rolesWithPrivileges = new LinkedList<>();
-            List<RoleDao> roles = entityManager.createQuery("SELECT r FROM RoleDao r JOIN UserRoleDao ur ON r.id = ur.fkRoleId WHERE ur.fkUserId = :fkUserId")
+            List<RoleDao> roles = entityManager.createQuery("SELECT r FROM RoleDao r JOIN UserRoleDao ur ON r.id = ur.fkRoleId WHERE ur.fkUserId = :fkUserId AND r.fkSystemId = :fkSystemId")
                     .setParameter("fkUserId", user.getId())
+                    .setParameter("fkSystemId", fkSystemId)
                     .getResultList();
             RoleWithPrivileges roleWithPrivileges;
             for (RoleDao role : roles) {
@@ -372,8 +368,10 @@ public class UserImpl {
                 roleWithPrivileges.setId(role.getId());
                 roleWithPrivileges.setRole(role.getRole());
                 roleWithPrivileges.setPrivileges(
-                        entityManager.createQuery("SELECT p FROM PrivilegeDao p JOIN RolePrivilegeDao rp ON p.id=rp.fkPrivilegeId WHERE rp.fkRoleId = :fkRoleId")
-                                .setParameter("fkRoleId", role.getId()).getResultList());
+                        entityManager.createQuery("SELECT p FROM PrivilegeDao p JOIN RolePrivilegeDao rp ON p.id=rp.fkPrivilegeId JOIN PrivilegeSystemDao ps ON p.id = ps.fkPrivilegeId WHERE rp.fkRoleId = :fkRoleId AND ps.fkSystemId = :fkSystemId")
+                                .setParameter("fkRoleId", role.getId())
+                                .setParameter("fkSystemId", fkSystemId)
+                                .getResultList());
                 rolesWithPrivileges.add(roleWithPrivileges);
             }
             ResponseGetRolesWithPrivileges responseGetRolesWithPrivileges = new ResponseGetRolesWithPrivileges();
@@ -389,12 +387,13 @@ public class UserImpl {
         }
     }
 
-    public StandardResponse getUserRoles(String token) throws Exception {
+    public StandardResponse getUserRoles(String token, Long fkSystemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
             UserDao user = UserDao.validate(token);
-            user.checkPrivilege(PrivilegeNames.GET_ROLES);
-            List<RoleDto> roles = entityManager.createQuery("SELECT r FROM RoleDao r JOIN UserRoleDao ur ON r.id = ur.fkRoleId WHERE ur.fkUserId = :fkUserId")
+            user.checkPrivilege(PrivilegeNames.GET_ROLES, fkSystemId);
+            List<RoleDto> roles = entityManager.createQuery("SELECT r FROM RoleDao r JOIN UserRoleDao ur ON r.id = ur.fkRoleId WHERE ur.fkUserId = :fkUserId AND r.fkSystemId = :fkSystemId")
+                    .setParameter("fkSystemId", fkSystemId)
                     .setParameter("fkUserId", user.getId())
                     .getResultList();
             ResponseGetRoles responseGetRoles = new ResponseGetRoles();
@@ -415,13 +414,13 @@ public class UserImpl {
         EntityManager entityManager = Database.getEntityManager();
         try {
             UserDao user = UserDao.validate(token);
-            user.checkPrivilege(PrivilegeNames.GET_PRIVILEGES);
             List<PrivilegeDto> privileges = entityManager.createQuery("SELECT distinct (p) " +
                     "FROM PrivilegeDao p " +
                     "JOIN RolePrivilegeDao rp ON p.id=rp.fkPrivilegeId " +
                     "JOIN UserRoleDao ur ON rp.fkRoleId=ur.fkRoleId " +
+                    "JOIN PrivilegeSystemDao ps ON p.id = ps.fkPrivilegeId " +
                     "WHERE ur.fkUserId = :fkUserId " +
-                    "AND p.fkSystemId = :fkSystemId")
+                    "AND ps.fkSystemId = :fkSystemId")
                     .setParameter("fkUserId", user.getId())
                     .setParameter("fkSystemId", fkSystemId)
                     .getResultList();

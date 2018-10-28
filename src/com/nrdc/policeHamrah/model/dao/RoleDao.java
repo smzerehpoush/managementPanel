@@ -12,7 +12,8 @@ public class RoleDao extends com.nrdc.policeHamrah.model.dto.RoleDto {
     public RoleDao() {
     }
 
-    public RoleDao(Long creatorId, String role) {
+    public RoleDao(String role, Long fkSystemId, Long creatorId) {
+        this.setFkSystemId(fkSystemId);
         this.setFkCreatorId(creatorId);
         this.setRole(role);
     }
@@ -37,5 +38,12 @@ public class RoleDao extends com.nrdc.policeHamrah.model.dto.RoleDto {
     @Column(name = "FK_CREATOR_ID")
     public Long getFkCreatorId() {
         return super.getFkCreatorId();
+    }
+
+    @Override
+    @Basic
+    @Column(name = "FK_SYSTEM_ID")
+    public Long getFkSystemId() {
+        return super.getFkSystemId();
     }
 }

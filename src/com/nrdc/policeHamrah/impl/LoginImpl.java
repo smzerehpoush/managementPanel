@@ -9,8 +9,8 @@ import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestAddTokenKey;
 import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestLogin;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseLogin;
 import com.nrdc.policeHamrah.model.dao.*;
+import com.nrdc.policeHamrah.model.dto.AuthDto;
 import com.nrdc.policeHamrah.model.dto.PrivilegeDto;
-import com.nrdc.policeHamrah.model.dto.TokenDto;
 import com.nrdc.policeHamrah.model.dto.UserDto;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -53,15 +53,13 @@ public class LoginImpl {
 
             UserDao user = verifyUser(requestLogin);
             SystemDao systemDao = SystemDao.getSystem(SystemNames.POLICE_HAMRAH);
-            PrivilegeDto privilege = PrivilegeDao.getPrivilege(PrivilegeNames.LOGIN, systemDao.getId());
+            PrivilegeDto privilege = PrivilegeDao.getPrivilege(PrivilegeNames.LOGIN);
             operation.setFkPrivilegeId(privilege.getId());
-            TokenDto token = new TokenDao(user, systemDao);
-            entityManager.persist(token);
-            KeyDao key = new KeyDao(user, systemDao);
-            entityManager.persist(key);
+            AuthDto auth = new AuthDao(user, systemDao);
+            entityManager.persist(auth);
             ResponseLogin responseLogin = new ResponseLogin();
-            responseLogin.setKey(key.getKey());
-            responseLogin.setToken(token.getToken());
+            responseLogin.setKey(auth.getKey());
+            responseLogin.setToken(auth.getToken());
             responseLogin.setUser(user.createCustomUser());
             StandardResponse response = new StandardResponse();
             response.setResponse(responseLogin);
@@ -95,11 +93,10 @@ public class LoginImpl {
                 entityManager.getEntityManagerFactory().getCache().evictAll();
             }
             UserDao user = UserDao.getUser(token);
-            if (!user.getIsActive())
-                throw new Exception(Constants.NOT_ACTIVE_USER);
+            user.isActive();
             SystemDao systemDao = SystemDao.getSystem(fkSystemId);
-            PrivilegeDao privilege = PrivilegeDao.getPrivilege(PrivilegeNames.LOGIN, systemDao.getId());
-            user.checkPrivilege(privilege);
+            PrivilegeDao privilege = PrivilegeDao.getPrivilege(PrivilegeNames.LOGIN);
+            user.checkPrivilege(privilege, fkSystemId);
             StandardResponse<ResponseLogin> response = loginToSystem(user, systemDao);
             if (transaction != null && transaction.isActive())
                 transaction.commit();
@@ -107,9 +104,9 @@ public class LoginImpl {
         } catch (Exception exception) {
             if (transaction != null && transaction.isActive())
                 transaction.rollback();
-            return new StandardResponse<ResponseLogin>().getNOKExceptions(exception);
+            return StandardResponse.getNOKExceptions(exception);
         } finally {
-            if (entityManager != null && entityManager.isOpen())
+            if (entityManager.isOpen())
                 entityManager.close();
         }
     }
@@ -117,9 +114,10 @@ public class LoginImpl {
     private StandardResponse<ResponseLogin> loginToSystem(UserDao user, SystemDao systemDao) throws Exception {
         user.checkKey(systemDao);
         user.checkToken(systemDao);
-        KeyDao key = new KeyDao(user, systemDao);
-        TokenDao token = new TokenDao(user, systemDao);
-        StandardResponse responseAddTokenKey = sendTokenKeyToSystem(user, token, key, systemDao);
+        AuthDao auth = new AuthDao(user, systemDao);
+//        StandardResponse responseAddTokenKey = sendTokenKeyToSystem(user, token, key, systemDao);
+        // TODO: 10/27/2018 implement addTokenKey service
+        StandardResponse responseAddTokenKey = new StandardResponse();
         if (responseAddTokenKey.getResultCode() == -1) {
             throw new Exception(responseAddTokenKey.getResultMessage());
         }
@@ -128,11 +126,10 @@ public class LoginImpl {
         try {
             if (transaction != null && !transaction.isActive())
                 transaction.begin();
-            entityManager.persist(key);
-            entityManager.persist(token);
+            entityManager.persist(auth);
             if (transaction != null && transaction.isActive())
                 transaction.commit();
-            StandardResponse<ResponseLogin> response = createResponseLogin(user, systemDao, key, token);
+            StandardResponse<ResponseLogin> response = createResponseLogin(user, systemDao, auth);
             return response;
 
         } catch (Exception ex) {
@@ -146,11 +143,11 @@ public class LoginImpl {
         }
     }
 
-    private StandardResponse<ResponseLogin> createResponseLogin(UserDao dbUser, SystemDao systemDao, KeyDao key, TokenDao token) throws Exception {
+    private StandardResponse<ResponseLogin> createResponseLogin(UserDao dbUser, SystemDao systemDao, AuthDao auth) throws Exception {
         StandardResponse<ResponseLogin> response = new StandardResponse<>();
         ResponseLogin responseLogin = new ResponseLogin();
-        responseLogin.setKey(key.getKey());
-        responseLogin.setToken(token.getToken());
+        responseLogin.setKey(auth.getKey());
+        responseLogin.setToken(auth.getToken());
         UserDto user = (UserDao) dbUser.clone();
 //        if (systemDao.getSystemName().equals(SystemNames.VEHICLE_TICKET.name())) {
 //            user.setPassword("");
@@ -162,8 +159,8 @@ public class LoginImpl {
         return response;
     }
 
-    private StandardResponse sendTokenKeyToSystem(UserDao user, TokenDao token, KeyDao key, SystemDao systemDao) throws Exception {
-        RequestAddTokenKey requestAddTokenKey = new RequestAddTokenKey(token.getToken(), key.getKey(), user.getId());
+    private StandardResponse sendTokenKeyToSystem(UserDao user, AuthDao auth, SystemDao systemDao) throws Exception {
+        RequestAddTokenKey requestAddTokenKey = new RequestAddTokenKey(auth.getToken(), auth.getKey(), user.getId());
         URL url = new URL(systemDao.getSystemPath() + "/addTokenKey");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setDoOutput(true);
