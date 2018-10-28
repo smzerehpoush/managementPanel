@@ -188,7 +188,7 @@ public class UserServices {
     @Path("/roles")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserRoles(@QueryParam("token") String token) {
+    public Response getUserRoles(@QueryParam("token") String token, @QueryParam("fkSystemId")Long fkSystemId) {
         logger.info("++================== getRoles SERVICE : START ==================++");
         try {
             StandardResponse response = new UserImpl().getUserRoles(token);
