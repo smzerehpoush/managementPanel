@@ -8,13 +8,13 @@
     <persistence-unit name="policeHamrahJPA" transaction-type="JTA">
         <jta-data-source>policeHamrahDataSourceLocal</jta-data-source>
 
-        <class>com.nrdc.policeHamrah.model.dao.KeyDao</class>
         <class>com.nrdc.policeHamrah.model.dao.PrivilegeDao</class>
+        <class>com.nrdc.policeHamrah.model.dao.PrivilegeSystemDao</class>
         <class>com.nrdc.policeHamrah.model.dao.RoleDao</class>
         <class>com.nrdc.policeHamrah.model.dao.RolePrivilegeDao</class>
         <class>com.nrdc.policeHamrah.model.dao.SystemDao</class>
         <class>com.nrdc.policeHamrah.model.dao.SystemVersionDao</class>
-        <class>com.nrdc.policeHamrah.model.dao.TokenDao</class>
+        <class>com.nrdc.policeHamrah.model.dao.AuthDao</class>
         <class>com.nrdc.policeHamrah.model.dao.UserDao</class>
         <class>com.nrdc.policeHamrah.model.dao.UserRoleDao</class>
         <class>com.nrdc.policeHamrah.model.dao.SystemUserDao</class>
