@@ -38,4 +38,11 @@ public class RoleDao extends com.nrdc.policeHamrah.model.dto.RoleDto {
     public Long getFkCreatorId() {
         return super.getFkCreatorId();
     }
+
+    @Override
+    @Basic
+    @Column(name = "FK_SYSTEM_ID")
+    public Long getFkSystemId() {
+        return super.getFkSystemId();
+    }
 }
