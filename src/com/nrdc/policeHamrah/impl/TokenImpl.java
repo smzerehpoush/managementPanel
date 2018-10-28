@@ -18,23 +18,29 @@ public class TokenImpl {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             UserDao user = UserDao.validate(token);
-            if (user.getId().equals(fkUserId)) {
-                throw new Exception(Constants.CAN_NOT_DELETE_TOKEN);
+            String dbToken = null;
+            try {
+                dbToken = (String) entityManager.createQuery("SELECT a.token FROM AuthDao a WHERE a.fkUserId = :fkUserId AND a.fkSystemId = :fkSystemId")
+                        .setParameter("fkUserId", fkUserId)
+                        .setParameter("fkSystemId", fkSystemId)
+                        .getSingleResult();
+            } catch (Exception ex) {
+                throw new Exception(Constants.NOT_VALID_TOKEN);
             }
+            if (token.equals(dbToken))
+                throw new Exception(Constants.CAN_NOT_DELETE_TOKEN);
             SystemDao inputSystem = SystemDao.getSystem(fkSystemId);
             List<SystemDao> userSystems = user.systems();
             checkUserSystems(inputSystem, userSystems);
-            PrivilegeDao privilege = PrivilegeDao.getPrivilege(PrivilegeNames.REMOVE_TOKEN, inputSystem.getId());
+            PrivilegeDao privilege = PrivilegeDao.getPrivilege(PrivilegeNames.REMOVE_TOKEN);
             user.checkPrivilege(privilege, fkSystemId);
-
+            if (!transaction.isActive())
+                transaction.begin();
             entityManager.createQuery("DELETE FROM AuthDao t WHERE t.fkUserId = :fkUserId AND t.fkSystemId = :fkSystemId")
                     .setParameter("fkUserId", fkUserId)
                     .setParameter("fkSystemId", fkSystemId)
                     .executeUpdate();
-            entityManager.createQuery("DELETE FROM KeyDao k WHERE k.fkUserId = :fkUserId AND k.fkSystemId = :fkSystemId")
-                    .setParameter("fkUserId", fkUserId)
-                    .setParameter("fkSystemId", fkSystemId)
-                    .executeUpdate();
+
             if (transaction.isActive())
                 transaction.commit();
 
