@@ -28,7 +28,7 @@ import java.util.List;
 public class UserImpl {
     public StandardResponse resetPassword(String token, RequestResetPassword requestResetPassword) throws Exception {
 //        OperationDao operation = new OperationDao();
-        PrivilegeDao privilege = PrivilegeDao.getPrivilege(PrivilegeNames.RESET_PASSWORD);
+        PrivilegeDao privilege = PrivilegeDao.getPrivilege(PrivilegeNames.RESET_PASSWORD, requestResetPassword.getFkSystemId());
 //        operation.setFkPrivilegeId(privilege.getId());
         UserDao user = UserDao.validate(token);
 //        operation.setUserToken(token);
@@ -127,7 +127,7 @@ public class UserImpl {
             UserDao user1 = UserDao.validate(token);
             SystemDao systemDao = SystemDao.getSystem(fkSystemId);
             String privilegeName = "ACTIVATE_" + systemDao.getSystemName() + "_USERS";
-            user1.checkPrivilege(privilegeName);
+            user1.checkPrivilege(privilegeName, fkSystemId);
             UserDao user2 = UserDao.getUser(fkUserId);
             List<SystemDao> user2SystemDaos = getUserSystems(user2);
             if (!user2SystemDaos.contains(systemDao)) {
@@ -165,7 +165,7 @@ public class UserImpl {
             UserDao user1 = UserDao.validate(token);
             SystemDao systemDao = SystemDao.getSystem(fkSystemId);
             String privilegeName = "DEACTIVATE_" + systemDao.getSystemName() + "_USERS";
-            user1.checkPrivilege(privilegeName);
+            user1.checkPrivilege(privilegeName, fkSystemId);
             UserDao user2 = UserDao.getUser(fkUserId);
             if (user1.equals(user2)) {
                 throw new Exception(Constants.CANT_DE_ACTIVE_YOURSELF);
@@ -204,7 +204,7 @@ public class UserImpl {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             UserDao user = UserDao.validate(token);
-            user.checkPrivilege(PrivilegeNames.ADD_USERS);
+            user.checkPrivilege(PrivilegeNames.ADD_USERS, requestAddUser.getFkSystemId());
             if (!transaction.isActive())
                 transaction.begin();
             UserDao u = new UserDao(requestAddUser);
@@ -291,7 +291,7 @@ public class UserImpl {
         EntityManager entityManager = Database.getEntityManager();
         try {
             UserDao user = UserDao.validate(token);
-            user.checkPrivilege(PrivilegeNames.FILTER_USERS);
+            user.checkPrivilege(PrivilegeNames.FILTER_USERS, requestFilterUsers.getFkSystemId());
             StringBuilder query = new StringBuilder();
             query.append("SELECT u FROM UserDao u ");
             if (requestFilterUsers.getFkSystemId() != null) {
