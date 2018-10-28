@@ -199,7 +199,12 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
     public boolean checkPrivilege(PrivilegeDto privilege, Long fkSystemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
-            int size = entityManager.createQuery("SELECT p FROM PrivilegeDao p JOIN RolePrivilegeDao rp ON p.id = rp.fkPrivilegeId JOIN UserRoleDao ur ON rp.fkRoleId = ur.fkRoleId JOIN PrivilegeSystemDao ps ON p.id = ps.fkPrivilegeId WHERE ur.fkUserId = :fkUserId AND p.id = :privilegeId AND ps.fkSystemId = :fkSystemId ")
+            int size = entityManager.createQuery(
+                    "SELECT p FROM PrivilegeDao p " +
+                            "JOIN RolePrivilegeDao rp ON p.id = rp.fkPrivilegeId " +
+                            "JOIN UserRoleDao ur ON rp.fkRoleId = ur.fkRoleId " +
+                            "JOIN RoleDao r ON r.id = ur.fkRoleId " +
+                            "WHERE ur.fkUserId = :fkUserId AND p.id = :privilegeId AND r.fkSystemId = :fkSystemId")
                     .setParameter("fkUserId", this.getId())
                     .setParameter("privilegeId", privilege.getId())
                     .setParameter("fkSystemId", fkSystemId)
@@ -219,7 +224,12 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
     public boolean checkPrivilege(String privilegeName, Long fkSystemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
-            int size = entityManager.createQuery("SELECT p FROM PrivilegeDao p JOIN RolePrivilegeDao rp ON p.id = rp.fkPrivilegeId JOIN UserRoleDao ur ON rp.fkRoleId = ur.fkRoleId JOIN PrivilegeSystemDao ps ON p.id = ps.fkPrivilegeId WHERE ur.fkUserId = :fkUserId AND p.privilegeText = :privilegeName AND ps.fkSystemId = :fkSystemId ")
+            int size = entityManager.createQuery("" +
+                    "SELECT p FROM PrivilegeDao p " +
+                    "JOIN RolePrivilegeDao rp ON p.id = rp.fkPrivilegeId " +
+                    "JOIN UserRoleDao ur ON rp.fkRoleId = ur.fkRoleId " +
+                    "JOIN RoleDao r ON ur.fkRoleId = r.id " +
+                    "WHERE ur.fkUserId = :fkUserId AND p.privilegeText = :privilegeName AND r.fkSystemId = :fkSystemId")
                     .setParameter("fkUserId", this.getId())
                     .setParameter("privilegeName", privilegeName)
                     .setParameter("fkSystemId", fkSystemId)
