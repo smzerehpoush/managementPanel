@@ -19,12 +19,11 @@ public class PrivilegeDao extends com.nrdc.policeHamrah.model.dto.PrivilegeDto {
         this.setPrivilegeText(privilegeText);
     }
 
-    public static PrivilegeDao getPrivilege(String privilege, Long fkSystemId) throws Exception {
+    public static PrivilegeDao getPrivilege(String privilege) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
-            return (PrivilegeDao) entityManager.createQuery("SELECT p FROM PrivilegeDao p JOIN PrivilegeSystemDao ps ON p.id = ps .fkPrivilegeId WHERE p.privilegeText = :privilegeText AND ps.fkSystemId = :fkSystemId ")
+            return (PrivilegeDao) entityManager.createQuery("SELECT p FROM PrivilegeDao p WHERE p.privilegeText = :privilegeText ")
                     .setParameter("privilegeText", privilege)
-                    .setParameter("fkSystemId", fkSystemId)
                     .getSingleResult();
         } catch (Exception ex) {
             throw new Exception(Constants.NOT_VALID_PRIVILEGE);
