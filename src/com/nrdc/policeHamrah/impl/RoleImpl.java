@@ -109,19 +109,16 @@ public class RoleImpl {
     }
 
 
-    public StandardResponse getRolePrivileges(String token, Long fkRoleId, Long fkSystemId) throws Exception {
+    public StandardResponse getRolePrivileges(String token, Long fkRoleId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
-            UserDao user = UserDao.validate(token);
-            List privileges = entityManager.createQuery("SELECT p FROM PrivilegeDao p JOIN RolePrivilegeDao rp ON p.id = rp.fkPrivilegeId JOIN PrivilegeSystemDao  ps ON p.id = ps.fkPrivilegeId WHERE ps.fkSystemId = :fkSystemId AND rp.fkRoleId = :fkRoleId")
+            UserDao.validate(token);
+            List privileges = entityManager.createQuery("SELECT p FROM PrivilegeDao p JOIN RolePrivilegeDao rp ON p.id = rp.fkPrivilegeId WHERE rp.fkRoleId = :fkRoleId")
                     .setParameter("fkRoleId", fkRoleId)
-                    .setParameter("fkSystemId", fkSystemId)
                     .getResultList();
             ResponseGetPrivileges responseGetPrivileges = new ResponseGetPrivileges();
             responseGetPrivileges.setPrivileges(privileges);
-            StandardResponse response = new StandardResponse<>();
-
-
+            StandardResponse<ResponseGetPrivileges> response = new StandardResponse<>();
             response.setResponse(responseGetPrivileges);
             return response;
         } finally {
