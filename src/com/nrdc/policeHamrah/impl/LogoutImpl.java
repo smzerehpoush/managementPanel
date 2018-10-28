@@ -70,7 +70,7 @@ public class LogoutImpl {
 
     private void logoutFromPH(UserDao user, EntityManager entityManager) {
 
-        entityManager.createQuery("DELETE FROM TokenDao WHERE fkUserId = :fkUserId ")
+        entityManager.createQuery("DELETE FROM AuthDao WHERE fkUserId = :fkUserId ")
                 .setParameter("fkUserId", user.getId())
                 .executeUpdate();
         entityManager.createQuery("DELETE FROM KeyDao WHERE fkUserId = :fkUserId ")
@@ -79,7 +79,7 @@ public class LogoutImpl {
     }
 
     private void deleteToken(UserDao user, SystemDao systemDao, EntityManager entityManager) {
-        entityManager.createQuery("DELETE FROM TokenDao WHERE fkUserId = :fkUserId AND fkSystemId = :fkSystemId")
+        entityManager.createQuery("DELETE FROM AuthDao WHERE fkUserId = :fkUserId AND fkSystemId = :fkSystemId")
                 .setParameter("fkUserId", user.getId())
                 .setParameter("fkSystemId", systemDao.getId())
                 .executeUpdate();
