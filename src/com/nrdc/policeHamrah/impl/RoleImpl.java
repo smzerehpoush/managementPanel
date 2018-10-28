@@ -20,7 +20,7 @@ public class RoleImpl {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             UserDao user = UserDao.validate(token);
-            user.checkPrivilege(PrivilegeNames.ADD_ROLE);
+            user.checkPrivilege(PrivilegeNames.ADD_ROLE, requestAddRole.getFkSystemId());
             RoleDao role = new RoleDao(user.getId(), requestAddRole.getRoleText());
             Long roleId = (Long) (entityManager.createQuery("SELECT MAX (r.id) FROM RoleDao r")
                     .getSingleResult())
@@ -54,7 +54,7 @@ public class RoleImpl {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             UserDao user = UserDao.validate(token);
-            user.checkPrivilege(PrivilegeNames.EDIT_ROLE);
+            user.checkPrivilege(PrivilegeNames.EDIT_ROLE, requestEditRole.getFkSystemId());
             if (!transaction.isActive())
                 transaction.begin();
             //delete all privileges of roll and add new privileges
@@ -86,7 +86,7 @@ public class RoleImpl {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             UserDao user = UserDao.validate(token);
-            user.checkPrivilege(PrivilegeNames.REMOVE_ROLE);
+            user.checkPrivilege(PrivilegeNames.REMOVE_ROLE, fkSystemId);
             if (!transaction.isActive())
                 transaction.begin();
             entityManager.createQuery("DELETE FROM RoleDao r WHERE r.id = :roleId")
@@ -134,7 +134,6 @@ public class RoleImpl {
         try {
             UserDao user = UserDao.validate(token);
             user.checkPrivilege(PrivilegeNames.GET_PRIVILEGES);
-            List privileges = entityManager.createQuery("SELECT p FROM PrivilegeDao p JOIN RolePrivilegeDao rp ON p.id = rp.fkPrivilegeId WHERE rp.fkRoleId = :fkRoleId")
                     .setParameter("fkRoleId", fkRoleId)
                     .getResultList();
             ResponseGetPrivileges responseGetPrivileges = new ResponseGetPrivileges();
