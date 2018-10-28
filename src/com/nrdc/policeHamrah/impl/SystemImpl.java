@@ -1,8 +1,8 @@
 package com.nrdc.policeHamrah.impl;
 
+import com.nrdc.policeHamrah.helper.PrivilegeNames;
 import com.nrdc.policeHamrah.jsonModel.StandardResponse;
 import com.nrdc.policeHamrah.jsonModel.customizedModel.SystemWithVersion;
-import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetPrivileges;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetSystemWithVersions;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetSystems;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetUsers;
@@ -59,11 +59,6 @@ public class SystemImpl {
         }
     }
 
-    public StandardResponse<ResponseGetPrivileges> getSystemPrivileges(String token, Long fkSystemId) {
-        // TODO: 10/25/2018 implement service
-        return null;
-    }
-
     private List<SystemWithVersion> createSystemWithVersions(List<SystemDto> systemDtos) {
         List<SystemWithVersion> systemWithVersions = new LinkedList<>();
         SystemWithVersion systemWithVersion;
@@ -95,16 +90,18 @@ public class SystemImpl {
         try {
             UserDao user = UserDao.validate(token);
             SystemDao systemDao = SystemDao.getSystem(fkSystemId);
-            String privilegeName = "GET_" + systemDao.getSystemName() + "_USERS";
-            user.checkPrivilege(privilegeName, fkSystemId);
-            List<UserDto> users = entityManager.createQuery("SELECT u FROM UserDao u JOIN SystemUserDao us ON u.id = us.fkUserId WHERE us.fkSystemId = :fkSystemId")
+            user.checkPrivilege(PrivilegeNames.GET_SYSTEM_USERS, fkSystemId);
+            List<UserDao> users = entityManager.createQuery("SELECT distinct (u) FROM UserDao u JOIN SystemUserDao us ON u.id = us.fkUserId WHERE us.fkSystemId = :fkSystemId")
                     .setParameter("fkSystemId", systemDao.getId())
                     .getResultList();
-            for (UserDto u : users) {
-                u.setPassword(null);
+            List<UserDto> newUsers = new LinkedList<>();
+            for (UserDao u : users) {
+                UserDto newUser = (UserDto) u.clone();
+                newUser.setPassword(null);
+                newUsers.add(newUser);
             }
             ResponseGetUsers responseGetUsers = new ResponseGetUsers();
-            responseGetUsers.setUsers(users);
+            responseGetUsers.setUsers(newUsers);
             StandardResponse<ResponseGetUsers> response = new StandardResponse<>();
 
 
