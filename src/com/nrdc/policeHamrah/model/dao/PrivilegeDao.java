@@ -35,8 +35,8 @@ public class PrivilegeDao extends com.nrdc.policeHamrah.model.dto.PrivilegeDto {
     }
 
 
-    public static PrivilegeDao getPrivilege(PrivilegeNames privilegeName, Long fkSystemId) throws Exception {
-        return getPrivilege(privilegeName.name(), fkSystemId);
+    public static PrivilegeDao getPrivilege(PrivilegeNames privilegeName) throws Exception {
+        return getPrivilege(privilegeName.name());
     }
 
     @Override
