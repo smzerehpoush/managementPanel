@@ -87,9 +87,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
                     .setParameter("phoneNumber", phoneNumber)
                     .setParameter("password", password);
             UserDao user = (UserDao) query.getSingleResult();
-            if (!user.getIsActive()) {
-                throw new Exception(Constants.NOT_ACTIVE_USER);
-            }
+            user.isActive();
             return user;
         } catch (NoResultException ex1) {
             throw new Exception(Constants.INCORRECT_USERNAME_OR_PASSWORD);
