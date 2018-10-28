@@ -415,13 +415,13 @@ public class UserImpl {
         EntityManager entityManager = Database.getEntityManager();
         try {
             UserDao user = UserDao.validate(token);
-            user.checkPrivilege(PrivilegeNames.GET_PRIVILEGES);
             List<PrivilegeDto> privileges = entityManager.createQuery("SELECT distinct (p) " +
                     "FROM PrivilegeDao p " +
                     "JOIN RolePrivilegeDao rp ON p.id=rp.fkPrivilegeId " +
                     "JOIN UserRoleDao ur ON rp.fkRoleId=ur.fkRoleId " +
+                    "JOIN PrivilegeSystemDao ps ON p.id = ps.fkPrivilegeId " +
                     "WHERE ur.fkUserId = :fkUserId " +
-                    "AND p.fkSystemId = :fkSystemId")
+                    "AND ps.fkSystemId = :fkSystemId")
                     .setParameter("fkUserId", user.getId())
                     .setParameter("fkSystemId", fkSystemId)
                     .getResultList();
