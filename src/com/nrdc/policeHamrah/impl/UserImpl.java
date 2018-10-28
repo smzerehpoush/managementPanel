@@ -28,7 +28,7 @@ import java.util.List;
 public class UserImpl {
     public StandardResponse resetPassword(String token, RequestResetPassword requestResetPassword) throws Exception {
 //        OperationDao operation = new OperationDao();
-        PrivilegeDao privilege = PrivilegeDao.getPrivilege(PrivilegeNames.RESET_PASSWORD, requestResetPassword.getFkSystemId());
+        PrivilegeDao privilege = PrivilegeDao.getPrivilege(PrivilegeNames.RESET_PASSWORD);
 //        operation.setFkPrivilegeId(privilege.getId());
         UserDao user = UserDao.validate(token);
 //        operation.setUserToken(token);
