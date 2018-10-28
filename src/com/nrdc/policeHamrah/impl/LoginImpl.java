@@ -105,7 +105,7 @@ public class LoginImpl {
         } catch (Exception exception) {
             if (transaction != null && transaction.isActive())
                 transaction.rollback();
-            return new StandardResponse<ResponseLogin>().getNOKExceptions(exception);
+            return StandardResponse.getNOKExceptions(exception);
         } finally {
             if (entityManager != null && entityManager.isOpen())
                 entityManager.close();
