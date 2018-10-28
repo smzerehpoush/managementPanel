@@ -77,7 +77,7 @@ public class RoleServices {
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response removeRole(@QueryParam("token") String token, @QueryParam("fkRoleId") Long fkRoleId) {
+    public Response removeRole(@QueryParam("token") String token, @QueryParam("fkRoleId") Long fkRoleId, @QueryParam("fkSystemId") Long fkSystemId) {
         logger.info("++================== removeRole SERVICE : START ==================++");
         try {
             StandardResponse response = new RoleImpl().removeRole(token, fkRoleId);
