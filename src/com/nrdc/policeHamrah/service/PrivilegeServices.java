@@ -28,7 +28,7 @@ public class PrivilegeServices {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserPrivileges(@QueryParam("token") String token) {
+    public Response getUserPrivileges(@QueryParam("token") String token, @QueryParam("fkSystemId")Long fkSystemId) {
         logger.info("++================== getUserPrivileges SERVICE : START ==================++");
         try {
             StandardResponse<ResponseGetPrivileges> response = new PrivilegeImpl().getPrivileges(token);
