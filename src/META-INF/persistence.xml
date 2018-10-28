@@ -9,7 +9,6 @@
         <jta-data-source>policeHamrahDataSourceLocal</jta-data-source>
 
         <class>com.nrdc.policeHamrah.model.dao.PrivilegeDao</class>
-        <class>com.nrdc.policeHamrah.model.dao.PrivilegeSystemDao</class>
         <class>com.nrdc.policeHamrah.model.dao.RoleDao</class>
         <class>com.nrdc.policeHamrah.model.dao.RolePrivilegeDao</class>
         <class>com.nrdc.policeHamrah.model.dao.SystemDao</class>
