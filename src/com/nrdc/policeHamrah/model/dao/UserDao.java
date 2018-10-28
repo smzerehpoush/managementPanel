@@ -33,24 +33,28 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
         this.setPoliceCode(requestAddUser.getPoliceCode());
     }
 
+    //validate user and return it
     public static UserDao validate(String token) throws Exception {
         return validate(token, SystemNames.POLICE_HAMRAH);
     }
 
-    public static UserDao validate(String token, SystemNames systemName) throws Exception {
-        return validate(token, systemName.name());
+    public static UserDao validate(String token, SystemNames systemNameEnum) throws Exception {
+        return validate(token, systemNameEnum.name());
     }
 
     public static UserDao validate(String token, String systemName) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
 
         try {
-            TokenDao.validateToken(token, systemName);
-            checkActivation(token, systemName);
-            return (UserDao) entityManager.createQuery("SELECT u FROM UserDao u WHERE u.id = (SELECT t.fkUserId FROM TokenDao t WHERE t.token = :token AND t.fkSystemId = (SELECT s.id FROM SystemDao s WHERE s.systemName = :systemName))")
+            //first validating token
+            AuthDao.validateToken(token, systemName);
+            //check user activation
+            UserDao user = (UserDao) entityManager.createQuery("SELECT u FROM UserDao u JOIN AuthDao a ON a.fkUserId = u.id JOIN SystemDao s ON s.id = a.fkSystemId WHERE a.token = :token AND s.systemName = :systemName")
                     .setParameter("token", token)
                     .setParameter("systemName", systemName)
                     .getSingleResult();
+            user.isActive();
+            return user;
         } catch (NoResultException ex1) {
             throw new Exception(Constants.INCORRECT_USERNAME_OR_PASSWORD);
         } catch (NonUniqueResultException ex2) {
@@ -102,8 +106,8 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
         EntityManager entityManager = Database.getEntityManager();
 
         try {
-            TokenDao.validateToken(token, systemName);
-            return (UserDao) entityManager.createQuery("SELECT u FROM UserDao u WHERE u.id = (SELECT t.fkUserId FROM TokenDao t WHERE t.token = :token AND t.fkSystemId = (SELECT s.id FROM SystemDao s WHERE s.systemName = :systemName))")
+            AuthDao.validateToken(token, systemName);
+            return (UserDao) entityManager.createQuery("SELECT u FROM UserDao u JOIN AuthDao a ON a.fkUserId = u.id JOIN SystemDao s ON s.id = a.fkSystemId WHERE s.systemName = :systemName AND a.token = :token")
                     .setParameter("token", token)
                     .setParameter("systemName", systemName)
                     .getSingleResult();
@@ -126,15 +130,11 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
         return getUser(token, systemName.name());
     }
 
-    public static UserDao getUser(TokenDao token) throws Exception {
-        return getUser(token.getToken(), token.getFkSystemId());
-    }
-
     public static UserDao getUser(String token, Long systemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         logger.info("UserDao authentication");
         try {
-            return (UserDao) entityManager.createQuery("SELECT u FROM UserDao u JOIN TokenDao t ON t.fkUserId = u.id where t.token = :token AND t.fkSystemId = :fkSystemId")
+            return (UserDao) entityManager.createQuery("SELECT u FROM UserDao u JOIN AuthDao t ON t.fkUserId = u.id where t.token = :token AND t.fkSystemId = :fkSystemId")
                     .setParameter("token", token)
                     .setParameter("fkSystemId", systemId)
                     .getSingleResult();
@@ -145,74 +145,12 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
 
     }
 
-    public static void verify(String token, SystemDao systemDao) throws Exception {
-        EntityManager entityManager = Database.getEntityManager();
 
-        try {
-            int size = entityManager.createQuery("SELECT t FROM TokenDao t WHERE t.token = :token AND t.fkSystemId = :systemId")
-                    .setParameter("token", token)
-                    .setParameter("systemId", systemDao.getId())
-                    .getResultList()
-                    .size();
-            if (size != 1) {
-                logger.info("token is not valid");
-                throw new Exception(Constants.NOT_VALID_TOKEN);
-            }
-        } finally {
-            if (entityManager != null && entityManager.isOpen())
-                entityManager.close();
-        }
-    }
-
-    public static void verify(String token) throws Exception {
-        SystemDao systemDao = SystemDao.getSystem(SystemNames.POLICE_HAMRAH);
-        verify(token, systemDao);
-    }
-
-    public static void verify(String token, String systemName) throws Exception {
-        EntityManager entityManager = Database.getEntityManager();
-
-        try {
-            int size = entityManager.createQuery("SELECT t FROM TokenDao t WHERE t.token = :token AND t.fkSystemId = (SELECT s.id FROM SystemDao s WHERE s.systemName = :systemName )")
-                    .setParameter("token", token)
-                    .setParameter("systemName", systemName)
-                    .getResultList()
-                    .size();
-            if (size != 1) {
-                logger.info("token is not valid");
-                throw new Exception(Constants.NOT_VALID_TOKEN);
-            }
-        } finally {
-            if (entityManager != null && entityManager.isOpen())
-                entityManager.close();
-        }
-    }
-
-    public static boolean checkPrivilege(String privilege, Long fkUserId) throws Exception {
-        EntityManager entityManager = Database.getEntityManager();
-        PrivilegeDao p = PrivilegeDao.getPrivilege(privilege);
-        try {
-            int size = entityManager.createQuery("SELECT p FROM PrivilegeDao p JOIN RolePrivilegeDao rp ON p.id = rp.fkPrivilegeId JOIN UserRoleDao ur ON rp.fkRoleId = ur.fkRoleId WHERE ur.fkUserId = :fkUserId AND p.privilegeText = :privilege")
-                    .setParameter("fkUserId", fkUserId)
-                    .setParameter("privilege", privilege)
-                    .getResultList()
-                    .size();
-            if (size < 1) {
-                throw new Exception(Constants.PERMISSION_ERROR);
-            }
-            return true;
-
-        } finally {
-            if (entityManager != null && entityManager.isOpen())
-                entityManager.close();
-        }
-    }
-
-    public static KeyDao getKey(String token, String systemName) throws Exception {
-        TokenDao.validateToken(token, systemName);
+    public static AuthDao getKey(String token, String systemName) throws Exception {
+        AuthDao.validateToken(token, systemName);
         EntityManager entityManager = Database.getEntityManager();
         try {
-            return (KeyDao) entityManager.createQuery("SELECT k FROM KeyDao k JOIN TokenDao t ON k.fkUserId = t.fkUserId WHERE t.token = :token AND k.fkSystemId = (SELECT s.id FROM SystemDao s WHERE s.systemName = :systemName )")
+            return (AuthDao) entityManager.createQuery("SELECT k FROM AuthDao k JOIN SystemDao  s ON s.id = k.fkSystemId WHERE k.token = :token AND s.systemName = :systemName")
                     .setParameter("systemName", systemName)
                     .setParameter("token", token)
                     .getSingleResult();
@@ -224,18 +162,18 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
         }
     }
 
-    public static KeyDao getKey(String token, SystemNames systemName) throws Exception {
+    public static AuthDao getKey(String token, SystemNames systemName) throws Exception {
         return getKey(token, systemName.name());
     }
 
-    public static KeyDao getKey(String token) throws Exception {
+    public static AuthDao getKey(String token) throws Exception {
         return getKey(token, SystemNames.POLICE_HAMRAH);
     }
 
-    public static KeyDao getKeyByUsername(String username) throws Exception {
+    public static AuthDao getKeyByUsername(String username) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
-            return (KeyDao) entityManager.createQuery("SELECT k FROM KeyDao k JOIN UserDao u ON u.id = k.fkUserId WHERE u.username = :username")
+            return (AuthDao) entityManager.createQuery("SELECT k FROM AuthDao k JOIN UserDao u ON u.id = k.fkUserId WHERE u.username = :username")
                     .setParameter("username", username)
                     .getSingleResult();
         } catch (NonUniqueResultException | NoResultException ex) {
@@ -246,32 +184,6 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
         }
     }
 
-    public static void checkActivation(String token, SystemNames systemName) throws Exception {
-        checkActivation(token, systemName.name());
-    }
-
-    public static void checkActivation(String token, String systemName) throws Exception {
-        EntityManager entityManager = Database.getEntityManager();
-
-        try {
-            Long size = (Long) entityManager.createQuery("SELECT count (t) FROM TokenDao t JOIN SystemDao s ON s.id = t.fkSystemId JOIN UserDao  u ON t.fkUserId = u.id WHERE t.token = :token AND s.systemName = :systemName AND u.isActive = true")
-                    .setParameter("systemName", systemName)
-                    .setParameter("token", token)
-                    .getSingleResult();
-            if (!size.equals(1L)) {
-                throw new Exception(Constants.NOT_ACTIVE_USER);
-            }
-        } finally {
-            if (entityManager != null && entityManager.isOpen())
-                entityManager.close();
-        }
-
-
-    }
-
-    public static boolean checkPrivilege(String privilege, UserDao user) throws Exception {
-        return checkPrivilege(privilege, user.getId());
-    }
 
     public List<SystemDao> systems() {
         EntityManager entityManager = Database.getEntityManager();
@@ -286,12 +198,13 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
         }
     }
 
-    public boolean checkPrivilege(PrivilegeDto privilege) throws Exception {
+    public boolean checkPrivilege(PrivilegeDto privilege, Long fkSystemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
-            int size = entityManager.createQuery("SELECT p FROM PrivilegeDao p JOIN RolePrivilegeDao rp ON p.id = rp.fkPrivilegeId JOIN UserRoleDao ur ON rp.fkRoleId = ur.fkRoleId WHERE ur.fkUserId = :fkUserId AND p.id = :privilegeId")
+            int size = entityManager.createQuery("SELECT p FROM PrivilegeDao p JOIN RolePrivilegeDao rp ON p.id = rp.fkPrivilegeId JOIN UserRoleDao ur ON rp.fkRoleId = ur.fkRoleId JOIN PrivilegeSystemDao ps ON p.id = ps.fkPrivilegeId WHERE ur.fkUserId = :fkUserId AND p.id = :privilegeId AND ps.fkSystemId = :fkSystemId ")
                     .setParameter("fkUserId", this.getId())
                     .setParameter("privilegeId", privilege.getId())
+                    .setParameter("fkSystemId", fkSystemId)
                     .getResultList()
                     .size();
             if (size < 1) {
@@ -303,6 +216,35 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
             if (entityManager != null && entityManager.isOpen())
                 entityManager.close();
         }
+    }
+
+    public boolean checkPrivilege(String privilegeName, Long fkSystemId) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        try {
+            int size = entityManager.createQuery("SELECT p FROM PrivilegeDao p JOIN RolePrivilegeDao rp ON p.id = rp.fkPrivilegeId JOIN UserRoleDao ur ON rp.fkRoleId = ur.fkRoleId JOIN PrivilegeSystemDao ps ON p.id = ps.fkPrivilegeId WHERE ur.fkUserId = :fkUserId AND p.privilegeText = :privilegeName AND ps.fkSystemId = :fkSystemId ")
+                    .setParameter("fkUserId", this.getId())
+                    .setParameter("privilegeName", privilegeName)
+                    .setParameter("fkSystemId", fkSystemId)
+                    .getResultList()
+                    .size();
+            if (size < 1) {
+                throw new Exception(Constants.PERMISSION_ERROR);
+            }
+            return true;
+
+        } finally {
+            if (entityManager != null && entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+
+    public boolean checkPrivilege(PrivilegeNames privilegeName, Long fkSystemId) throws Exception {
+        return checkPrivilege(privilegeName.name(), fkSystemId);
+    }
+
+    public void isActive() throws Exception {
+        if (!this.getIsActive())
+            throw new Exception(Constants.USER_IS_NOT_ACTIVE);
     }
 
     @Override
@@ -374,15 +316,18 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
         return super.getPoliceCode();
     }
 
+    public void checkKey(SystemNames systemNames) throws Exception {
+        checkKey(systemNames.name());
+    }
+
     public void checkKey(String systemName) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
-            int size = entityManager.createQuery("SELECT  k FROM KeyDao k WHERE k.fkUserId = :fkUserId AND k.fkSystemId = (SELECT s.id FROM SystemDao s WHERE s.systemName = :systemName)")
+            Long size = (Long) entityManager.createQuery("SELECT count (a)  FROM AuthDao a JOIN SystemDao s ON a.fkSystemId = s.id WHERE s.systemName = :systemName AND a.fkUserId = :fkUserId")
                     .setParameter("systemName", systemName)
                     .setParameter("fkUserId", super.getId())
-                    .getResultList()
-                    .size();
-            if (size != 0)
+                    .getSingleResult();
+            if (!size.equals(0L))
                 throw new Exception(Constants.ACTIVE_USER_EXISTS + "کلید تکراری");
         } finally {
             if (entityManager.isOpen())
@@ -390,24 +335,32 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
         }
     }
 
-    public void checkKey(SystemDao systemDao) throws Exception {
-        checkKey(systemDao.getSystemName());
+    public void checkKey(SystemDao system) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        try {
+            Long size = (Long) entityManager.createQuery("SELECT count (a) FROM AuthDao a WHERE a.fkSystemId = :fkSystemId AND a.fkUserId = :fkUserId")
+                    .setParameter("fkSystemId", system.getId())
+                    .setParameter("fkUserId", super.getId())
+                    .getSingleResult();
+
+            if (!size.equals(0L))
+                throw new Exception(Constants.ACTIVE_USER_EXISTS + "کلید تکراری");
+        } finally {
+            if (entityManager.isOpen())
+                entityManager.close();
+        }
     }
 
-    public void checkKey(SystemNames systemNames) throws Exception {
-        checkKey(systemNames.name());
-    }
 
     public void checkToken(String systemName) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
 
-            int size = entityManager.createQuery("SELECT  t FROM TokenDao t WHERE t.fkUserId = :fkUserId AND t.fkSystemId = (SELECT s.id FROM SystemDao s WHERE s.systemName = :systemName)")
+            Long size = (Long) entityManager.createQuery("SELECT  count (t) FROM AuthDao t JOIN SystemDao s ON t.fkSystemId = s.id WHERE t.fkUserId = :fkUserId AND s.systemName = :systemName")
                     .setParameter("systemName", systemName)
                     .setParameter("fkUserId", super.getId())
-                    .getResultList()
-                    .size();
-            if (size != 0)
+                    .getSingleResult();
+            if (!size.equals(0L))
                 throw new Exception(Constants.ACTIVE_USER_EXISTS + "توکن تکراری");
         } finally {
             if (entityManager.isOpen())
@@ -416,7 +369,19 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
     }
 
     public void checkToken(SystemDao systemDao) throws Exception {
-        checkToken(systemDao.getSystemName());
+        EntityManager entityManager = Database.getEntityManager();
+        try {
+
+            Long size = (Long) entityManager.createQuery("SELECT  count (t) FROM AuthDao t WHERE t.fkUserId = :fkUserId AND t.fkSystemId = :fkSystemId ")
+                    .setParameter("fkSystemId", systemDao.getId())
+                    .setParameter("fkUserId", super.getId())
+                    .getSingleResult();
+            if (!size.equals(0L))
+                throw new Exception(Constants.ACTIVE_USER_EXISTS + "توکن تکراری");
+        } finally {
+            if (entityManager.isOpen())
+                entityManager.close();
+        }
     }
 
     public void checkToken(SystemNames system) throws Exception {
@@ -443,15 +408,6 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
             if (entityManager != null && entityManager.isOpen())
                 entityManager.close();
         }
-    }
-
-    public boolean checkPrivilege(String privilege) throws Exception {
-        return checkPrivilege(privilege, super.getId());
-    }
-
-
-    public void checkPrivilege(PrivilegeNames privilegeName) throws Exception {
-        checkPrivilege(privilegeName.name());
     }
 
     public UserDto createCustomUser() throws CloneNotSupportedException {
