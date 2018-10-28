@@ -372,8 +372,10 @@ public class UserImpl {
                 roleWithPrivileges.setId(role.getId());
                 roleWithPrivileges.setRole(role.getRole());
                 roleWithPrivileges.setPrivileges(
-                        entityManager.createQuery("SELECT p FROM PrivilegeDao p JOIN RolePrivilegeDao rp ON p.id=rp.fkPrivilegeId WHERE rp.fkRoleId = :fkRoleId")
-                                .setParameter("fkRoleId", role.getId()).getResultList());
+                        entityManager.createQuery("SELECT p FROM PrivilegeDao p JOIN RolePrivilegeDao rp ON p.id=rp.fkPrivilegeId JOIN PrivilegeSystemDao ps ON p.id = ps.fkPrivilegeId WHERE rp.fkRoleId = :fkRoleId AND ps.fkSystemId = :fkSystemId")
+                                .setParameter("fkRoleId", role.getId())
+                                .setParameter("fkSystemId", fkSystemId)
+                                .getResultList());
                 rolesWithPrivileges.add(roleWithPrivileges);
             }
             ResponseGetRolesWithPrivileges responseGetRolesWithPrivileges = new ResponseGetRolesWithPrivileges();
