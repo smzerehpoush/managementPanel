@@ -81,7 +81,7 @@ public class RoleImpl {
         }
     }
 
-    public StandardResponse removeRole(String token, Long fkRoleId) throws Exception {
+    public StandardResponse removeRole(String token, Long fkRoleId, Long fkSystemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
