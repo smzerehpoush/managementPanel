@@ -21,7 +21,7 @@ public class RoleImpl {
         try {
             UserDao user = UserDao.validate(token);
             user.checkPrivilege(PrivilegeNames.ADD_ROLE, requestAddRole.getFkSystemId());
-            RoleDao role = new RoleDao(user.getId(), requestAddRole.getRoleText());
+            RoleDao role = new RoleDao(requestAddRole.getRoleText(), requestAddRole.getFkSystemId(), user.getId());
             Long roleId = (Long) (entityManager.createQuery("SELECT MAX (r.id) FROM RoleDao r")
                     .getSingleResult())
                     + 1;
