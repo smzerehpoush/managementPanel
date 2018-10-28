@@ -191,7 +191,7 @@ public class UserServices {
     public Response getUserRoles(@QueryParam("token") String token, @QueryParam("fkSystemId")Long fkSystemId) {
         logger.info("++================== getRoles SERVICE : START ==================++");
         try {
-            StandardResponse response = new UserImpl().getUserRoles(token);
+            StandardResponse response = new UserImpl().getUserRoles(token,fkSystemId);
             String key = UserDao.getKey(token).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
