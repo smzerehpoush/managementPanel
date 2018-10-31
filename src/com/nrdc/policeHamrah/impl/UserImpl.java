@@ -128,7 +128,7 @@ public class UserImpl {
             user1.checkPrivilege(PrivilegeNames.ACTIVE_USER, fkSystemId);
             SystemDao systemDao = SystemDao.getSystem(fkSystemId);
             UserDao user2 = UserDao.getUser(fkUserId);
-            List<SystemDao> user2SystemList = getUserSystems(user2);
+            List<SystemDao> user2SystemList = user2.systems();
             if (!user2SystemList.contains(systemDao)) {
                 throw new Exception(Constants.USER_SYSTEM_ERROR);
             }
@@ -165,7 +165,7 @@ public class UserImpl {
             user1.checkPrivilege(PrivilegeNames.DE_ACTIVE_USER, fkSystemId);
             SystemDao systemDao = SystemDao.getSystem(fkSystemId);
             UserDao user2 = UserDao.getUser(fkUserId);
-            List<SystemDao> user2SystemList = getUserSystems(user2);
+            List<SystemDao> user2SystemList = user2.systems();
             if (!user2SystemList.contains(systemDao)) {
                 throw new Exception(Constants.USER_SYSTEM_ERROR);
             }
@@ -273,7 +273,7 @@ public class UserImpl {
             SystemDao systemDao = SystemDao.getSystem(requestEditUser.getFkSystemId());
             adminUser.checkPrivilege(PrivilegeNames.EDIT_USER, requestEditUser.getFkSystemId());
             UserDao user = UserDao.getUser(requestEditUser.getFkUserId());
-            List<SystemDao> userSystemList = getUserSystems(user);
+            List<SystemDao> userSystemList = user.systems();
             if (!userSystemList.contains(systemDao)) {
                 throw new Exception(Constants.USER_SYSTEM_ERROR);
             }
