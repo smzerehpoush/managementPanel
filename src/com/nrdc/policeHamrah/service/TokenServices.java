@@ -17,6 +17,8 @@ public class TokenServices {
     private static Logger logger = Logger.getLogger(TokenServices.class.getName());
 
     /**
+     * 11
+     * remove token of a user from systems
      * @param token      user token
      * @param fkSystemId id of system
      * @param fkUserId   id of user

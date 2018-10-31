@@ -21,6 +21,7 @@ public class RoleServices {
     private static Logger logger = Logger.getLogger(RoleServices.class.getName());
 
     /**
+     * 05
      * add a role
      *
      * @param encryptedRequest RequestAddRole
@@ -71,6 +72,7 @@ public class RoleServices {
     }
 
     /**
+     * 07
      * @param token    user token
      * @param fkRoleId id of role
      * @return simple StandardResponse to handle state
@@ -96,6 +98,7 @@ public class RoleServices {
     }
 
     /**
+     * 08
      * @param token    user token
      * @param fkRoleId id of role
      * @return list of privileges of a role

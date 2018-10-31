@@ -19,7 +19,7 @@ public class LoginService {
     private static Logger logger = Logger.getLogger(LoginService.class.getName());
 
     /***
-     * login to police hamrah
+     * 01
      * @param requestLogin {@link RequestLogin}
      * @return standardResponse
      */
@@ -41,7 +41,7 @@ public class LoginService {
     }
 
     /**
-     * login to all other system except policeHamrag
+     * 02
      *
      * @param token      user token
      * @param fkSystemId id of system that user want to login

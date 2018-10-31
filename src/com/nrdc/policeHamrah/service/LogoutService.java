@@ -18,6 +18,7 @@ public class LogoutService {
     private static Logger logger = Logger.getLogger(LogoutService.class.getName());
 
     /**
+     * 03
      * @param token      token of user that want to logout
      * @param fkSystemId system that user want to logout
      * @return Simple Standard Response to handle state of logout

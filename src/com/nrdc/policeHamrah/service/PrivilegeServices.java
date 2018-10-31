@@ -22,6 +22,7 @@ public class PrivilegeServices {
     private static Logger logger = Logger.getLogger(PrivilegeServices.class.getName());
 
     /**
+     * 04
      * get privileges of a user with token
      *
      * @param token user token

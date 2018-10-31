@@ -28,6 +28,7 @@ public class UserServices {
     private ObjectMapper objectMapper = new ObjectMapper();
 
     /**
+     * 12
      * @param encryptedRequest RequestAddUser
      * @return simple StandardResponse to handle state
      */
@@ -52,6 +53,7 @@ public class UserServices {
     }
 
     /**
+     * 13
      * @param encryptedRequest RequestEditUser
      * @return simple StandardResponse to handle state
      */
@@ -76,6 +78,7 @@ public class UserServices {
     }
 
     /**
+     * 14
      * @param token      user token
      * @param fkUserId   id of user to be activated
      * @param fkSystemId id of system of changing user
@@ -104,6 +107,7 @@ public class UserServices {
     }
 
     /**
+     * 15
      * @param token      user token
      * @param fkUserId   id of user to be deActivated
      * @param fkSystemId id of system of changing user
@@ -132,6 +136,7 @@ public class UserServices {
     }
 
     /**
+     * 16
      * filter users
      *
      * @param encryptedRequest RequestFilterUsers
@@ -159,6 +164,7 @@ public class UserServices {
     }
 
     /**
+     * 17
      * reset password of given user
      *
      * @param encryptedRequest RequestResetPassword
@@ -185,7 +191,9 @@ public class UserServices {
         }
     }
 
+
     /**
+     * 18
      * {@link GET} service with {@link QueryParam token} to return all roles of current user
      *
      * @param token token of currentUser
@@ -215,7 +223,7 @@ public class UserServices {
 
 
     /**
-     * {@link GET} service with {@link QueryParam token} to return all privileges of current user in specific system
+     * 19
      *
      * @param token      token of current User
      * @param fkSystemId fk system id of current User
@@ -244,7 +252,7 @@ public class UserServices {
     }
 
     /**
-     * @param token      user token
+     * 20
      * @param fkSystemId id of system
      * @return list of roles with privileges of a user
      */
@@ -272,6 +280,7 @@ public class UserServices {
     }
 
     /***
+     * 21
      * @param token token of a valid user
      * @return returns list of systems of a specific user
      */
