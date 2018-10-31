@@ -221,6 +221,47 @@ public class UserImpl {
         }
     }
 
+    private void checkRequestAddUser(RequestAddUser requestAddUser) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        Long size;
+        try {
+            //check username
+            if (requestAddUser.getUsername() == null || requestAddUser.getUsername().equals(""))
+                throw new Exception("نام کاربری اجباری می باشد;");
+            size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.username = :username")
+                    .setParameter("username", requestAddUser.getUsername())
+                    .getSingleResult();
+            if (size > 0)
+                throw new Exception("نام کاربری تکراری می باشد.");
+            //check nationalId
+            if (requestAddUser.getUsername() == null || requestAddUser.getUsername().equals(""))
+                throw new Exception("کد ملی اجباری شده");
+            size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.nationalId = :nationalId")
+                    .setParameter("nationalId", requestAddUser.getNationalId())
+                    .getSingleResult();
+            if (size > 0)
+                throw new Exception("کد ملی تکراری می باشد.");
+            //check policeCode
+            if (requestAddUser.getPoliceCode() != null && !requestAddUser.getPoliceCode().equals(""))
+                size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.policeCode= :policeCode")
+                        .setParameter("policeCode", requestAddUser.getPoliceCode())
+                        .getSingleResult();
+            if (size > 0)
+                throw new Exception("کد پلیس تکراری می باشد.");
+            //check phoneNumber
+            if (requestAddUser.getPhoneNumber() == null || requestAddUser.getPhoneNumber().equals(""))
+                throw new Exception("شماره تلفن اجباری شده");
+            size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.phoneNumber= :phoneNumber")
+                    .setParameter("phoneNumber", requestAddUser.getPhoneNumber())
+                    .getSingleResult();
+            if (size > 0)
+                throw new Exception("شماره تلفن تکراری می باشد.");
+        } finally {
+            if (entityManager != null && entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+
     public List<SystemDao> getUserSystems(UserDao user) {
         EntityManager entityManager = Database.getEntityManager();
         try {
