@@ -325,6 +325,115 @@ public class UserImpl {
         }
     }
 
+    private void checkUsername(String username, Long fkUserId) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        Long size;
+        try {
+            //check username
+            if (username == null || username.equals(""))
+                throw new Exception("نام کاربری اجباری می باشد;");
+            size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.username = :username")
+                    .setParameter("username", username)
+                    .getSingleResult();
+            if (size.equals(1L)) {
+                Long id = (Long) entityManager.createQuery("SELECT (u.id) FROM UserDao u WHERE u.username = :username")
+                        .setParameter("username", username)
+                        .getSingleResult();
+                if (!id.equals(fkUserId))
+                    throw new Exception("نام کاربری تکراری می باشد.");
+
+            }
+            if (size > 1)
+                throw new Exception("نام کاربری تکراری می باشد.");
+        } finally {
+            if (entityManager != null && entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+
+    private void checkNationalId(String nationalId, Long fkUserId) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        Long size;
+        try {
+            //check nationalId
+            if (nationalId == null || nationalId.equals(""))
+                throw new Exception("کد ملی اجباری می باشد;");
+            size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.nationalId = :username")
+                    .setParameter("username", nationalId)
+                    .getSingleResult();
+            if (size.equals(1L)) {
+                Long id = (Long) entityManager.createQuery("SELECT (u.id) FROM UserDao u WHERE u.nationalId = :nationalId")
+                        .setParameter("nationalId", nationalId)
+                        .getSingleResult();
+                if (!id.equals(fkUserId))
+                    throw new Exception("کد ملی تکراری می باشد.");
+
+            }
+            if (size > 1)
+                throw new Exception("کد ملی تکراری می باشد.");
+        } finally {
+            if (entityManager != null && entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+    private void checkPhoneNumber(String phoneNumber, Long fkUserId) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        Long size;
+        try {
+            //check phoneNumber
+            if (phoneNumber == null || phoneNumber.equals(""))
+                throw new Exception("شماره تلفن اجباری می باشد;");
+            size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.phoneNumber = :phoneNumber")
+                    .setParameter("phoneNumber", phoneNumber)
+                    .getSingleResult();
+            if (size.equals(1L)) {
+                Long id = (Long) entityManager.createQuery("SELECT (u.id) FROM UserDao u WHERE u.phoneNumber= :phoneNumber")
+                        .setParameter("phoneNumber", phoneNumber)
+                        .getSingleResult();
+                if (!id.equals(fkUserId))
+                    throw new Exception("شماره تلفن تکراری می باشد.");
+
+            }
+            if (size > 1)
+                throw new Exception("شماره تلفن تکراری می باشد.");
+        } finally {
+            if (entityManager != null && entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+
+    private void checkPoliceCode(String policeCode, Long fkUserId) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        Long size;
+        try {
+            //check policeCode
+            size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.policeCode = :policeCode")
+                    .setParameter("policeCode", policeCode)
+                    .getSingleResult();
+            if (size.equals(1L)) {
+                Long id = (Long) entityManager.createQuery("SELECT (u.id) FROM UserDao u WHERE u.policeCode = :policeCode")
+                        .setParameter("policeCode", policeCode)
+                        .getSingleResult();
+                if (!id.equals(fkUserId))
+                    throw new Exception("کد پلیس  تکراری می باشد.");
+
+            }
+            if (size > 1)
+                throw new Exception("کد پلیس تکراری می باشد.");
+        } finally {
+            if (entityManager != null && entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+
+    private void checkRequestEditUser(RequestEditUser requestEditUser) throws Exception {
+        checkUsername(requestEditUser.getUsername(), requestEditUser.getFkUserId());
+        checkNationalId(requestEditUser.getNationalId(), requestEditUser.getFkUserId());
+        checkPoliceCode(requestEditUser.getPoliceCode(), requestEditUser.getFkUserId());
+        checkPhoneNumber(requestEditUser.getPhoneNumber(), requestEditUser.getFkUserId());
+
+    }
+
 
     public StandardResponse<ResponseGetUsers> filterUsers(String token, RequestFilterUsers requestFilterUsers) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
