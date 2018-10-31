@@ -23,14 +23,14 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
     }
 
     public UserDao(RequestAddUser requestAddUser) {
-        this.setPassword(requestAddUser.getPassword());
         this.setUsername(requestAddUser.getUsername());
-        this.setIsActive(true);
+        this.setPassword(requestAddUser.getPassword());
         this.setPhoneNumber(requestAddUser.getPhoneNumber());
         this.setFirstName(requestAddUser.getFirstName());
         this.setLastName(requestAddUser.getLastName());
         this.setNationalId(requestAddUser.getNationalId());
         this.setPoliceCode(requestAddUser.getPoliceCode());
+        this.setIsActive(true);
     }
 
     //validate user and return it
