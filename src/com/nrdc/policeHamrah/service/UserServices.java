@@ -87,6 +87,9 @@ public class UserServices {
     public Response activeUser(@QueryParam("token") String token, @QueryParam("fkUserId") Long fkUserId, @QueryParam("fkSystemId") Long fkSystemId) {
         logger.info("++================== activeUser SERVICE : START ==================++");
         try {
+            if (token == null || fkSystemId == null || fkUserId == null) {
+                throw new Exception(Constants.NOT_VALID_REQUEST);
+            }
             StandardResponse response = new UserImpl().activeUser(token, fkUserId, fkSystemId);
             String key = UserDao.getKey(token).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
@@ -112,6 +115,9 @@ public class UserServices {
     public Response deActiveUser(@QueryParam("token") String token, @QueryParam("fkUserID") Long fkUserId, @QueryParam("fkSystemId") Long fkSystemId) {
         logger.info("++================== deActiveUser SERVICE : START ==================++");
         try {
+            if (token == null || fkSystemId == null || fkUserId == null) {
+                throw new Exception(Constants.NOT_VALID_REQUEST);
+            }
             StandardResponse response = new UserImpl().deActiveUser(token, fkUserId, fkSystemId);
             String key = UserDao.getKey(token).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
@@ -191,6 +197,9 @@ public class UserServices {
     public Response getUserRoles(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) {
         logger.info("++================== getRoles SERVICE : START ==================++");
         try {
+            if (token == null || fkSystemId == null) {
+                throw new Exception(Constants.NOT_VALID_REQUEST);
+            }
             StandardResponse response = new UserImpl().getUserRoles(token, fkSystemId);
             String key = UserDao.getKey(token).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
@@ -246,6 +255,9 @@ public class UserServices {
     public Response getRolesWithPrivileges(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) {
         logger.info("++================== getUserRolesWithPrivileges SERVICE : START ==================++");
         try {
+            if (token == null || fkSystemId == null) {
+                throw new Exception(Constants.NOT_VALID_REQUEST);
+            }
             StandardResponse<ResponseGetRolesWithPrivileges> response = new UserImpl().getUserRolesWithPrivileges(token, fkSystemId);
             String key = UserDao.getKey(token).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
@@ -269,6 +281,9 @@ public class UserServices {
     public Response getUserSystems(@QueryParam("token") String token) {
         logger.info("++================== getUserSystems SERVICE : START ==================++");
         try {
+            if (token == null) {
+                throw new Exception(Constants.NOT_VALID_REQUEST);
+            }
             StandardResponse<ResponseGetSystems> response = new SystemImpl().getUserSystems(token);
             Response finalResponse = Response.status(200).entity(response).build();
             logger.info("++================== getUserSystems SERVICE : END ==================++");

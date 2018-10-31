@@ -1,5 +1,6 @@
 package com.nrdc.policeHamrah.service;
 
+import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.Encryption;
 import com.nrdc.policeHamrah.impl.RoleImpl;
 import com.nrdc.policeHamrah.jsonModel.EncryptedRequest;
@@ -80,6 +81,9 @@ public class RoleServices {
     public Response removeRole(@QueryParam("token") String token, @QueryParam("fkRoleId") Long fkRoleId) {
         logger.info("++================== removeRole SERVICE : START ==================++");
         try {
+            if (token == null || fkRoleId == null) {
+                throw new Exception(Constants.NOT_VALID_REQUEST);
+            }
             StandardResponse response = new RoleImpl().removeRole(token, fkRoleId);
             Response finalResponse = Response.status(200).entity(response).build();
             logger.info("++================== removeRole SERVICE : END ==================++");
@@ -102,6 +106,9 @@ public class RoleServices {
     public Response getRolePrivileges(@QueryParam("token") String token, @QueryParam("fkRoleId") Long fkRoleId) {
         logger.info("++================== getRolePrivileges SERVICE : START ==================++");
         try {
+            if (token == null || fkRoleId == null) {
+                throw new Exception(Constants.NOT_VALID_REQUEST);
+            }
             StandardResponse response = new RoleImpl().getRolePrivileges(token, fkRoleId);
             String key = UserDao.getKey(token).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);

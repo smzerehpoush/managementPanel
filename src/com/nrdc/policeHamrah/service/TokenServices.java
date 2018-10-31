@@ -1,5 +1,6 @@
 package com.nrdc.policeHamrah.service;
 
+import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.Encryption;
 import com.nrdc.policeHamrah.impl.TokenImpl;
 import com.nrdc.policeHamrah.jsonModel.EncryptedResponse;
@@ -27,6 +28,9 @@ public class TokenServices {
     public Response removeToken(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId, @QueryParam("fkUserId") Long fkUserId) {
         logger.info("++================== removeToken SERVICE : START ==================++");
         try {
+            if (token == null || fkSystemId == null || fkUserId == null) {
+                throw new Exception(Constants.NOT_VALID_REQUEST);
+            }
             StandardResponse response = new TokenImpl().removeToken(token, fkSystemId, fkUserId);
             String key = UserDao.getKey(token).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
