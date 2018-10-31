@@ -263,18 +263,6 @@ public class UserImpl {
         }
     }
 
-    public List<SystemDao> getUserSystems(UserDao user) {
-        EntityManager entityManager = Database.getEntityManager();
-        try {
-            return entityManager.createQuery("SELECT s FROM SystemDao s JOIN SystemUserDao us ON us.fkSystemId = s.id WHERE us.fkUserId = :fkUserId")
-                    .setParameter("fkUserId", user.getId())
-                    .getResultList();
-        } finally {
-            if (entityManager != null && entityManager.isOpen())
-                entityManager.close();
-        }
-    }
-
     public StandardResponse editUser(String token, RequestEditUser requestEditUser) {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
