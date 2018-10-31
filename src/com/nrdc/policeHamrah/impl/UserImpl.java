@@ -409,9 +409,8 @@ public class UserImpl {
                 roleWithPrivileges.setId(role.getId());
                 roleWithPrivileges.setRole(role.getRole());
                 roleWithPrivileges.setPrivileges(
-                        entityManager.createQuery("SELECT p FROM PrivilegeDao p JOIN RolePrivilegeDao rp ON p.id=rp.fkPrivilegeId JOIN PrivilegeSystemDao ps ON p.id = ps.fkPrivilegeId WHERE rp.fkRoleId = :fkRoleId AND ps.fkSystemId = :fkSystemId")
+                        entityManager.createQuery("SELECT p FROM PrivilegeDao p JOIN RolePrivilegeDao rp ON p.id = rp.fkPrivilegeId WHERE rp.fkRoleId = :fkRoleId ")
                                 .setParameter("fkRoleId", role.getId())
-                                .setParameter("fkSystemId", fkSystemId)
                                 .getResultList());
                 rolesWithPrivileges.add(roleWithPrivileges);
             }
@@ -458,10 +457,10 @@ public class UserImpl {
             List<PrivilegeDto> privileges = entityManager.createQuery("SELECT distinct (p) " +
                     "FROM PrivilegeDao p " +
                     "JOIN RolePrivilegeDao rp ON p.id=rp.fkPrivilegeId " +
+                    "JOIN RoleDao r ON r.id = rp.fkRoleId " +
                     "JOIN UserRoleDao ur ON rp.fkRoleId=ur.fkRoleId " +
-                    "JOIN PrivilegeSystemDao ps ON p.id = ps.fkPrivilegeId " +
                     "WHERE ur.fkUserId = :fkUserId " +
-                    "AND ps.fkSystemId = :fkSystemId")
+                    "AND r.fkSystemId = :fkSystemId")
                     .setParameter("fkUserId", user.getId())
                     .setParameter("fkSystemId", fkSystemId)
                     .getResultList();
