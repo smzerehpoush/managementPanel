@@ -288,14 +288,14 @@ public class UserImpl {
 
             if (!transaction.isActive())
                 transaction.begin();
-            entityManager.createQuery("UPDATE UserDao u SET u.username = :username , u.phoneNumber= :phoneNumber , u.phoneNumber = :phoneNumber , u.firstName = :firstName , u.lastName = :lastName , u.nationalId = :nationalId , u.policeCode = :policeCode WHERE u.id = :id")
+            entityManager.createQuery("UPDATE UserDao u SET u.username = :username , u.phoneNumber= :phoneNumber , u.phoneNumber = :phoneNumber , u.firstName = :firstName , u.lastName = :lastName , u.nationalId = :nationalId , u.policeCode = :policeCode WHERE u.id = :fkUserId")
                     .setParameter("username", requestEditUser.getUsername())
                     .setParameter("phoneNumber", requestEditUser.getPhoneNumber())
                     .setParameter("firstName", requestEditUser.getFirstName())
                     .setParameter("lastName", requestEditUser.getLastName())
                     .setParameter("nationalId", requestEditUser.getNationalId())
                     .setParameter("policeCode", requestEditUser.getPoliceCode())
-                    .setParameter("id", requestEditUser.getFkUserId())
+                    .setParameter("fkUserId", requestEditUser.getFkUserId())
                     .executeUpdate();
             if (transaction.isActive())
                 transaction.commit();
