@@ -200,9 +200,10 @@ public class UserImpl {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             UserDao user = UserDao.validate(token);
-            user.checkPrivilege(PrivilegeNames.ADD_USERS, requestAddUser.getFkSystemId());
+            user.checkPrivilege(PrivilegeNames.ADD_USER, requestAddUser.getFkSystemId());
             if (!transaction.isActive())
                 transaction.begin();
+            checkRequestAddUser(requestAddUser);
             UserDao u = new UserDao(requestAddUser);
             entityManager.persist(u);
             if (transaction.isActive())
