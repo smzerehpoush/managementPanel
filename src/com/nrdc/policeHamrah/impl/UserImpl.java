@@ -285,7 +285,7 @@ public class UserImpl {
                 if (ex.getMessage().equals(Constants.CANT_NOT_EDIT_THIS_USER))
                     throw ex;
             }
-
+            checkRequestEditUser(requestEditUser);
             if (!transaction.isActive())
                 transaction.begin();
             entityManager.createQuery("UPDATE UserDao u SET u.username = :username , u.phoneNumber= :phoneNumber , u.phoneNumber = :phoneNumber , u.firstName = :firstName , u.lastName = :lastName , u.nationalId = :nationalId , u.policeCode = :policeCode WHERE u.id = :fkUserId")
@@ -364,6 +364,7 @@ public class UserImpl {
                 entityManager.close();
         }
     }
+
     private void checkPhoneNumber(String phoneNumber, Long fkUserId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         Long size;
