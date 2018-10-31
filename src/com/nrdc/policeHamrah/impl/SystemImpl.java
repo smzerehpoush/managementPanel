@@ -17,7 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class SystemImpl {
-    public StandardResponse getUserSystems(String token) throws Exception {
+    public StandardResponse<ResponseGetSystems> getUserSystems(String token) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
             UserDto user = UserDao.validate(token);
@@ -27,7 +27,7 @@ public class SystemImpl {
                     .getResultList();
             ResponseGetSystems responseGetSystems = new ResponseGetSystems();
             responseGetSystems.setSystemDtos(systems);
-            StandardResponse response = new StandardResponse<>();
+            StandardResponse<ResponseGetSystems> response = new StandardResponse<>();
 
 
             response.setResponse(responseGetSystems);
