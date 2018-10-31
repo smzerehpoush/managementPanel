@@ -47,6 +47,7 @@ public class RoleServices {
     }
 
     /**
+     * 06
      * edit a role
      *
      * @param encryptedRequest RequestEditRole
@@ -73,6 +74,7 @@ public class RoleServices {
 
     /**
      * 07
+     * remove role of user
      * @param token    user token
      * @param fkRoleId id of role
      * @return simple StandardResponse to handle state
@@ -99,6 +101,7 @@ public class RoleServices {
 
     /**
      * 08
+     * get privileges of a role
      * @param token    user token
      * @param fkRoleId id of role
      * @return list of privileges of a role

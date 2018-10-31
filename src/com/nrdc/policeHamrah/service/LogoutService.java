@@ -19,6 +19,7 @@ public class LogoutService {
 
     /**
      * 03
+     * logout from systems with fkSystemId, if fkSystemId is null then logout from PH
      * @param token      token of user that want to logout
      * @param fkSystemId system that user want to logout
      * @return Simple Standard Response to handle state of logout

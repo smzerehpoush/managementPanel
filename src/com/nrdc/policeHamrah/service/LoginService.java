@@ -18,8 +18,9 @@ import javax.ws.rs.core.Response;
 public class LoginService {
     private static Logger logger = Logger.getLogger(LoginService.class.getName());
 
-    /***
+    /***]
      * 01
+     * login to police hamrah system
      * @param requestLogin {@link RequestLogin}
      * @return standardResponse
      */
@@ -42,6 +43,7 @@ public class LoginService {
 
     /**
      * 02
+     * login to all other system except policeHamrah
      *
      * @param token      user token
      * @param fkSystemId id of system that user want to login

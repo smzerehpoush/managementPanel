@@ -21,6 +21,7 @@ public class SystemServices {
 
     /**
      * 09
+     * list of systems with last version of them
      * @param token user token
      * @return ResponseGetSystemWithVersions list of system with their last versions
      */
@@ -49,6 +50,7 @@ public class SystemServices {
 
     /**
      * 10
+     * list of users a system
      * @param token      user token
      * @param fkSystemId is of system
      * @return ResponseGetUsers : list of users of a system

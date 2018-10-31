@@ -25,7 +25,8 @@ public class PrivilegeServices {
      * 04
      * get privileges of a user with token
      *
-     * @param token user token
+     * @param token      user token
+     * @param fkSystemId id of system
      * @return ResponseGetPrivileges
      */
     @GET
