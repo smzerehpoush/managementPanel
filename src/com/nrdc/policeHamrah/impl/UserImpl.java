@@ -427,8 +427,8 @@ public class UserImpl {
     public StandardResponse<ResponseGetUsers> filterUsers(String token, RequestFilterUsers requestFilterUsers) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         try {
-            UserDao user = UserDao.validate(token);
-            user.checkPrivilege(PrivilegeNames.FILTER_USERS, requestFilterUsers.getFkSystemId());
+            UserDao.validate(token);
+//            user.checkPrivilege(PrivilegeNames.FILTER_USERS, requestFilterUsers.getFkSystemId());
             StringBuilder query = new StringBuilder();
             query.append("SELECT u FROM UserDao u ");
             if (requestFilterUsers.getFkSystemId() != null) {
@@ -530,7 +530,6 @@ public class UserImpl {
         EntityManager entityManager = Database.getEntityManager();
         try {
             UserDao user = UserDao.validate(token);
-            user.checkPrivilege(PrivilegeNames.GET_ROLES, fkSystemId);
             List<RoleDto> roles = entityManager.createQuery("SELECT r FROM RoleDao r JOIN UserRoleDao ur ON r.id = ur.fkRoleId WHERE ur.fkUserId = :fkUserId AND r.fkSystemId = :fkSystemId")
                     .setParameter("fkSystemId", fkSystemId)
                     .setParameter("fkUserId", user.getId())
