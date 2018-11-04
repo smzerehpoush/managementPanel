@@ -444,9 +444,9 @@ public class UserImpl {
                 query.append(requestFilterUsers.getUsername());
                 query.append("%' ");
             }
-            if (requestFilterUsers.getActive() != null) {
+            if (requestFilterUsers.getIsActive() != null) {
                 query.append(" AND u.isActive = ");
-                query.append(requestFilterUsers.getActive());
+                query.append(requestFilterUsers.getIsActive() ? "true" : "false");
             }
             if (requestFilterUsers.getPhoneNumber() != null) {
                 query.append(" AND u.phoneNumber LIKE '");
