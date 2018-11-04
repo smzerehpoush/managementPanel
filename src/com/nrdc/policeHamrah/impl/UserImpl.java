@@ -430,7 +430,7 @@ public class UserImpl {
             UserDao.validate(token);
 //            user.checkPrivilege(PrivilegeNames.FILTER_USERS, requestFilterUsers.getFkSystemId());
             StringBuilder query = new StringBuilder();
-            query.append("SELECT u FROM UserDao u ");
+            query.append("SELECT distinct(u) FROM UserDao u ");
             if (requestFilterUsers.getFkSystemId() != null) {
                 query.append(" JOIN SystemUserDao us ON u.id = us.fkUserId ");
             }
