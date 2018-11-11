@@ -8,7 +8,10 @@ import com.nrdc.policeHamrah.jsonModel.StandardResponse;
 import com.nrdc.policeHamrah.model.dao.UserDao;
 import org.apache.log4j.Logger;
 
-import javax.ws.rs.*;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -19,13 +22,13 @@ public class TokenServices {
     /**
      * 11
      * remove token of a user from systems
+     *
      * @param token      user token
      * @param fkSystemId id of system
      * @param fkUserId   id of user
      * @return simple StandardResponse to handle state
      */
     @DELETE
-    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response removeToken(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId, @QueryParam("fkUserId") Long fkUserId) {
         logger.info("++================== removeToken SERVICE : START ==================++");
