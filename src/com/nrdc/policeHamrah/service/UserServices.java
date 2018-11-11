@@ -116,7 +116,7 @@ public class UserServices {
     @Path("/deActive")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deActiveUser(@QueryParam("token") String token, @QueryParam("fkUserID") Long fkUserId, @QueryParam("fkSystemId") Long fkSystemId) {
+    public Response deActiveUser(@QueryParam("token") String token, @QueryParam("fkUserId") Long fkUserId, @QueryParam("fkSystemId") Long fkSystemId) {
         logger.info("++================== deActiveUser SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null || fkUserId == null) {
