@@ -25,7 +25,7 @@ public class TokenImpl {
                         .setParameter("fkSystemId", fkSystemId)
                         .getSingleResult();
             } catch (Exception ex) {
-                throw new Exception(Constants.NOT_VALID_TOKEN);
+                throw new Exception(Constants.NOT_LOGED_IN);
             }
             if (token.equals(dbToken))
                 throw new Exception(Constants.CAN_NOT_DELETE_TOKEN);
