@@ -18,7 +18,7 @@ public class TokenImpl {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             UserDao user = UserDao.validate(token);
-            String dbToken = null;
+            String dbToken;
             try {
                 dbToken = (String) entityManager.createQuery("SELECT a.token FROM AuthDao a WHERE a.fkUserId = :fkUserId AND a.fkSystemId = :fkSystemId")
                         .setParameter("fkUserId", fkUserId)
