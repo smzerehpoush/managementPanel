@@ -16,6 +16,7 @@ public class TokenImpl {
     public StandardResponse removeToken(String token, Long fkSystemId, Long fkUserId) {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             UserDao user = UserDao.validate(token);
             String dbToken;
