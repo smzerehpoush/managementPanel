@@ -19,6 +19,7 @@ public class LogoutImpl {
         EntityManager operationEntityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         EntityTransaction operationTransaction = operationEntityManager.getTransaction();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         OperationDao operation = new OperationDao();
         operation.setUserToken(token);
         operation.setPrivilegeName(PrivilegeNames.LOGOUT.name());

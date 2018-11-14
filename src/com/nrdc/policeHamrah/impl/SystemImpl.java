@@ -19,6 +19,7 @@ import java.util.List;
 public class SystemImpl {
     public StandardResponse<ResponseGetSystems> getUserSystems(String token) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             UserDto user = UserDao.validate(token);
 //            user.checkPrivilege(PrivilegeNames.GET_SYSTEMS);
@@ -40,6 +41,7 @@ public class SystemImpl {
 
     public StandardResponse<ResponseGetSystemWithVersions> getSystemVersions(String token) {
         EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             UserDao user = UserDao.validate(token);
             List<SystemDto> systemDtos = entityManager.createQuery("SELECT s FROM SystemDao s JOIN SystemUserDao su ON s.id = su.fkSystemId WHERE su.fkUserId = :fkUserId ")
@@ -74,7 +76,6 @@ public class SystemImpl {
     private SystemVersionDto getSystemVersion(Long fkSystemId) {
         EntityManager entityManager = Database.getEntityManager();
         entityManager.getEntityManagerFactory().getCache().evictAll();
-
         try {
             return (SystemVersionDto) entityManager.createQuery("SELECT v FROM SystemVersionDao v WHERE v.fkSystemId = :fkSystemId AND v.versionCode = (SELECT MAX (s.versionCode) FROM SystemVersionDao s WHERE s.fkSystemId = :fkSystemId)")
                     .setParameter("fkSystemId", fkSystemId)
@@ -87,6 +88,7 @@ public class SystemImpl {
 
     public StandardResponse<ResponseGetUsers> getSystemUsers(String token, Long fkSystemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             UserDao user = UserDao.validate(token);
             SystemDao systemDao = SystemDao.getSystem(fkSystemId);

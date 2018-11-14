@@ -33,6 +33,7 @@ public class LoginImpl {
     public StandardResponse login(RequestLogin requestLogin) {
         EntityManager entityManager = Database.getEntityManager();
         EntityManager operationEntityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         EntityTransaction transaction = entityManager.getTransaction();
         EntityTransaction operationTransaction = operationEntityManager.getTransaction();
         OperationDao operation = new OperationDao();
@@ -87,10 +88,11 @@ public class LoginImpl {
     public StandardResponse<ResponseLogin> loginToSystem(String token, Long fkSystemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
+
         try {
             if (transaction != null && !transaction.isActive()) {
                 transaction.begin();
-                entityManager.getEntityManagerFactory().getCache().evictAll();
             }
             UserDao user = UserDao.getUser(token);
             user.isActive();
@@ -122,6 +124,7 @@ public class LoginImpl {
             throw new Exception(responseAddTokenKey.getResultMessage());
         }
         EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             if (transaction != null && !transaction.isActive())
@@ -202,6 +205,7 @@ public class LoginImpl {
 
     private String getUserPassword(String username) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             return (String) entityManager.createQuery("SELECT u.password FROM UserDao u WHERE u.username = :username")
                     .setParameter("username", username)

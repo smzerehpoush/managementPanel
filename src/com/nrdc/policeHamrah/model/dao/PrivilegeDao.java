@@ -21,6 +21,7 @@ public class PrivilegeDao extends com.nrdc.policeHamrah.model.dto.PrivilegeDto {
 
     public static PrivilegeDao getPrivilege(String privilege) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             return (PrivilegeDao) entityManager.createQuery("SELECT p FROM PrivilegeDao p WHERE p.privilegeText = :privilegeText ")
                     .setParameter("privilegeText", privilege)
