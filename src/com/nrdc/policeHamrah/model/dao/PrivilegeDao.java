@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "PH_PRIVILEGE", schema = Constants.SCHEMA)
 public class PrivilegeDao extends com.nrdc.policeHamrah.model.dto.PrivilegeDto {
-    public static final String tableName = "PH_PRIVILEGE";
+    private static final String tableName = "PH_PRIVILEGE";
 
     public PrivilegeDao() {
     }
@@ -21,6 +21,7 @@ public class PrivilegeDao extends com.nrdc.policeHamrah.model.dto.PrivilegeDto {
 
     public static PrivilegeDao getPrivilege(String privilege) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             return (PrivilegeDao) entityManager.createQuery("SELECT p FROM PrivilegeDao p WHERE p.privilegeText = :privilegeText ")
                     .setParameter("privilegeText", privilege)
@@ -51,5 +52,19 @@ public class PrivilegeDao extends com.nrdc.policeHamrah.model.dto.PrivilegeDto {
     @Column(name = "PRIVILEGE_TEXT", table = tableName)
     public String getPrivilegeText() {
         return super.getPrivilegeText();
+    }
+
+    @Basic
+    @Column(name = "PRIVILEGE_LABEL", table = tableName)
+    @Override
+    public String getLabel() {
+        return super.getLabel();
+    }
+
+    @Basic
+    @Column(name = "VISIBLE", table = tableName)
+    @Override
+    public Boolean getVisible() {
+        return super.getVisible();
     }
 }

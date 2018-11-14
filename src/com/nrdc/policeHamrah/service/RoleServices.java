@@ -1,5 +1,6 @@
 package com.nrdc.policeHamrah.service;
 
+import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.Encryption;
 import com.nrdc.policeHamrah.impl.RoleImpl;
 import com.nrdc.policeHamrah.jsonModel.EncryptedRequest;
@@ -20,6 +21,7 @@ public class RoleServices {
     private static Logger logger = Logger.getLogger(RoleServices.class.getName());
 
     /**
+     * 05
      * add a role
      *
      * @param encryptedRequest RequestAddRole
@@ -45,6 +47,7 @@ public class RoleServices {
     }
 
     /**
+     * 06
      * edit a role
      *
      * @param encryptedRequest RequestEditRole
@@ -70,6 +73,8 @@ public class RoleServices {
     }
 
     /**
+     * 07
+     * remove role of user
      * @param token    user token
      * @param fkRoleId id of role
      * @return simple StandardResponse to handle state
@@ -80,6 +85,9 @@ public class RoleServices {
     public Response removeRole(@QueryParam("token") String token, @QueryParam("fkRoleId") Long fkRoleId) {
         logger.info("++================== removeRole SERVICE : START ==================++");
         try {
+            if (token == null || fkRoleId == null) {
+                throw new Exception(Constants.NOT_VALID_REQUEST);
+            }
             StandardResponse response = new RoleImpl().removeRole(token, fkRoleId);
             Response finalResponse = Response.status(200).entity(response).build();
             logger.info("++================== removeRole SERVICE : END ==================++");
@@ -92,6 +100,8 @@ public class RoleServices {
     }
 
     /**
+     * 08
+     * get privileges of a role
      * @param token    user token
      * @param fkRoleId id of role
      * @return list of privileges of a role
@@ -102,6 +112,9 @@ public class RoleServices {
     public Response getRolePrivileges(@QueryParam("token") String token, @QueryParam("fkRoleId") Long fkRoleId) {
         logger.info("++================== getRolePrivileges SERVICE : START ==================++");
         try {
+            if (token == null || fkRoleId == null) {
+                throw new Exception(Constants.NOT_VALID_REQUEST);
+            }
             StandardResponse response = new RoleImpl().getRolePrivileges(token, fkRoleId);
             String key = UserDao.getKey(token).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);

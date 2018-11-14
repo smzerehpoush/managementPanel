@@ -1,5 +1,6 @@
 package com.nrdc.policeHamrah.service;
 
+import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.Encryption;
 import com.nrdc.policeHamrah.impl.SystemImpl;
 import com.nrdc.policeHamrah.jsonModel.EncryptedResponse;
@@ -19,6 +20,8 @@ public class SystemServices {
     private static Logger logger = Logger.getLogger(SystemServices.class.getName());
 
     /**
+     * 09
+     * list of systems with last version of them
      * @param token user token
      * @return ResponseGetSystemWithVersions list of system with their last versions
      */
@@ -28,6 +31,9 @@ public class SystemServices {
     public Response getSystemWithVersion(@QueryParam("token") String token) {
         logger.info("++================== getSystemWithVersion SERVICE : START ==================++");
         try {
+            if (token == null ) {
+                throw new Exception(Constants.NOT_VALID_REQUEST);
+            }
             StandardResponse<ResponseGetSystemWithVersions> response = new SystemImpl().getSystemVersions(token);
             String key = UserDao.getKey(token).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
@@ -43,6 +49,8 @@ public class SystemServices {
 
 
     /**
+     * 10
+     * list of users a system
      * @param token      user token
      * @param fkSystemId is of system
      * @return ResponseGetUsers : list of users of a system
@@ -54,6 +62,9 @@ public class SystemServices {
     public Response getSystemUsers(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) {
         logger.info("++================== getSystemUsers SERVICE : START ==================++");
         try {
+            if (token == null || fkSystemId == null) {
+                throw new Exception(Constants.NOT_VALID_REQUEST);
+            }
             StandardResponse<ResponseGetUsers> response = new SystemImpl().getSystemUsers(token, fkSystemId);
             String key = UserDao.getKey(token).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);

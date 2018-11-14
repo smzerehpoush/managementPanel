@@ -1,5 +1,6 @@
 package com.nrdc.policeHamrah.service;
 
+import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.impl.LogoutImpl;
 import com.nrdc.policeHamrah.jsonModel.StandardResponse;
 import org.apache.log4j.Logger;
@@ -17,6 +18,8 @@ public class LogoutService {
     private static Logger logger = Logger.getLogger(LogoutService.class.getName());
 
     /**
+     * 03
+     * logout from systems with fkSystemId, if fkSystemId is null then logout from PH
      * @param token      token of user that want to logout
      * @param fkSystemId system that user want to logout
      * @return Simple Standard Response to handle state of logout
@@ -26,6 +29,9 @@ public class LogoutService {
     public Response login(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) {
         logger.info("++================== logout SERVICE : START ==================++");
         try {
+            if (token == null || fkSystemId == null) {
+                throw new Exception(Constants.NOT_VALID_REQUEST);
+            }
             StandardResponse response = new LogoutImpl().logout(token, fkSystemId);
             Response finalResponse = Response.status(200).entity(response).build();
             logger.info("++================== logout SERVICE : END ==================++");

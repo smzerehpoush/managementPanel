@@ -77,6 +77,7 @@ public class UserImpl {
 
     private boolean checkUserOldPassword(String username, RequestResetPassword requestResetPassword) {
         EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             Long size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.username = :username AND u.password = :password ")
                     .setParameter("username", username)
@@ -101,6 +102,7 @@ public class UserImpl {
     private void setUserNewPassword(String username, RequestResetPassword requestResetPassword) {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             if (!transaction.isActive())
                 transaction.begin();
@@ -123,26 +125,27 @@ public class UserImpl {
     public StandardResponse activeUser(String token, Long fkUserId, Long fkSystemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             UserDao user1 = UserDao.validate(token);
+            if (user1.getId().equals(fkUserId))
+                throw new Exception(Constants.CANT_NOT_DEACTIVE_THIS_USER);
             user1.checkPrivilege(PrivilegeNames.ACTIVE_USER, fkSystemId);
             SystemDao systemDao = SystemDao.getSystem(fkSystemId);
             UserDao user2 = UserDao.getUser(fkUserId);
-            List<SystemDao> user2SystemList = getUserSystems(user2);
+            List<SystemDao> user2SystemList = user2.systems();
             if (!user2SystemList.contains(systemDao)) {
                 throw new Exception(Constants.USER_SYSTEM_ERROR);
             }
             if (transaction != null && !transaction.isActive())
                 transaction.begin();
-            entityManager.createQuery("UPDATE UserDao u SET u.isActive = true WHERE u.id = :fkUserId")
+            entityManager.createQuery("UPDATE UserDao u SET u.isActive = true WHERE u.id = :fkUserId ")
                     .setParameter("fkUserId", fkUserId)
                     .executeUpdate();
             if (transaction != null && transaction.isActive())
                 transaction.commit();
 
             StandardResponse response = new StandardResponse<>();
-
-
             return response;
 
         } catch (Exception ex) {
@@ -160,12 +163,13 @@ public class UserImpl {
     public StandardResponse deActiveUser(String token, Long fkUserId, Long fkSystemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             UserDao user1 = UserDao.validate(token);
             user1.checkPrivilege(PrivilegeNames.DE_ACTIVE_USER, fkSystemId);
             SystemDao systemDao = SystemDao.getSystem(fkSystemId);
             UserDao user2 = UserDao.getUser(fkUserId);
-            List<SystemDao> user2SystemList = getUserSystems(user2);
+            List<SystemDao> user2SystemList = user2.systems();
             if (!user2SystemList.contains(systemDao)) {
                 throw new Exception(Constants.USER_SYSTEM_ERROR);
             }
@@ -198,11 +202,13 @@ public class UserImpl {
     public StandardResponse addUser(String token, RequestAddUser requestAddUser) {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             UserDao user = UserDao.validate(token);
-            user.checkPrivilege(PrivilegeNames.ADD_USERS, requestAddUser.getFkSystemId());
+            user.checkPrivilege(PrivilegeNames.ADD_USER, requestAddUser.getFkSystemId());
             if (!transaction.isActive())
                 transaction.begin();
+            checkRequestAddUser(requestAddUser);
             UserDao u = new UserDao(requestAddUser);
             entityManager.persist(u);
             if (transaction.isActive())
@@ -221,12 +227,42 @@ public class UserImpl {
         }
     }
 
-    public List<SystemDao> getUserSystems(UserDao user) {
+    private void checkRequestAddUser(RequestAddUser requestAddUser) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
+        Long size;
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
-            return entityManager.createQuery("SELECT s FROM SystemDao s JOIN SystemUserDao us ON us.fkSystemId = s.id WHERE us.fkUserId = :fkUserId")
-                    .setParameter("fkUserId", user.getId())
-                    .getResultList();
+            //check username
+            if (requestAddUser.getUsername() == null || requestAddUser.getUsername().equals(""))
+                throw new Exception("نام کاربری اجباری می باشد;");
+            size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.username = :username")
+                    .setParameter("username", requestAddUser.getUsername())
+                    .getSingleResult();
+            if (size > 0)
+                throw new Exception("نام کاربری تکراری می باشد.");
+            //check nationalId
+            if (requestAddUser.getUsername() == null || requestAddUser.getUsername().equals(""))
+                throw new Exception("کد ملی اجباری شده");
+            size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.nationalId = :nationalId")
+                    .setParameter("nationalId", requestAddUser.getNationalId())
+                    .getSingleResult();
+            if (size > 0)
+                throw new Exception("کد ملی تکراری می باشد.");
+            //check policeCode
+            if (requestAddUser.getPoliceCode() != null && !requestAddUser.getPoliceCode().equals(""))
+                size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.policeCode= :policeCode")
+                        .setParameter("policeCode", requestAddUser.getPoliceCode())
+                        .getSingleResult();
+            if (size > 0)
+                throw new Exception("کد پلیس تکراری می باشد.");
+            //check phoneNumber
+            if (requestAddUser.getPhoneNumber() == null || requestAddUser.getPhoneNumber().equals(""))
+                throw new Exception("شماره تلفن اجباری شده");
+            size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.phoneNumber= :phoneNumber")
+                    .setParameter("phoneNumber", requestAddUser.getPhoneNumber())
+                    .getSingleResult();
+            if (size > 0)
+                throw new Exception("شماره تلفن تکراری می باشد.");
         } finally {
             if (entityManager != null && entityManager.isOpen())
                 entityManager.close();
@@ -236,6 +272,7 @@ public class UserImpl {
     public StandardResponse editUser(String token, RequestEditUser requestEditUser) {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             //admin user
             UserDao adminUser = UserDao.validate(token);
@@ -243,7 +280,7 @@ public class UserImpl {
             SystemDao systemDao = SystemDao.getSystem(requestEditUser.getFkSystemId());
             adminUser.checkPrivilege(PrivilegeNames.EDIT_USER, requestEditUser.getFkSystemId());
             UserDao user = UserDao.getUser(requestEditUser.getFkUserId());
-            List<SystemDao> userSystemList = getUserSystems(user);
+            List<SystemDao> userSystemList = user.systems();
             if (!userSystemList.contains(systemDao)) {
                 throw new Exception(Constants.USER_SYSTEM_ERROR);
             }
@@ -255,17 +292,17 @@ public class UserImpl {
                 if (ex.getMessage().equals(Constants.CANT_NOT_EDIT_THIS_USER))
                     throw ex;
             }
-
+            checkRequestEditUser(requestEditUser);
             if (!transaction.isActive())
                 transaction.begin();
-            entityManager.createQuery("UPDATE UserDao u SET u.username = :username , u.phoneNumber= :phoneNumber , u.phoneNumber = :phoneNumber , u.firstName = :firstName , u.lastName = :lastName , u.nationalId = :nationalId , u.policeCode = :policeCode WHERE u.id = :id")
+            entityManager.createQuery("UPDATE UserDao u SET u.username = :username , u.phoneNumber= :phoneNumber , u.phoneNumber = :phoneNumber , u.firstName = :firstName , u.lastName = :lastName , u.nationalId = :nationalId , u.policeCode = :policeCode WHERE u.id = :fkUserId")
                     .setParameter("username", requestEditUser.getUsername())
                     .setParameter("phoneNumber", requestEditUser.getPhoneNumber())
                     .setParameter("firstName", requestEditUser.getFirstName())
                     .setParameter("lastName", requestEditUser.getLastName())
                     .setParameter("nationalId", requestEditUser.getNationalId())
                     .setParameter("policeCode", requestEditUser.getPoliceCode())
-                    .setParameter("id", requestEditUser.getFkUserId())
+                    .setParameter("fkUserId", requestEditUser.getFkUserId())
                     .executeUpdate();
             if (transaction.isActive())
                 transaction.commit();
@@ -283,14 +320,129 @@ public class UserImpl {
         }
     }
 
+    private void checkUsername(String username, Long fkUserId) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
+        Long size;
+        try {
+            //check username
+            if (username == null || username.equals(""))
+                throw new Exception("نام کاربری اجباری می باشد;");
+            size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.username = :username")
+                    .setParameter("username", username)
+                    .getSingleResult();
+            if (size.equals(1L)) {
+                Long id = (Long) entityManager.createQuery("SELECT (u.id) FROM UserDao u WHERE u.username = :username")
+                        .setParameter("username", username)
+                        .getSingleResult();
+                if (!id.equals(fkUserId))
+                    throw new Exception("نام کاربری تکراری می باشد.");
+
+            }
+            if (size > 1)
+                throw new Exception("نام کاربری تکراری می باشد.");
+        } finally {
+            if (entityManager != null && entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+
+    private void checkNationalId(String nationalId, Long fkUserId) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
+        Long size;
+        try {
+            //check nationalId
+            if (nationalId == null || nationalId.equals(""))
+                throw new Exception("کد ملی اجباری می باشد;");
+            size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.nationalId = :username")
+                    .setParameter("username", nationalId)
+                    .getSingleResult();
+            if (size.equals(1L)) {
+                Long id = (Long) entityManager.createQuery("SELECT (u.id) FROM UserDao u WHERE u.nationalId = :nationalId")
+                        .setParameter("nationalId", nationalId)
+                        .getSingleResult();
+                if (!id.equals(fkUserId))
+                    throw new Exception("کد ملی تکراری می باشد.");
+
+            }
+            if (size > 1)
+                throw new Exception("کد ملی تکراری می باشد.");
+        } finally {
+            if (entityManager != null && entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+
+    private void checkPhoneNumber(String phoneNumber, Long fkUserId) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
+        Long size;
+        try {
+            //check phoneNumber
+            if (phoneNumber == null || phoneNumber.equals(""))
+                throw new Exception("شماره تلفن اجباری می باشد;");
+            size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.phoneNumber = :phoneNumber")
+                    .setParameter("phoneNumber", phoneNumber)
+                    .getSingleResult();
+            if (size.equals(1L)) {
+                Long id = (Long) entityManager.createQuery("SELECT (u.id) FROM UserDao u WHERE u.phoneNumber= :phoneNumber")
+                        .setParameter("phoneNumber", phoneNumber)
+                        .getSingleResult();
+                if (!id.equals(fkUserId))
+                    throw new Exception("شماره تلفن تکراری می باشد.");
+
+            }
+            if (size > 1)
+                throw new Exception("شماره تلفن تکراری می باشد.");
+        } finally {
+            if (entityManager != null && entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+
+    private void checkPoliceCode(String policeCode, Long fkUserId) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
+        Long size;
+        try {
+            //check policeCode
+            size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.policeCode = :policeCode")
+                    .setParameter("policeCode", policeCode)
+                    .getSingleResult();
+            if (size.equals(1L)) {
+                Long id = (Long) entityManager.createQuery("SELECT (u.id) FROM UserDao u WHERE u.policeCode = :policeCode")
+                        .setParameter("policeCode", policeCode)
+                        .getSingleResult();
+                if (!id.equals(fkUserId))
+                    throw new Exception("کد پلیس  تکراری می باشد.");
+
+            }
+            if (size > 1)
+                throw new Exception("کد پلیس تکراری می باشد.");
+        } finally {
+            if (entityManager != null && entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+
+    private void checkRequestEditUser(RequestEditUser requestEditUser) throws Exception {
+        checkUsername(requestEditUser.getUsername(), requestEditUser.getFkUserId());
+        checkNationalId(requestEditUser.getNationalId(), requestEditUser.getFkUserId());
+        checkPoliceCode(requestEditUser.getPoliceCode(), requestEditUser.getFkUserId());
+        checkPhoneNumber(requestEditUser.getPhoneNumber(), requestEditUser.getFkUserId());
+
+    }
+
 
     public StandardResponse<ResponseGetUsers> filterUsers(String token, RequestFilterUsers requestFilterUsers) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
-            UserDao user = UserDao.validate(token);
-            user.checkPrivilege(PrivilegeNames.FILTER_USERS, requestFilterUsers.getFkSystemId());
+            UserDao.validate(token);
+//            user.checkPrivilege(PrivilegeNames.FILTER_USERS, requestFilterUsers.getFkSystemId());
             StringBuilder query = new StringBuilder();
-            query.append("SELECT u FROM UserDao u ");
+            query.append("SELECT distinct(u) FROM UserDao u ");
             if (requestFilterUsers.getFkSystemId() != null) {
                 query.append(" JOIN SystemUserDao us ON u.id = us.fkUserId ");
             }
@@ -304,9 +456,9 @@ public class UserImpl {
                 query.append(requestFilterUsers.getUsername());
                 query.append("%' ");
             }
-            if (requestFilterUsers.getActive() != null) {
+            if (requestFilterUsers.getIsActive() != null) {
                 query.append(" AND u.isActive = ");
-                query.append(requestFilterUsers.getActive());
+                query.append(requestFilterUsers.getIsActive() ? "true" : "false");
             }
             if (requestFilterUsers.getPhoneNumber() != null) {
                 query.append(" AND u.phoneNumber LIKE '");
@@ -355,6 +507,7 @@ public class UserImpl {
 
     public StandardResponse<ResponseGetRolesWithPrivileges> getUserRolesWithPrivileges(String token, Long fkSystemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             UserDao user = UserDao.validate(token);
             List<RoleWithPrivileges> rolesWithPrivileges = new LinkedList<>();
@@ -368,9 +521,8 @@ public class UserImpl {
                 roleWithPrivileges.setId(role.getId());
                 roleWithPrivileges.setRole(role.getRole());
                 roleWithPrivileges.setPrivileges(
-                        entityManager.createQuery("SELECT p FROM PrivilegeDao p JOIN RolePrivilegeDao rp ON p.id=rp.fkPrivilegeId JOIN PrivilegeSystemDao ps ON p.id = ps.fkPrivilegeId WHERE rp.fkRoleId = :fkRoleId AND ps.fkSystemId = :fkSystemId")
+                        entityManager.createQuery("SELECT p FROM PrivilegeDao p JOIN RolePrivilegeDao rp ON p.id = rp.fkPrivilegeId WHERE rp.fkRoleId = :fkRoleId ")
                                 .setParameter("fkRoleId", role.getId())
-                                .setParameter("fkSystemId", fkSystemId)
                                 .getResultList());
                 rolesWithPrivileges.add(roleWithPrivileges);
             }
@@ -389,9 +541,9 @@ public class UserImpl {
 
     public StandardResponse getUserRoles(String token, Long fkSystemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             UserDao user = UserDao.validate(token);
-            user.checkPrivilege(PrivilegeNames.GET_ROLES, fkSystemId);
             List<RoleDto> roles = entityManager.createQuery("SELECT r FROM RoleDao r JOIN UserRoleDao ur ON r.id = ur.fkRoleId WHERE ur.fkUserId = :fkUserId AND r.fkSystemId = :fkSystemId")
                     .setParameter("fkSystemId", fkSystemId)
                     .setParameter("fkUserId", user.getId())
@@ -412,15 +564,16 @@ public class UserImpl {
 
     public StandardResponse getPrivileges(String token, Long fkSystemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             UserDao user = UserDao.validate(token);
             List<PrivilegeDto> privileges = entityManager.createQuery("SELECT distinct (p) " +
                     "FROM PrivilegeDao p " +
                     "JOIN RolePrivilegeDao rp ON p.id=rp.fkPrivilegeId " +
+                    "JOIN RoleDao r ON r.id = rp.fkRoleId " +
                     "JOIN UserRoleDao ur ON rp.fkRoleId=ur.fkRoleId " +
-                    "JOIN PrivilegeSystemDao ps ON p.id = ps.fkPrivilegeId " +
                     "WHERE ur.fkUserId = :fkUserId " +
-                    "AND ps.fkSystemId = :fkSystemId")
+                    "AND r.fkSystemId = :fkSystemId")
                     .setParameter("fkUserId", user.getId())
                     .setParameter("fkSystemId", fkSystemId)
                     .getResultList();

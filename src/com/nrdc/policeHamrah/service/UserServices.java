@@ -28,6 +28,7 @@ public class UserServices {
     private ObjectMapper objectMapper = new ObjectMapper();
 
     /**
+     * 12
      * @param encryptedRequest RequestAddUser
      * @return simple StandardResponse to handle state
      */
@@ -52,6 +53,7 @@ public class UserServices {
     }
 
     /**
+     * 13
      * @param encryptedRequest RequestEditUser
      * @return simple StandardResponse to handle state
      */
@@ -76,6 +78,7 @@ public class UserServices {
     }
 
     /**
+     * 14
      * @param token      user token
      * @param fkUserId   id of user to be activated
      * @param fkSystemId id of system of changing user
@@ -87,6 +90,9 @@ public class UserServices {
     public Response activeUser(@QueryParam("token") String token, @QueryParam("fkUserId") Long fkUserId, @QueryParam("fkSystemId") Long fkSystemId) {
         logger.info("++================== activeUser SERVICE : START ==================++");
         try {
+            if (token == null || fkSystemId == null || fkUserId == null) {
+                throw new Exception(Constants.NOT_VALID_REQUEST);
+            }
             StandardResponse response = new UserImpl().activeUser(token, fkUserId, fkSystemId);
             String key = UserDao.getKey(token).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
@@ -101,6 +107,7 @@ public class UserServices {
     }
 
     /**
+     * 15
      * @param token      user token
      * @param fkUserId   id of user to be deActivated
      * @param fkSystemId id of system of changing user
@@ -109,9 +116,12 @@ public class UserServices {
     @Path("/deActive")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deActiveUser(@QueryParam("token") String token, @QueryParam("fkUserID") Long fkUserId, @QueryParam("fkSystemId") Long fkSystemId) {
+    public Response deActiveUser(@QueryParam("token") String token, @QueryParam("fkUserId") Long fkUserId, @QueryParam("fkSystemId") Long fkSystemId) {
         logger.info("++================== deActiveUser SERVICE : START ==================++");
         try {
+            if (token == null || fkSystemId == null || fkUserId == null) {
+                throw new Exception(Constants.NOT_VALID_REQUEST);
+            }
             StandardResponse response = new UserImpl().deActiveUser(token, fkUserId, fkSystemId);
             String key = UserDao.getKey(token).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
@@ -126,6 +136,7 @@ public class UserServices {
     }
 
     /**
+     * 16
      * filter users
      *
      * @param encryptedRequest RequestFilterUsers
@@ -153,6 +164,7 @@ public class UserServices {
     }
 
     /**
+     * 17
      * reset password of given user
      *
      * @param encryptedRequest RequestResetPassword
@@ -179,10 +191,13 @@ public class UserServices {
         }
     }
 
+
     /**
+     * 18
      * {@link GET} service with {@link QueryParam token} to return all roles of current user
      *
      * @param token token of currentUser
+     * @param fkSystemId id of system
      * @return all roles of current user
      */
     @Path("/roles")
@@ -191,6 +206,9 @@ public class UserServices {
     public Response getUserRoles(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) {
         logger.info("++================== getRoles SERVICE : START ==================++");
         try {
+            if (token == null || fkSystemId == null) {
+                throw new Exception(Constants.NOT_VALID_REQUEST);
+            }
             StandardResponse response = new UserImpl().getUserRoles(token, fkSystemId);
             String key = UserDao.getKey(token).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
@@ -204,13 +222,41 @@ public class UserServices {
         }
     }
 
+    /**
+     * 19
+     * @param token      user token
+     * @param fkSystemId id of system
+     * @return list of roles with privileges of a user
+     */
+    @Path("/roles/privileges")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getRolesWithPrivileges(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) {
+        logger.info("++================== getUserRolesWithPrivileges SERVICE : START ==================++");
+        try {
+            if (token == null || fkSystemId == null) {
+                throw new Exception(Constants.NOT_VALID_REQUEST);
+            }
+            StandardResponse<ResponseGetRolesWithPrivileges> response = new UserImpl().getUserRolesWithPrivileges(token, fkSystemId);
+            String key = UserDao.getKey(token).getKey();
+            EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
+            Response finalResponse = Response.status(200).entity(encryptedResponse).build();
+            logger.info("++================== getUserRolesWithPrivileges SERVICE : END ==================++");
+            return finalResponse;
+        } catch (Exception ex) {
+            logger.error("++================== getUserRolesWithPrivileges SERVICE : EXCEPTION ==================++");
+            StandardResponse response = StandardResponse.getNOKExceptions(ex);
+            return Response.status(200).entity(response).build();
+        }
+    }
 
     /**
+     * 20
      * {@link GET} service with {@link QueryParam token} to return all privileges of current user in specific system
      *
      * @param token      token of current User
      * @param fkSystemId fk system id of current User
-     * @return all privileges of currentUser in specific system
+     * @return list of privileges of currentUser in specific system
      */
     @Path("/privileges")
     @GET
@@ -234,32 +280,8 @@ public class UserServices {
         }
     }
 
-    /**
-     * @param token      user token
-     * @param fkSystemId id of system
-     * @return list of roles with privileges of a user
-     */
-    @Path("/roles/privileges")
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getRolesWithPrivileges(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) {
-        logger.info("++================== getUserRolesWithPrivileges SERVICE : START ==================++");
-        try {
-            StandardResponse<ResponseGetRolesWithPrivileges> response = new UserImpl().getUserRolesWithPrivileges(token, fkSystemId);
-            String key = UserDao.getKey(token).getKey();
-            EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
-            Response finalResponse = Response.status(200).entity(encryptedResponse).build();
-            logger.info("++================== getUserRolesWithPrivileges SERVICE : END ==================++");
-            return finalResponse;
-        } catch (Exception ex) {
-            logger.error("++================== getUserRolesWithPrivileges SERVICE : EXCEPTION ==================++");
-            StandardResponse response = StandardResponse.getNOKExceptions(ex);
-            return Response.status(200).entity(response).build();
-        }
-    }
-
     /***
+     * 21
      * @param token token of a valid user
      * @return returns list of systems of a specific user
      */
@@ -269,8 +291,13 @@ public class UserServices {
     public Response getUserSystems(@QueryParam("token") String token) {
         logger.info("++================== getUserSystems SERVICE : START ==================++");
         try {
+            if (token == null) {
+                throw new Exception(Constants.NOT_VALID_REQUEST);
+            }
             StandardResponse<ResponseGetSystems> response = new SystemImpl().getUserSystems(token);
-            Response finalResponse = Response.status(200).entity(response).build();
+            String key = UserDao.getKey(token).getKey();
+            EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
+            Response finalResponse = Response.status(200).entity(encryptedResponse).build();
             logger.info("++================== getUserSystems SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {

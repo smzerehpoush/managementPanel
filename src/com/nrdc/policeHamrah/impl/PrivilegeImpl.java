@@ -10,6 +10,7 @@ import java.util.List;
 public class PrivilegeImpl {
     public StandardResponse<ResponseGetPrivileges> getPrivileges(String token, Long fkSystemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             UserDao.validate(token);
             List privileges = entityManager.createQuery("SELECT distinct (p) FROM PrivilegeDao p " +

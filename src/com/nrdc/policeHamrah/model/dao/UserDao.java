@@ -23,14 +23,14 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
     }
 
     public UserDao(RequestAddUser requestAddUser) {
-        this.setPassword(requestAddUser.getPassword());
         this.setUsername(requestAddUser.getUsername());
-        this.setIsActive(true);
+        this.setPassword(requestAddUser.getPassword());
         this.setPhoneNumber(requestAddUser.getPhoneNumber());
         this.setFirstName(requestAddUser.getFirstName());
         this.setLastName(requestAddUser.getLastName());
         this.setNationalId(requestAddUser.getNationalId());
         this.setPoliceCode(requestAddUser.getPoliceCode());
+        this.setIsActive(true);
     }
 
     //validate user and return it
@@ -44,6 +44,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
 
     public static UserDao validate(String token, String systemName) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
 
         try {
             //first validating token
@@ -67,6 +68,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
 
     public static UserDao getUser(Long fkUserId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             return (UserDao) entityManager.createQuery("SELECT u FROM UserDao u WHERE u.id = :fkUserId")
                     .setParameter("fkUserId", fkUserId)
@@ -81,6 +83,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
 
     public static UserDao getUser(String username, String password, String phoneNumber) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             Query query = entityManager.createQuery("SELECT u FROM UserDao u WHERE (u.username = :username and u.password = :password) OR (u.phoneNumber= :phoneNumber and u.password = :password)")
                     .setParameter("username", username)
@@ -102,6 +105,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
 
     public static UserDao getUser(String token, String systemName) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
 
         try {
             AuthDao.validateToken(token, systemName);
@@ -130,6 +134,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
 
     public static UserDao getUser(String token, Long systemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         logger.info("UserDao authentication");
         try {
             return (UserDao) entityManager.createQuery("SELECT u FROM UserDao u JOIN AuthDao t ON t.fkUserId = u.id where t.token = :token AND t.fkSystemId = :fkSystemId")
@@ -147,6 +152,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
     public static AuthDao getKey(String token, String systemName) throws Exception {
         AuthDao.validateToken(token, systemName);
         EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             return (AuthDao) entityManager.createQuery("SELECT k FROM AuthDao k JOIN SystemDao  s ON s.id = k.fkSystemId WHERE k.token = :token AND s.systemName = :systemName")
                     .setParameter("systemName", systemName)
@@ -170,6 +176,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
 
     public static AuthDao getKeyByUsername(String username) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             return (AuthDao) entityManager.createQuery("SELECT k FROM AuthDao k JOIN UserDao u ON u.id = k.fkUserId WHERE u.username = :username")
                     .setParameter("username", username)
@@ -185,6 +192,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
 
     public List<SystemDao> systems() {
         EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             List<SystemDao> systemDaoList = entityManager.createQuery("SELECT s FROM SystemDao s JOIN SystemUserDao su ON s.id = su.fkSystemId WHERE su.fkUserId = :fkUserId")
                     .setParameter("fkUserId", this.getId())
@@ -198,6 +206,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
 
     public boolean checkPrivilege(PrivilegeDto privilege, Long fkSystemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             int size = entityManager.createQuery(
                     "SELECT p FROM PrivilegeDao p " +
@@ -223,6 +232,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
 
     public boolean checkPrivilege(String privilegeName, Long fkSystemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             int size = entityManager.createQuery("" +
                     "SELECT p FROM PrivilegeDao p " +
@@ -330,6 +340,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
 
     public void checkKey(String systemName) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             Long size = (Long) entityManager.createQuery("SELECT count (a)  FROM AuthDao a JOIN SystemDao s ON a.fkSystemId = s.id WHERE s.systemName = :systemName AND a.fkUserId = :fkUserId")
                     .setParameter("systemName", systemName)
@@ -345,6 +356,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
 
     public void checkKey(SystemDao system) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             Long size = (Long) entityManager.createQuery("SELECT count (a) FROM AuthDao a WHERE a.fkSystemId = :fkSystemId AND a.fkUserId = :fkUserId")
                     .setParameter("fkSystemId", system.getId())
@@ -362,6 +374,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
 
     public void checkToken(String systemName) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
 
             Long size = (Long) entityManager.createQuery("SELECT  count (t) FROM AuthDao t JOIN SystemDao s ON t.fkSystemId = s.id WHERE t.fkUserId = :fkUserId AND s.systemName = :systemName")
@@ -378,6 +391,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
 
     public void checkToken(SystemDao systemDao) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
 
             Long size = (Long) entityManager.createQuery("SELECT  count (t) FROM AuthDao t WHERE t.fkUserId = :fkUserId AND t.fkSystemId = :fkSystemId ")
@@ -403,6 +417,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
 
     public void checkSystemAccess(Long fkSystemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             boolean hasAccess = entityManager.createQuery("SELECT u FROM SystemUserDao u WHERE u.fkUserId = :userId  AND u.fkSystemId = :systemId")
                     .setParameter("userId", super.getId())

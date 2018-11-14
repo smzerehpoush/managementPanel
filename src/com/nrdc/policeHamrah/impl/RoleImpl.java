@@ -19,6 +19,7 @@ public class RoleImpl {
     public StandardResponse addRole(String token, RequestAddRole requestAddRole) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             UserDao user = UserDao.validate(token);
             SystemDao systemDao = SystemDao.getSystem(requestAddRole.getFkSystemId());
@@ -58,6 +59,7 @@ public class RoleImpl {
     public StandardResponse editRole(String token, RequestEditRole requestEditRole) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             UserDao user = UserDao.validate(token);
             Long fkSystemId = (Long) entityManager.createQuery("SELECT r.fkSystemId FROM RoleDao r WHERE r.id = :fkRoleId ")
@@ -93,6 +95,7 @@ public class RoleImpl {
     public StandardResponse removeRole(String token, Long fkRoleId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             UserDao user = UserDao.validate(token);
             Long fkSystemId = (Long) entityManager.createQuery("SELECT r.fkSystemId FROM RoleDao r WHERE r.id = :fkRoleId")
@@ -124,6 +127,7 @@ public class RoleImpl {
 
     public StandardResponse getRolePrivileges(String token, Long fkRoleId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             UserDao.validate(token);
             List privileges = entityManager.createQuery("SELECT p FROM PrivilegeDao p JOIN RolePrivilegeDao rp ON p.id = rp.fkPrivilegeId WHERE rp.fkRoleId = :fkRoleId")
