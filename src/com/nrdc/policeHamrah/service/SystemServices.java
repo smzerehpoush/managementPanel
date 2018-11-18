@@ -118,10 +118,11 @@ public class SystemServices {
 
     /**
      * 24
+     * list of roles with privileges of a system
      *
      * @param token      user token
      * @param fkSystemId id of system
-     * @return list of roles with privileges of a user
+     * @return list of roles with privileges of a system
      */
     @Path("/roles/privileges")
     @GET
