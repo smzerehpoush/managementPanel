@@ -1,6 +1,7 @@
 package com.nrdc.policeHamrah.helper;
 
 public class Constants {
+    public static final String NOT_VALID_ROLE = "نقش وارد شده معتبر نمی باشد.";
     public static final String NOT_VALID_REQUEST = "درخواست از سمت انئروید معتبر نمی باشد.";
     public static final String NOT_LOGED_IN = "کاربر وارد سامانه مذکور نشده است.";
     public static final String NOT_ACTIVE_USER = "چنین کاربری غیر فعال می باشد.لطفا کاربر را فعال کنید.";
