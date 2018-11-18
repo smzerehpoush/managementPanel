@@ -7,10 +7,7 @@ import com.nrdc.policeHamrah.impl.UserImpl;
 import com.nrdc.policeHamrah.jsonModel.EncryptedRequest;
 import com.nrdc.policeHamrah.jsonModel.EncryptedResponse;
 import com.nrdc.policeHamrah.jsonModel.StandardResponse;
-import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestAddUser;
-import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestEditUser;
-import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestFilterUsers;
-import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestResetPassword;
+import com.nrdc.policeHamrah.jsonModel.jsonRequest.*;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetRolesWithPrivileges;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetSystems;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetUsers;
@@ -217,6 +214,26 @@ public class UserServices {
             return finalResponse;
         } catch (Exception ex) {
             logger.error("++================== getRoles SERVICE : EXCEPTION ==================++");
+            StandardResponse response = StandardResponse.getNOKExceptions(ex);
+            return Response.status(200).entity(response).build();
+        }
+    }
+    @Path("/roles")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response assignRole(EncryptedRequest encryptedRequest) {
+        logger.info("++================== assignRoles SERVICE : START ==================++");
+        try {
+            RequestAssignRole request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestAssignRole.class);
+            StandardResponse response = new UserImpl().assignRole(encryptedRequest.getToken(), request);
+            String key = UserDao.getKey(encryptedRequest.getToken()).getKey();
+            EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
+            Response finalResponse = Response.status(200).entity(encryptedResponse).build();
+            logger.info("++================== assignRoles SERVICE : END ==================++");
+            return finalResponse;
+        } catch (Exception ex) {
+            logger.error("++================== assignRoles SERVICE : EXCEPTION ==================++");
             StandardResponse response = StandardResponse.getNOKExceptions(ex);
             return Response.status(200).entity(response).build();
         }
