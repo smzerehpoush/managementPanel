@@ -16,60 +16,123 @@ import com.nrdc.policeHamrah.model.dto.UserDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 public class UserImpl {
-    public StandardResponse assignRole(String token, RequestAssignRole requestAssignRole) throws Exception {
+    private void mergeAndRemove(List<Long> A, List<Long> B, boolean isSysAdmin, Long userId, Long fkSystemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
-            UserDao user = UserDao.validate(token);
-            user.checkPrivilege(PrivilegeNames.ASSIGN_ROLE, requestAssignRole.getFkSystemId());
             if (!transaction.isActive())
                 transaction.begin();
-            UserRoleDao ur;
-
-
-            for (Long roleId : requestAssignRole.getFkRoleIdList()) {
-                Long size = (Long) entityManager.createQuery("SELECT COUNT (ur) FROM UserRoleDao ur WHERE ur.fkUserId = :fkUserId AND ur.fkRoleId = :fkRoleId ")
-                        .setParameter("fkUserId", user.getId())
-                        .setParameter("fkRoleId", roleId)
-                        .getSingleResult();
-                if (!size.equals(0L))
-                    continue;
-                size = (Long) entityManager.createQuery("SELECT COUNT (r) FROM RoleDao r WHERE r.id = :roleId ")
-                        .setParameter("roleId", roleId)
-                        .getSingleResult();
-                if (!size.equals(1L))
-                    throw new Exception(Constants.NOT_VALID_ROLE);
-                RoleDao role = (RoleDao) entityManager.createQuery("SELECT r FROM RoleDao r WHERE r.id = :roleId ")
-                        .setParameter("roleId", roleId)
-                        .getSingleResult();
-
-                if (!role.getFkSystemId().equals(requestAssignRole.getFkSystemId()))
-                    throw new Exception("سیستم نقش موردنظر با سیتم وارد شده مطابقت نمی کند.");
+            List<Long> B2 = (List<Long>) ((ArrayList<Long>) B).clone();
+            B2.removeAll(A);
+            for (Long b : B2) {
+                RoleDao role = getRole(b);
                 if (role.getRole().equals(Constants.SYS_ADMIN)) {
-                    size = (Long) entityManager.createQuery("SELECT COUNT (r) FROM RoleDao r JOIN UserRoleDao ur ON r.id = ur.fkRoleId WHERE ur.fkUserId = :fkUserId AND r.role = :role ")
-                            .setParameter("fkUserId", user.getId())
-                            .setParameter("role", Constants.SYS_ADMIN)
-                            .getSingleResult();
-                    if (!size.equals(1L))
+                    if (!isSysAdmin)
                         throw new Exception(Constants.CAN_NOT_ASSIGN_THIE_ROLE);
                 }
-                ur = new UserRoleDao();
-                ur.setFkRoleId(roleId);
-                ur.setFkUserId(user.getId());
+                if (!role.getFkSystemId().equals(fkSystemId))
+                    throw new Exception(Constants.NOT_VALID_ROLE_SYSTEM);
+                UserRoleDao ur = new UserRoleDao();
+                ur.setFkRoleId(b);
+                ur.setFkUserId(userId);
                 entityManager.persist(ur);
+            }
+            A.removeAll(B);
+            for (Long a : A) {
+                RoleDao role = getRole(a);
+                if (role.getRole().equals(Constants.SYS_ADMIN)) {
+                    if (!isSysAdmin)
+                        throw new Exception(Constants.CAN_NOT_ASSIGN_THIE_ROLE);
+                }
+                if (!role.getFkSystemId().equals(fkSystemId))
+                    throw new Exception(Constants.NOT_VALID_ROLE_SYSTEM);
+                entityManager.createQuery("DELETE FROM UserRoleDao ur WHERE ur.fkRoleId = :fkRoleId AND ur.fkUserId = :fkUserId ")
+                        .setParameter("fkUserId", userId)
+                        .setParameter("fkRoleId", a)
+                        .executeUpdate();
             }
             if (transaction.isActive())
                 transaction.commit();
-            return new StandardResponse<>();
         } catch (Exception ex) {
             if (transaction != null && transaction.isActive())
                 transaction.rollback();
-            throw ex;
+        } finally {
+            if (entityManager.isOpen())
+                entityManager.close();
+
+        }
+    }
+
+    private RoleDao getRole(Long roleId) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
+        try {
+            roleValidation(roleId);
+            RoleDao role = (RoleDao) entityManager.createQuery("SELECT r FROM RoleDao r WHERE r.id = :roleId ")
+                    .setParameter("roleId", roleId)
+                    .getSingleResult();
+            return role;
+        } finally {
+            if (entityManager.isOpen())
+                entityManager.close();
+        }
+
+    }
+
+    public StandardResponse assignRole(String token, RequestAssignRole requestAssignRole) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
+        try {
+            UserDao user = UserDao.validate(token);
+            boolean isUserSysAdmin = isUserSysAdmin(user.getId(), requestAssignRole.getFkSystemId());
+            List roleIdListInDb = entityManager.createQuery("SELECT r.id  FROM RoleDao r JOIN UserRoleDao ur ON r.id = ur.fkRoleId WHERE ur.fkUserId = :fkUserId AND r.fkSystemId = :fkSystemId")
+                    .setParameter("fkUserId", user.getId())
+                    .setParameter("fkSystemId", requestAssignRole.getFkSystemId())
+                    .getResultList();
+
+            mergeAndRemove(roleIdListInDb, requestAssignRole.getFkRoleIdList(), isUserSysAdmin, user.getId(), requestAssignRole.getFkSystemId());
+            return new StandardResponse();
+        } finally {
+            if (entityManager.isOpen())
+                entityManager.close();
+        }
+
+
+    }
+
+    private boolean isUserSysAdmin(Long userId, Long fkSystemId) {
+        EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
+        try {
+            Long size = (Long) entityManager.createQuery("SELECT COUNT (r) FROM RoleDao r JOIN UserRoleDao ur ON r.id = ur.fkRoleId WHERE ur.fkUserId = :fkUserId AND r.role = :role AND r.fkSystemId = :fkSystemId ")
+                    .setParameter("fkUserId", userId)
+                    .setParameter("fkSystemId", fkSystemId)
+                    .setParameter("role", Constants.SYS_ADMIN)
+                    .getSingleResult();
+            return size.equals(1L);
+        } finally {
+            if (entityManager.isOpen())
+                entityManager.close();
+        }
+
+    }
+
+    private void roleValidation(Long roleId) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
+        try {
+            Long size = (Long) entityManager.createQuery("SELECT COUNT (r) FROM RoleDao r WHERE r.id = :roleId ")
+                    .setParameter("roleId", roleId)
+                    .getSingleResult();
+            if (!size.equals(1L))
+                throw new Exception(Constants.NOT_VALID_ROLE);
+
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();
@@ -219,6 +282,8 @@ public class UserImpl {
             user1.checkPrivilege(PrivilegeNames.DE_ACTIVE_USER, fkSystemId);
             SystemDao systemDao = SystemDao.getSystem(fkSystemId);
             UserDao user2 = UserDao.getUser(fkUserId);
+            if (user1.getId().equals(user2.getId()))
+                throw new Exception(Constants.CAN_NOT_DE_ACTIVE_YOURSELF);
             List<SystemDao> user2SystemList = user2.systems();
             if (!user2SystemList.contains(systemDao)) {
                 throw new Exception(Constants.USER_SYSTEM_ERROR);
@@ -231,10 +296,7 @@ public class UserImpl {
             if (transaction != null && transaction.isActive())
                 transaction.commit();
 
-            StandardResponse response = new StandardResponse<>();
-
-
-            return response;
+            return new StandardResponse<>();
 
         } catch (Exception ex) {
             if (transaction != null && transaction.isActive())
