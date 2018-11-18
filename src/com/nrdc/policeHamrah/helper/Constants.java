@@ -2,6 +2,7 @@ package com.nrdc.policeHamrah.helper;
 
 public class Constants {
     public static final String NOT_VALID_ROLE = "نقش وارد شده معتبر نمی باشد.";
+    public static final String NOT_VALID_ROLE_SYSTEM = "نقش وارد شده هماهنگ با سامنه وارد شده نمی باشد";
     public static final String NOT_VALID_TOKEN = "توکن معتبر نیست.";
     public static final String NOT_VALID_SYSTEM = "سیستم معتبر نمی باشد. یا هنوز اضافه نشده است.";
     public static final String NOT_VALID_USER = "کاربر معتبر نمی باشد";
