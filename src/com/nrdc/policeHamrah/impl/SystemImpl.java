@@ -114,4 +114,25 @@ public class SystemImpl {
                 entityManager.close();
         }
     }
+
+    public StandardResponse getSystemRoles(String token, Long fkSystemId) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
+        try {
+            UserDao.validate(token);
+            List<RoleDto> roles = entityManager.createQuery("SELECT r FROM RoleDao r WHERE r.fkSystemId = :fkSystemId")
+                    .setParameter("fkSystemId", fkSystemId)
+                    .getResultList();
+            ResponseGetRoles responseGetRoles = new ResponseGetRoles();
+            responseGetRoles.setRoles(roles);
+            StandardResponse response = new StandardResponse<>();
+
+
+            response.setResponse(responseGetRoles);
+            return response;
+        } finally {
+            if (entityManager.isOpen())
+                entityManager.close();
+        }
+    }
 }
