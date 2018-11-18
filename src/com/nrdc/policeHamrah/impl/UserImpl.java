@@ -179,7 +179,7 @@ public class UserImpl {
         try {
             UserDao user1 = UserDao.validate(token);
             if (user1.getId().equals(fkUserId))
-                throw new Exception(Constants.CANT_NOT_DEACTIVE_THIS_USER);
+                throw new Exception(Constants.CAN_NOT_DE_ACTIVE_THIS_USER);
             user1.checkPrivilege(PrivilegeNames.ACTIVE_USER, fkSystemId);
             SystemDao systemDao = SystemDao.getSystem(fkSystemId);
             UserDao user2 = UserDao.getUser(fkUserId);
@@ -337,9 +337,9 @@ public class UserImpl {
             try {
                 boolean b = user.checkPrivilege(PrivilegeNames.EDIT_USER, requestEditUser.getFkSystemId());
                 if (b)
-                    throw new Exception(Constants.CANT_NOT_EDIT_THIS_USER);
+                    throw new Exception(Constants.CAN_NOT_EDIT_THIS_USER);
             } catch (Exception ex) {
-                if (ex.getMessage().equals(Constants.CANT_NOT_EDIT_THIS_USER))
+                if (ex.getMessage().equals(Constants.CAN_NOT_EDIT_THIS_USER))
                     throw ex;
             }
             checkRequestEditUser(requestEditUser);
