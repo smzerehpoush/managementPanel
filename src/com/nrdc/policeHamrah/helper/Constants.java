@@ -8,7 +8,7 @@ public class Constants {
     public static final String NOT_VALID_PRIVILEGE = "دسترسی معتبر نمی باشد";
 
     public static final String NOT_VALID_REQUEST = "درخواست از سمت انئروید معتبر نمی باشد.";
-    public static final String NOT_LOGED_IN = "کاربر وارد سامانه مذکور نشده است.";
+    public static final String NOT_LOGIN_ED = "کاربر وارد سامانه مذکور نشده است.";
     public static final String NOT_ACTIVE_USER = "چنین کاربری غیر فعال می باشد.لطفا کاربر را فعال کنید.";
 
     public static final String CAN_NOT_DE_ACTIVE_YOURSELF = "نمی توانید خودتان را غیر فغال کنید.";
