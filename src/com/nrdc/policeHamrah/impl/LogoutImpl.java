@@ -50,7 +50,7 @@ public class LogoutImpl {
             }
             if (transaction != null && transaction.isActive())
                 transaction.commit();
-            return new StandardResponse();
+            return new StandardResponse<>();
 
         } catch (Exception ex) {
             operation.setStatusCode(-1L);

@@ -45,7 +45,8 @@ public class RoleImpl {
             }
             if (transaction.isActive())
                 transaction.commit();
-            return new StandardResponse();
+            StandardResponse response = new StandardResponse();
+            return response;
         } catch (Exception ex) {
             if (transaction != null && transaction.isActive())
                 transaction.rollback();
@@ -81,7 +82,7 @@ public class RoleImpl {
             }
             if (transaction.isActive())
                 transaction.commit();
-            return new StandardResponse();
+            return new StandardResponse<>();
         } catch (Exception ex) {
             if (transaction != null && transaction.isActive())
                 transaction.rollback();
@@ -113,7 +114,7 @@ public class RoleImpl {
 
             if (transaction.isActive())
                 transaction.commit();
-            return new StandardResponse();
+            return new StandardResponse<>();
         } catch (Exception ex) {
             if (transaction != null && transaction.isActive())
                 transaction.rollback();
