@@ -5,7 +5,7 @@
         try {
 
         }finally {
-            if (entityManager!=null && entityManager.isOpen())
+            if (entityManager.isOpen())
                 entityManager.close();
         }
 
