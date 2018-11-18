@@ -26,7 +26,7 @@ public class LogoutService {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response login(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) {
+    public Response logout(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) {
         logger.info("++================== logout SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null) {
