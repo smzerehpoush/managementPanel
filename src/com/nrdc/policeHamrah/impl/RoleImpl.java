@@ -73,9 +73,9 @@ public class RoleImpl {
             entityManager.createQuery("DELETE FROM RolePrivilegeDao rp WHERE rp.fkRoleId = :fkRoleId")
                     .setParameter("fkRoleId", requestEditRole.getFkRoleId())
                     .executeUpdate();
-
+            RolePrivilegeDao rp;
             for (Long privilegeId : requestEditRole.getPrivileges()) {
-                RolePrivilegeDao rp = new RolePrivilegeDao();
+                rp = new RolePrivilegeDao();
                 rp.setFkRoleId(requestEditRole.getFkRoleId());
                 rp.setFkPrivilegeId(privilegeId);
                 entityManager.persist(rp);
