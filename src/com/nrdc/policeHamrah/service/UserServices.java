@@ -230,6 +230,13 @@ public class UserServices {
         }
     }
 
+    /***]
+     * 25
+     * assign a role to a user
+     *
+     * @param encryptedRequest encrypted request
+     * @return simple StandardResponse to handle state
+     */
     @Path("/roles")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
