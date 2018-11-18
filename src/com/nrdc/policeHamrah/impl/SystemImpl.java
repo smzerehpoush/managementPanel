@@ -2,12 +2,13 @@ package com.nrdc.policeHamrah.impl;
 
 import com.nrdc.policeHamrah.helper.PrivilegeNames;
 import com.nrdc.policeHamrah.jsonModel.StandardResponse;
+import com.nrdc.policeHamrah.jsonModel.customizedModel.RoleWithPrivileges;
 import com.nrdc.policeHamrah.jsonModel.customizedModel.SystemWithVersion;
-import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetSystemWithVersions;
-import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetSystems;
-import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetUsers;
+import com.nrdc.policeHamrah.jsonModel.jsonResponse.*;
+import com.nrdc.policeHamrah.model.dao.RoleDao;
 import com.nrdc.policeHamrah.model.dao.SystemDao;
 import com.nrdc.policeHamrah.model.dao.UserDao;
+import com.nrdc.policeHamrah.model.dto.RoleDto;
 import com.nrdc.policeHamrah.model.dto.SystemDto;
 import com.nrdc.policeHamrah.model.dto.SystemVersionDto;
 import com.nrdc.policeHamrah.model.dto.UserDto;
@@ -17,8 +18,42 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class SystemImpl {
+    public StandardResponse<ResponseGetRolesWithPrivileges> getSystemRolesWithPrivileges(String token, Long fkSystemId) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
+        try {
+            UserDao user = UserDao.validate(token);
+            List<RoleWithPrivileges> rolesWithPrivileges = new LinkedList<>();
+            List<RoleDao> roles = entityManager.createQuery("SELECT r FROM RoleDao r WHERE r.fkSystemId = :fkSystemId")
+                    .setParameter("fkSystemId", fkSystemId)
+                    .getResultList();
+            RoleWithPrivileges roleWithPrivileges;
+            for (RoleDao role : roles) {
+                roleWithPrivileges = new RoleWithPrivileges();
+                roleWithPrivileges.setId(role.getId());
+                roleWithPrivileges.setRole(role.getRole());
+                roleWithPrivileges.setPrivileges(
+                        entityManager.createQuery("SELECT p FROM PrivilegeDao p JOIN RolePrivilegeDao rp ON p.id = rp.fkPrivilegeId WHERE rp.fkRoleId = :fkRoleId ")
+                                .setParameter("fkRoleId", role.getId())
+                                .getResultList());
+                rolesWithPrivileges.add(roleWithPrivileges);
+            }
+            ResponseGetRolesWithPrivileges responseGetRolesWithPrivileges = new ResponseGetRolesWithPrivileges();
+            responseGetRolesWithPrivileges.setRoleWithPrivileges(rolesWithPrivileges);
+            StandardResponse<ResponseGetRolesWithPrivileges> response = new StandardResponse<>();
+
+
+            response.setResponse(responseGetRolesWithPrivileges);
+            return response;
+        } finally {
+            if (entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+
     public StandardResponse<ResponseGetSystems> getUserSystems(String token) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             UserDto user = UserDao.validate(token);
 //            user.checkPrivilege(PrivilegeNames.GET_SYSTEMS);
@@ -40,6 +75,7 @@ public class SystemImpl {
 
     public StandardResponse<ResponseGetSystemWithVersions> getSystemVersions(String token) {
         EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             UserDao user = UserDao.validate(token);
             List<SystemDto> systemDtos = entityManager.createQuery("SELECT s FROM SystemDao s JOIN SystemUserDao su ON s.id = su.fkSystemId WHERE su.fkUserId = :fkUserId ")
@@ -74,7 +110,6 @@ public class SystemImpl {
     private SystemVersionDto getSystemVersion(Long fkSystemId) {
         EntityManager entityManager = Database.getEntityManager();
         entityManager.getEntityManagerFactory().getCache().evictAll();
-
         try {
             return (SystemVersionDto) entityManager.createQuery("SELECT v FROM SystemVersionDao v WHERE v.fkSystemId = :fkSystemId AND v.versionCode = (SELECT MAX (s.versionCode) FROM SystemVersionDao s WHERE s.fkSystemId = :fkSystemId)")
                     .setParameter("fkSystemId", fkSystemId)
@@ -87,6 +122,7 @@ public class SystemImpl {
 
     public StandardResponse<ResponseGetUsers> getSystemUsers(String token, Long fkSystemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             UserDao user = UserDao.validate(token);
             SystemDao systemDao = SystemDao.getSystem(fkSystemId);
@@ -106,6 +142,27 @@ public class SystemImpl {
 
 
             response.setResponse(responseGetUsers);
+            return response;
+        } finally {
+            if (entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+
+    public StandardResponse getSystemRoles(String token, Long fkSystemId) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
+        try {
+            UserDao.validate(token);
+            List<RoleDto> roles = entityManager.createQuery("SELECT r FROM RoleDao r WHERE r.fkSystemId = :fkSystemId")
+                    .setParameter("fkSystemId", fkSystemId)
+                    .getResultList();
+            ResponseGetRoles responseGetRoles = new ResponseGetRoles();
+            responseGetRoles.setRoles(roles);
+            StandardResponse response = new StandardResponse<>();
+
+
+            response.setResponse(responseGetRoles);
             return response;
         } finally {
             if (entityManager.isOpen())

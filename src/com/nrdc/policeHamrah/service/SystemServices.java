@@ -3,8 +3,11 @@ package com.nrdc.policeHamrah.service;
 import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.Encryption;
 import com.nrdc.policeHamrah.impl.SystemImpl;
+import com.nrdc.policeHamrah.impl.UserImpl;
 import com.nrdc.policeHamrah.jsonModel.EncryptedResponse;
 import com.nrdc.policeHamrah.jsonModel.StandardResponse;
+import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetRoles;
+import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetRolesWithPrivileges;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetSystemWithVersions;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetUsers;
 import com.nrdc.policeHamrah.model.dao.UserDao;
@@ -73,6 +76,63 @@ public class SystemServices {
             return finalResponse;
         } catch (Exception ex) {
             logger.error("++================== getSystemUsers SERVICE : EXCEPTION ==================++");
+            StandardResponse response = StandardResponse.getNOKExceptions(ex);
+            return Response.status(200).entity(response).build();
+        }
+    }
+
+    /**
+     * 23
+     * list of users a system
+     * @param token      user token
+     * @param fkSystemId is of system
+     * @return ResponseGetUsers : list of users of a system
+     */
+    @Path("/roles")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSystemRoles(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) {
+        logger.info("++================== getSystemRoles SERVICE : START ==================++");
+        try {
+            if (token == null || fkSystemId == null) {
+                throw new Exception(Constants.NOT_VALID_REQUEST);
+            }
+            StandardResponse<ResponseGetRoles> response = new SystemImpl().getSystemRoles(token, fkSystemId);
+            String key = UserDao.getKey(token).getKey();
+            EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
+            Response finalResponse = Response.status(200).entity(encryptedResponse).build();
+            logger.info("++================== getSystemRoles SERVICE : END ==================++");
+            return finalResponse;
+        } catch (Exception ex) {
+            logger.error("++================== getSystemRoles SERVICE : EXCEPTION ==================++");
+            StandardResponse response = StandardResponse.getNOKExceptions(ex);
+            return Response.status(200).entity(response).build();
+        }
+    }
+    /**
+     * 24
+     * @param token      user token
+     * @param fkSystemId id of system
+     * @return list of roles with privileges of a user
+     */
+    @Path("/roles/privileges")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSystemRolesWithPrivileges(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) {
+        logger.info("++================== getUserRolesWithPrivileges SERVICE : START ==================++");
+        try {
+            if (token == null || fkSystemId == null) {
+                throw new Exception(Constants.NOT_VALID_REQUEST);
+            }
+            StandardResponse<ResponseGetRolesWithPrivileges> response = new SystemImpl().getSystemRolesWithPrivileges(token, fkSystemId);
+            String key = UserDao.getKey(token).getKey();
+            EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
+            Response finalResponse = Response.status(200).entity(encryptedResponse).build();
+            logger.info("++================== getUserRolesWithPrivileges SERVICE : END ==================++");
+            return finalResponse;
+        } catch (Exception ex) {
+            logger.error("++================== getUserRolesWithPrivileges SERVICE : EXCEPTION ==================++");
             StandardResponse response = StandardResponse.getNOKExceptions(ex);
             return Response.status(200).entity(response).build();
         }

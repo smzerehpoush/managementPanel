@@ -36,7 +36,9 @@ public class RoleServices {
         try {
             RequestAddRole requestAddRole = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestAddRole.class);
             StandardResponse response = new RoleImpl().addRole(encryptedRequest.getToken(), requestAddRole);
-            Response finalResponse = Response.status(200).entity(response).build();
+            String key = UserDao.getKey(encryptedRequest.getToken()).getKey();
+            EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
+            Response finalResponse = Response.status(200).entity(encryptedResponse).build();
             logger.info("++================== addRole SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
@@ -62,7 +64,9 @@ public class RoleServices {
         try {
             RequestEditRole requestEditRole = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestEditRole.class);
             StandardResponse response = new RoleImpl().editRole(encryptedRequest.getToken(), requestEditRole);
-            Response finalResponse = Response.status(200).entity(response).build();
+            String key = UserDao.getKey(encryptedRequest.getToken()).getKey();
+            EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
+            Response finalResponse = Response.status(200).entity(encryptedResponse).build();
             logger.info("++================== editRole SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
@@ -75,6 +79,7 @@ public class RoleServices {
     /**
      * 07
      * remove role of user
+     *
      * @param token    user token
      * @param fkRoleId id of role
      * @return simple StandardResponse to handle state
@@ -89,7 +94,9 @@ public class RoleServices {
                 throw new Exception(Constants.NOT_VALID_REQUEST);
             }
             StandardResponse response = new RoleImpl().removeRole(token, fkRoleId);
-            Response finalResponse = Response.status(200).entity(response).build();
+            String key = UserDao.getKey(token).getKey();
+            EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
+            Response finalResponse = Response.status(200).entity(encryptedResponse).build();
             logger.info("++================== removeRole SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
@@ -102,6 +109,7 @@ public class RoleServices {
     /**
      * 08
      * get privileges of a role
+     *
      * @param token    user token
      * @param fkRoleId id of role
      * @return list of privileges of a role

@@ -16,6 +16,7 @@ public class TokenImpl {
     public StandardResponse removeToken(String token, Long fkSystemId, Long fkUserId) {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             UserDao user = UserDao.validate(token);
             String dbToken;
@@ -25,7 +26,7 @@ public class TokenImpl {
                         .setParameter("fkSystemId", fkSystemId)
                         .getSingleResult();
             } catch (Exception ex) {
-                throw new Exception(Constants.NOT_VALID_TOKEN);
+                throw new Exception(Constants.NOT_LOGED_IN);
             }
             if (token.equals(dbToken))
                 throw new Exception(Constants.CAN_NOT_DELETE_TOKEN);

@@ -2,6 +2,7 @@ package com.nrdc.policeHamrah.model.dao;
 
 import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.SystemNames;
+import com.nrdc.policeHamrah.impl.Database;
 import com.nrdc.policeHamrah.model.dto.SystemDto;
 import org.apache.log4j.Logger;
 
@@ -18,7 +19,8 @@ public class SystemDao extends SystemDto {
     }
 
     public static SystemDao getSystem(Long fkSystemId) throws Exception {
-        EntityManager entityManager = com.nrdc.policeHamrah.impl.Database.getEntityManager();
+        EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             SystemDao systemDao = (SystemDao) entityManager.createQuery("SELECT s FROM SystemDao s WHERE s.id = :id")
                     .setParameter("id", fkSystemId)
@@ -35,7 +37,8 @@ public class SystemDao extends SystemDto {
     }
 
     public static SystemDao getSystem(String systemName) throws Exception {
-        EntityManager entityManager = com.nrdc.policeHamrah.impl.Database.getEntityManager();
+        EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         logger.info("Get SystemDto Info ");
         try {
             SystemDao systemDao = (SystemDao) entityManager.createQuery("SELECT s FROM SystemDao s WHERE s.systemName = :systemName")

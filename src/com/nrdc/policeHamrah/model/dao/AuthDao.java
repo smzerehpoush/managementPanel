@@ -25,7 +25,7 @@ public class AuthDao extends com.nrdc.policeHamrah.model.dto.AuthDto {
 
     public static void validateToken(String token, String systemName) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
-
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             Long size = (Long) entityManager.createQuery("SELECT count (t) FROM AuthDao t JOIN SystemDao s ON s.id = t.fkSystemId WHERE t.token = :token AND s.systemName = :systemName")
                     .setParameter("systemName", systemName)

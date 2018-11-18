@@ -7,10 +7,7 @@ import com.nrdc.policeHamrah.impl.UserImpl;
 import com.nrdc.policeHamrah.jsonModel.EncryptedRequest;
 import com.nrdc.policeHamrah.jsonModel.EncryptedResponse;
 import com.nrdc.policeHamrah.jsonModel.StandardResponse;
-import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestAddUser;
-import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestEditUser;
-import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestFilterUsers;
-import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestResetPassword;
+import com.nrdc.policeHamrah.jsonModel.jsonRequest.*;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetRolesWithPrivileges;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetSystems;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetUsers;
@@ -116,7 +113,7 @@ public class UserServices {
     @Path("/deActive")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deActiveUser(@QueryParam("token") String token, @QueryParam("fkUserID") Long fkUserId, @QueryParam("fkSystemId") Long fkSystemId) {
+    public Response deActiveUser(@QueryParam("token") String token, @QueryParam("fkUserId") Long fkUserId, @QueryParam("fkSystemId") Long fkSystemId) {
         logger.info("++================== deActiveUser SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null || fkUserId == null) {
@@ -221,6 +218,26 @@ public class UserServices {
             return Response.status(200).entity(response).build();
         }
     }
+    @Path("/roles")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response assignRole(EncryptedRequest encryptedRequest) {
+        logger.info("++================== assignRoles SERVICE : START ==================++");
+        try {
+            RequestAssignRole request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestAssignRole.class);
+            StandardResponse response = new UserImpl().assignRole(encryptedRequest.getToken(), request);
+            String key = UserDao.getKey(encryptedRequest.getToken()).getKey();
+            EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
+            Response finalResponse = Response.status(200).entity(encryptedResponse).build();
+            logger.info("++================== assignRoles SERVICE : END ==================++");
+            return finalResponse;
+        } catch (Exception ex) {
+            logger.error("++================== assignRoles SERVICE : EXCEPTION ==================++");
+            StandardResponse response = StandardResponse.getNOKExceptions(ex);
+            return Response.status(200).entity(response).build();
+        }
+    }
 
     /**
      * 19
@@ -231,7 +248,7 @@ public class UserServices {
     @Path("/roles/privileges")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getRolesWithPrivileges(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) {
+    public Response getUserRolesWithPrivileges(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) {
         logger.info("++================== getUserRolesWithPrivileges SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null) {

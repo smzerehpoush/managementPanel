@@ -19,6 +19,7 @@ public class LogoutImpl {
         EntityManager operationEntityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         EntityTransaction operationTransaction = operationEntityManager.getTransaction();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         OperationDao operation = new OperationDao();
         operation.setUserToken(token);
         operation.setPrivilegeName(PrivilegeNames.LOGOUT.name());
@@ -49,7 +50,7 @@ public class LogoutImpl {
             }
             if (transaction != null && transaction.isActive())
                 transaction.commit();
-            return new StandardResponse();
+            return new StandardResponse<>();
 
         } catch (Exception ex) {
             operation.setStatusCode(-1L);

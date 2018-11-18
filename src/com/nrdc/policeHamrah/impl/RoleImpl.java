@@ -19,6 +19,7 @@ public class RoleImpl {
     public StandardResponse addRole(String token, RequestAddRole requestAddRole) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             UserDao user = UserDao.validate(token);
             SystemDao systemDao = SystemDao.getSystem(requestAddRole.getFkSystemId());
@@ -44,7 +45,8 @@ public class RoleImpl {
             }
             if (transaction.isActive())
                 transaction.commit();
-            return new StandardResponse();
+            StandardResponse response = new StandardResponse();
+            return response;
         } catch (Exception ex) {
             if (transaction != null && transaction.isActive())
                 transaction.rollback();
@@ -58,6 +60,7 @@ public class RoleImpl {
     public StandardResponse editRole(String token, RequestEditRole requestEditRole) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             UserDao user = UserDao.validate(token);
             Long fkSystemId = (Long) entityManager.createQuery("SELECT r.fkSystemId FROM RoleDao r WHERE r.id = :fkRoleId ")
@@ -70,16 +73,16 @@ public class RoleImpl {
             entityManager.createQuery("DELETE FROM RolePrivilegeDao rp WHERE rp.fkRoleId = :fkRoleId")
                     .setParameter("fkRoleId", requestEditRole.getFkRoleId())
                     .executeUpdate();
-
+            RolePrivilegeDao rp;
             for (Long privilegeId : requestEditRole.getPrivileges()) {
-                RolePrivilegeDao rp = new RolePrivilegeDao();
+                rp = new RolePrivilegeDao();
                 rp.setFkRoleId(requestEditRole.getFkRoleId());
                 rp.setFkPrivilegeId(privilegeId);
                 entityManager.persist(rp);
             }
             if (transaction.isActive())
                 transaction.commit();
-            return new StandardResponse();
+            return new StandardResponse<>();
         } catch (Exception ex) {
             if (transaction != null && transaction.isActive())
                 transaction.rollback();
@@ -93,6 +96,7 @@ public class RoleImpl {
     public StandardResponse removeRole(String token, Long fkRoleId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             UserDao user = UserDao.validate(token);
             Long fkSystemId = (Long) entityManager.createQuery("SELECT r.fkSystemId FROM RoleDao r WHERE r.id = :fkRoleId")
@@ -110,7 +114,7 @@ public class RoleImpl {
 
             if (transaction.isActive())
                 transaction.commit();
-            return new StandardResponse();
+            return new StandardResponse<>();
         } catch (Exception ex) {
             if (transaction != null && transaction.isActive())
                 transaction.rollback();
@@ -124,6 +128,7 @@ public class RoleImpl {
 
     public StandardResponse getRolePrivileges(String token, Long fkRoleId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             UserDao.validate(token);
             List privileges = entityManager.createQuery("SELECT p FROM PrivilegeDao p JOIN RolePrivilegeDao rp ON p.id = rp.fkPrivilegeId WHERE rp.fkRoleId = :fkRoleId")
