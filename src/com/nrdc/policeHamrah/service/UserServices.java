@@ -26,6 +26,7 @@ public class UserServices {
 
     /**
      * 12
+     *
      * @param encryptedRequest RequestAddUser
      * @return simple StandardResponse to handle state
      */
@@ -44,6 +45,7 @@ public class UserServices {
             return finalResponse;
         } catch (Exception ex) {
             logger.error("++================== addUser SERVICE : EXCEPTION ==================++");
+            logger.error(ex.getMessage(), ex);
             StandardResponse response = StandardResponse.getNOKExceptions(ex);
             return Response.status(200).entity(response).build();
         }
@@ -51,6 +53,7 @@ public class UserServices {
 
     /**
      * 13
+     *
      * @param encryptedRequest RequestEditUser
      * @return simple StandardResponse to handle state
      */
@@ -69,6 +72,7 @@ public class UserServices {
             return finalResponse;
         } catch (Exception ex) {
             logger.error("++================== editUser SERVICE : EXCEPTION ==================++");
+            logger.error(ex.getMessage(), ex);
             StandardResponse response = StandardResponse.getNOKExceptions(ex);
             return Response.status(200).entity(response).build();
         }
@@ -76,6 +80,7 @@ public class UserServices {
 
     /**
      * 14
+     *
      * @param token      user token
      * @param fkUserId   id of user to be activated
      * @param fkSystemId id of system of changing user
@@ -98,6 +103,7 @@ public class UserServices {
             return finalResponse;
         } catch (Exception ex) {
             logger.error("++================== activeUser SERVICE : EXCEPTION ==================++");
+            logger.error(ex.getMessage(), ex);
             StandardResponse response = StandardResponse.getNOKExceptions(ex);
             return Response.status(200).entity(response).build();
         }
@@ -105,6 +111,7 @@ public class UserServices {
 
     /**
      * 15
+     *
      * @param token      user token
      * @param fkUserId   id of user to be deActivated
      * @param fkSystemId id of system of changing user
@@ -127,6 +134,7 @@ public class UserServices {
             return finalResponse;
         } catch (Exception ex) {
             logger.error("++================== deActiveUser SERVICE : EXCEPTION ==================++");
+            logger.error(ex.getMessage(), ex);
             StandardResponse response = StandardResponse.getNOKExceptions(ex);
             return Response.status(200).entity(response).build();
         }
@@ -155,6 +163,7 @@ public class UserServices {
             return finalResponse;
         } catch (Exception ex) {
             logger.error("++================== filterUsers SERVICE : EXCEPTION ==================++");
+            logger.error(ex.getMessage(), ex);
             StandardResponse response = StandardResponse.getNOKExceptions(ex);
             return Response.status(200).entity(response).build();
         }
@@ -183,6 +192,7 @@ public class UserServices {
             return finalResponse;
         } catch (Exception ex) {
             logger.error("++================== resetPassword SERVICE : EXCEPTION ==================++");
+            logger.error(ex.getMessage(), ex);
             StandardResponse response = StandardResponse.getNOKExceptions(ex);
             return Response.status(200).entity(response).build();
         }
@@ -193,7 +203,7 @@ public class UserServices {
      * 18
      * {@link GET} service with {@link QueryParam token} to return all roles of current user
      *
-     * @param token token of currentUser
+     * @param token      token of currentUser
      * @param fkSystemId id of system
      * @return all roles of current user
      */
@@ -214,10 +224,12 @@ public class UserServices {
             return finalResponse;
         } catch (Exception ex) {
             logger.error("++================== getRoles SERVICE : EXCEPTION ==================++");
+            logger.error(ex.getMessage(), ex);
             StandardResponse response = StandardResponse.getNOKExceptions(ex);
             return Response.status(200).entity(response).build();
         }
     }
+
     @Path("/roles")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -234,6 +246,7 @@ public class UserServices {
             return finalResponse;
         } catch (Exception ex) {
             logger.error("++================== assignRoles SERVICE : EXCEPTION ==================++");
+            logger.error(ex.getMessage(), ex);
             StandardResponse response = StandardResponse.getNOKExceptions(ex);
             return Response.status(200).entity(response).build();
         }
@@ -241,6 +254,7 @@ public class UserServices {
 
     /**
      * 19
+     *
      * @param token      user token
      * @param fkSystemId id of system
      * @return list of roles with privileges of a user
@@ -262,6 +276,7 @@ public class UserServices {
             return finalResponse;
         } catch (Exception ex) {
             logger.error("++================== getUserRolesWithPrivileges SERVICE : EXCEPTION ==================++");
+            logger.error(ex.getMessage(), ex);
             StandardResponse response = StandardResponse.getNOKExceptions(ex);
             return Response.status(200).entity(response).build();
         }
@@ -292,6 +307,7 @@ public class UserServices {
             return finalResponse;
         } catch (Exception ex) {
             logger.error("++================== getPrivileges SERVICE : EXCEPTION ==================++");
+            logger.error(ex.getMessage(), ex);
             StandardResponse response = StandardResponse.getNOKExceptions(ex);
             return Response.status(200).entity(response).build();
         }
@@ -319,6 +335,7 @@ public class UserServices {
             return finalResponse;
         } catch (Exception ex) {
             logger.error("++================== getUserSystems SERVICE : EXCEPTION ==================++");
+            logger.error(ex.getMessage(), ex);
             StandardResponse response = StandardResponse.getNOKExceptions(ex);
             return Response.status(200).entity(response).build();
         }

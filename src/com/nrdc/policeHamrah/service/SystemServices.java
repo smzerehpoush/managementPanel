@@ -3,7 +3,6 @@ package com.nrdc.policeHamrah.service;
 import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.Encryption;
 import com.nrdc.policeHamrah.impl.SystemImpl;
-import com.nrdc.policeHamrah.impl.UserImpl;
 import com.nrdc.policeHamrah.jsonModel.EncryptedResponse;
 import com.nrdc.policeHamrah.jsonModel.StandardResponse;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetRoles;
@@ -25,6 +24,7 @@ public class SystemServices {
     /**
      * 09
      * list of systems with last version of them
+     *
      * @param token user token
      * @return ResponseGetSystemWithVersions list of system with their last versions
      */
@@ -34,7 +34,7 @@ public class SystemServices {
     public Response getSystemWithVersion(@QueryParam("token") String token) {
         logger.info("++================== getSystemWithVersion SERVICE : START ==================++");
         try {
-            if (token == null ) {
+            if (token == null) {
                 throw new Exception(Constants.NOT_VALID_REQUEST);
             }
             StandardResponse<ResponseGetSystemWithVersions> response = new SystemImpl().getSystemVersions(token);
@@ -45,6 +45,7 @@ public class SystemServices {
             return finalResponse;
         } catch (Exception ex) {
             logger.error("++================== getSystemWithVersion SERVICE : EXCEPTION ==================++");
+            logger.error(ex.getMessage(), ex);
             StandardResponse response = StandardResponse.getNOKExceptions(ex.getMessage());
             return Response.status(200).entity(response).build();
         }
@@ -54,6 +55,7 @@ public class SystemServices {
     /**
      * 10
      * list of users a system
+     *
      * @param token      user token
      * @param fkSystemId is of system
      * @return ResponseGetUsers : list of users of a system
@@ -76,6 +78,7 @@ public class SystemServices {
             return finalResponse;
         } catch (Exception ex) {
             logger.error("++================== getSystemUsers SERVICE : EXCEPTION ==================++");
+            logger.error(ex.getMessage(), ex);
             StandardResponse response = StandardResponse.getNOKExceptions(ex);
             return Response.status(200).entity(response).build();
         }
@@ -84,6 +87,7 @@ public class SystemServices {
     /**
      * 23
      * list of users a system
+     *
      * @param token      user token
      * @param fkSystemId is of system
      * @return ResponseGetUsers : list of users of a system
@@ -106,12 +110,15 @@ public class SystemServices {
             return finalResponse;
         } catch (Exception ex) {
             logger.error("++================== getSystemRoles SERVICE : EXCEPTION ==================++");
+            logger.error(ex.getMessage(), ex);
             StandardResponse response = StandardResponse.getNOKExceptions(ex);
             return Response.status(200).entity(response).build();
         }
     }
+
     /**
      * 24
+     *
      * @param token      user token
      * @param fkSystemId id of system
      * @return list of roles with privileges of a user
@@ -133,6 +140,7 @@ public class SystemServices {
             return finalResponse;
         } catch (Exception ex) {
             logger.error("++================== getUserRolesWithPrivileges SERVICE : EXCEPTION ==================++");
+            logger.error(ex.getMessage(), ex);
             StandardResponse response = StandardResponse.getNOKExceptions(ex);
             return Response.status(200).entity(response).build();
         }

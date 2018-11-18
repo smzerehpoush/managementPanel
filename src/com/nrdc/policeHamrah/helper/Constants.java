@@ -6,6 +6,7 @@ public class Constants {
     public static final String NOT_LOGED_IN = "کاربر وارد سامانه مذکور نشده است.";
     public static final String NOT_ACTIVE_USER = "چنین کاربری غیر فعال می باشد.لطفا کاربر را فعال کنید.";
     public static final String CANT_DE_ACTIVE_YOURSELF = "نمی توانید خودتان را غیر فغال کنید.";
+    public static final String CAN_NOT_ASSIGN_THIE_ROLE = "شما نمی توانید نقش مدیر ارشد را به دیگران تخصیص دهید.";
 
     public static final String NOT_VALID_TOKEN = "توکن معتبر نیست.";
     public static final String NOT_VALID_SYSTEM = "سیستم معتبر نمی باشد. یا هنوز اضافه نشده است.";
@@ -34,6 +35,10 @@ public class Constants {
     public static final String CANT_NOT_DEACTIVE_THIS_USER = "شما دسترسی غیر فعال کردن کارری با چنین سیتمی را ندارید.";
     public static final String USER_SYSTEM_ERROR = "کاربر مربوط به سیستم وارد شده نمی باشد.";
     public static final String CAN_NOT_REMOVE_YOUR_TOKEN = "نمی توانید توکن خود را حذف کنید";
+    public static final String CAN_NOT_EDIT_SYSADMIN = "شما نمی توانید نقش مدیر ارشد را تغییر دهید";
+    public static final String CAN_NOT_CREATE_SYSADMIN = "شما نمی توانید نقش مدیر ارشد را تعریف کنید. نقشی که همه دسترسی ها را شامل شود.";
+    public static final String CANT_NOT_REMOVE_SYSADMIN = "شما نمی توانید نقش مدیر ارشد را حذف کنید";
+    public static final String SYS_ADMIN = "SYS_ADMIN";
 
 }
 

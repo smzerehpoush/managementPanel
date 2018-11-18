@@ -31,7 +31,7 @@ public class UserImpl {
                 transaction.begin();
             UserRoleDao ur;
 
-            
+
             for (Long roleId : requestAssignRole.getFkRoleIdList()) {
                 Long size = (Long) entityManager.createQuery("SELECT COUNT (ur) FROM UserRoleDao ur WHERE ur.fkUserId = :fkUserId AND ur.fkRoleId = :fkRoleId ")
                         .setParameter("fkUserId", user.getId())
@@ -44,11 +44,20 @@ public class UserImpl {
                         .getSingleResult();
                 if (!size.equals(1L))
                     throw new Exception(Constants.NOT_VALID_ROLE);
-                Long fkSystemId = ((RoleDao)(entityManager.createQuery("SELECT r FROM RoleDao r WHERE r.id = :roleId ")
-                        .setParameter("roleId",roleId)
-                        .getSingleResult())).getFkSystemId();
-                if (!fkSystemId.equals(requestAssignRole.getFkSystemId()))
+                RoleDao role = (RoleDao) entityManager.createQuery("SELECT r FROM RoleDao r WHERE r.id = :roleId ")
+                        .setParameter("roleId", roleId)
+                        .getSingleResult();
+
+                if (!role.getFkSystemId().equals(requestAssignRole.getFkSystemId()))
                     throw new Exception("سیستم نقش موردنظر با سیتم وارد شده مطابقت نمی کند.");
+                if (role.getRole().equals(Constants.SYS_ADMIN)) {
+                    size = (Long) entityManager.createQuery("SELECT COUNT (r) FROM RoleDao r JOIN UserRoleDao ur ON r.id = ur.fkRoleId WHERE ur.fkUserId = :fkUserId AND r.role = :role ")
+                            .setParameter("fkUserId", user.getId())
+                            .setParameter("role", Constants.SYS_ADMIN)
+                            .getSingleResult();
+                    if (!size.equals(1L))
+                        throw new Exception(Constants.CAN_NOT_ASSIGN_THIE_ROLE);
+                }
                 ur = new UserRoleDao();
                 ur.setFkRoleId(roleId);
                 ur.setFkUserId(user.getId());

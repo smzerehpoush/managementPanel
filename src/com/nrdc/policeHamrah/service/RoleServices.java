@@ -43,6 +43,7 @@ public class RoleServices {
             return finalResponse;
         } catch (Exception ex) {
             logger.error("++================== addRole SERVICE : EXCEPTION ==================++");
+            logger.error(ex.getMessage(), ex);
             StandardResponse response = StandardResponse.getNOKExceptions(ex);
             return Response.status(200).entity(response).build();
         }
@@ -71,6 +72,7 @@ public class RoleServices {
             return finalResponse;
         } catch (Exception ex) {
             logger.error("++================== editRole SERVICE : EXCEPTION ==================++");
+            logger.error(ex.getMessage(), ex);
             StandardResponse response = StandardResponse.getNOKExceptions(ex);
             return Response.status(200).entity(response).build();
         }
@@ -101,6 +103,7 @@ public class RoleServices {
             return finalResponse;
         } catch (Exception ex) {
             logger.error("++================== removeRole SERVICE : EXCEPTION ==================++");
+            logger.error(ex.getMessage(), ex);
             StandardResponse response = StandardResponse.getNOKExceptions(ex);
             return Response.status(200).entity(response).build();
         }
@@ -131,6 +134,7 @@ public class RoleServices {
             return finalResponse;
         } catch (Exception ex) {
             logger.error("++================== getRolePrivileges SERVICE : EXCEPTION ==================++");
+            logger.error(ex.getMessage(), ex);
             StandardResponse response = StandardResponse.getNOKExceptions(ex);
             return Response.status(200).entity(response).build();
 

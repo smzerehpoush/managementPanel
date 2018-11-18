@@ -44,6 +44,7 @@ public class TokenServices {
             return finalResponse;
         } catch (Exception ex) {
             logger.error("++================== removeToken SERVICE : EXCEPTION ==================++");
+            logger.error(ex.getMessage(), ex);
             StandardResponse response = StandardResponse.getNOKExceptions(ex);
             return Response.status(200).entity(response).build();
         }

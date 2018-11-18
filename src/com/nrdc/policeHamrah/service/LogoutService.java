@@ -20,6 +20,7 @@ public class LogoutService {
     /**
      * 03
      * logout from systems with fkSystemId, if fkSystemId is null then logout from PH
+     *
      * @param token      token of user that want to logout
      * @param fkSystemId system that user want to logout
      * @return Simple Standard Response to handle state of logout
@@ -38,6 +39,7 @@ public class LogoutService {
             return finalResponse;
         } catch (Exception ex) {
             logger.error("++================== logout SERVICE : EXCEPTION ==================++");
+            logger.error(ex.getMessage(), ex);
             StandardResponse response = StandardResponse.getNOKExceptions(ex);
             return Response.status(200).entity(response).build();
         }

@@ -36,6 +36,7 @@ public class LoginService {
             return finalResponse;
         } catch (Exception ex) {
             logger.error("++================== login SERVICE : EXCEPTION ==================++");
+            logger.error(ex.getMessage(), ex);
             StandardResponse response = StandardResponse.getNOKExceptions(ex);
             return Response.status(200).entity(response).build();
         }
@@ -66,6 +67,7 @@ public class LoginService {
             return finalResponse;
         } catch (Exception ex) {
             logger.error("++================== login-to-system SERVICE : EXCEPTION ==================++");
+            logger.error(ex.getMessage(), ex);
             StandardResponse response = StandardResponse.getNOKExceptions(ex);
             return Response.status(200).entity(response).build();
         }

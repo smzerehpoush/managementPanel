@@ -45,6 +45,7 @@ public class PrivilegeServices {
             return finalResponse;
         } catch (Exception ex) {
             logger.error("++================== getUserPrivileges SERVICE : EXCEPTION ==================++");
+            logger.error(ex.getMessage(), ex);
             StandardResponse response = StandardResponse.getNOKExceptions(ex);
             return Response.status(200).entity(response).build();
         }
