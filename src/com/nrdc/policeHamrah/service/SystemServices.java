@@ -78,4 +78,33 @@ public class SystemServices {
         }
     }
 
+    /**
+     * 23
+     * list of users a system
+     * @param token      user token
+     * @param fkSystemId is of system
+     * @return ResponseGetUsers : list of users of a system
+     */
+    @Path("/roles")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSystemRoles(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) {
+        logger.info("++================== getSystemRoles SERVICE : START ==================++");
+        try {
+            if (token == null || fkSystemId == null) {
+                throw new Exception(Constants.NOT_VALID_REQUEST);
+            }
+            StandardResponse<ResponseGetRoles> response = new SystemImpl().getSystemRoles(token, fkSystemId);
+            String key = UserDao.getKey(token).getKey();
+            EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
+            Response finalResponse = Response.status(200).entity(encryptedResponse).build();
+            logger.info("++================== getSystemRoles SERVICE : END ==================++");
+            return finalResponse;
+        } catch (Exception ex) {
+            logger.error("++================== getSystemRoles SERVICE : EXCEPTION ==================++");
+            StandardResponse response = StandardResponse.getNOKExceptions(ex);
+            return Response.status(200).entity(response).build();
+        }
+    }
 }
