@@ -123,6 +123,13 @@ public class RoleImpl {
             user.checkPrivilege(PrivilegeNames.REMOVE_ROLE, fkSystemId);
             if (!transaction.isActive())
                 transaction.begin();
+            Long size = (Long) entityManager.createQuery("SELECT COUNT (r) FROM RoleDao r WHERE r.id = :roleId AND r.role = :role")
+                    .setParameter("role", Constants.SYS_ADMIN)
+                    .setParameter("roleId", fkRoleId)
+                    .getSingleResult();
+            if (size.equals(1L))
+                throw new Exception(Constants.CAN_NOT_REMOVE_SYSADMIN);
+
             entityManager.createQuery("DELETE FROM RoleDao r WHERE r.id = :roleId")
                     .setParameter("roleId", fkRoleId)
                     .executeUpdate();
