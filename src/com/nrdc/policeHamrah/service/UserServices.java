@@ -210,13 +210,13 @@ public class UserServices {
     @Path("/roles")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserRoles(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) {
+    public Response getUserRoles(@QueryParam("token") String token,@QueryParam("fkUserId") Long fkUserId, @QueryParam("fkSystemId") Long fkSystemId) {
         logger.info("++================== getRoles SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null) {
                 throw new Exception(Constants.NOT_VALID_REQUEST);
             }
-            StandardResponse response = new UserImpl().getUserRoles(token, fkSystemId);
+            StandardResponse response = new UserImpl().getUserRoles(token,fkUserId, fkSystemId);
             String key = UserDao.getKey(token).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();

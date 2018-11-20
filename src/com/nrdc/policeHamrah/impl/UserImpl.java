@@ -651,14 +651,14 @@ public class UserImpl {
         }
     }
 
-    public StandardResponse getUserRoles(String token, Long fkSystemId) throws Exception {
+    public StandardResponse getUserRoles(String token, Long fkUserId, Long fkSystemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
-            UserDao user = UserDao.validate(token);
+            UserDao.validate(token);
             List<RoleDto> roles = entityManager.createQuery("SELECT r FROM RoleDao r JOIN UserRoleDao ur ON r.id = ur.fkRoleId WHERE ur.fkUserId = :fkUserId AND r.fkSystemId = :fkSystemId")
                     .setParameter("fkSystemId", fkSystemId)
-                    .setParameter("fkUserId", user.getId())
+                    .setParameter("fkUserId", fkUserId)
                     .getResultList();
             ResponseGetRoles responseGetRoles = new ResponseGetRoles();
             responseGetRoles.setRoles(roles);
