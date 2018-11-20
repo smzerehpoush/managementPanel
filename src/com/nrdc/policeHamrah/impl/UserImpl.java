@@ -34,7 +34,7 @@ public class UserImpl {
                 RoleDao role = getRole(b);
                 if (role.getRole().equals(Constants.SYS_ADMIN)) {
                     if (!isSysAdmin)
-                        throw new Exception(Constants.CAN_NOT_ASSIGN_THIE_ROLE);
+                        throw new Exception(Constants.CAN_NOT_ASSIGN_THIS_ROLE);
                 }
                 if (!role.getFkSystemId().equals(fkSystemId))
                     throw new Exception(Constants.NOT_VALID_ROLE_SYSTEM);
@@ -48,7 +48,7 @@ public class UserImpl {
                 RoleDao role = getRole(a);
                 if (role.getRole().equals(Constants.SYS_ADMIN)) {
                     if (!isSysAdmin)
-                        throw new Exception(Constants.CAN_NOT_ASSIGN_THIE_ROLE);
+                        throw new Exception(Constants.CAN_NOT_ASSIGN_THIS_ROLE);
                 }
                 if (!role.getFkSystemId().equals(fkSystemId))
                     throw new Exception(Constants.NOT_VALID_ROLE_SYSTEM);

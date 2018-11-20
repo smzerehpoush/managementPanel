@@ -13,7 +13,7 @@ public class Constants {
     public static final String NOT_ACTIVE_USER = "چنین کاربری غیر فعال می باشد.لطفا کاربر را فعال کنید.";
 
     public static final String CAN_NOT_DE_ACTIVE_YOURSELF = "نمی توانید خودتان را غیر فغال کنید.";
-    public static final String CAN_NOT_ASSIGN_THIE_ROLE = "شما نمی توانید نقش مدیر ارشد را به دیگران تخصیص دهید.";
+    public static final String CAN_NOT_ASSIGN_THIS_ROLE = "شما نمی توانید نقش مدیر ارشد را به دیگران تخصیص دهید.";
     public static final String CAN_NOT_DELETE_TOKEN = "شما نمی توانید توکن خودتان را حذف کنید.";
     public static final String CAN_NOT_RETRIEVE_DATA_FROM_NAJA = "ایراد در دریافت اطلاعات از اجرائیات.";
     public static final String CAN_NOT_EDIT_SYSADMIN = "شما نمی توانید نقش مدیر ارشد را تغییر دهید";
