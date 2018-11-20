@@ -91,7 +91,7 @@ public class UserImpl {
         try {
             UserDao user = UserDao.validate(token);
             boolean isUserSysAdmin = isUserSysAdmin(user.getId(), requestAssignRole.getFkSystemId());
-            List roleIdListInDb = entityManager.createQuery("SELECT r.id  FROM RoleDao r JOIN UserRoleDao ur ON r.id = ur.fkRoleId WHERE ur.fkUserId = :fkUserId AND r.fkSystemId = :fkSystemId")
+            List roleIdListInDb = entityManager.createQuery("SELECT r.id FROM RoleDao r JOIN UserRoleDao ur ON r.id = ur.fkRoleId WHERE ur.fkUserId = :fkUserId AND r.fkSystemId = :fkSystemId")
                     .setParameter("fkUserId", user.getId())
                     .setParameter("fkSystemId", requestAssignRole.getFkSystemId())
                     .getResultList();
@@ -617,14 +617,14 @@ public class UserImpl {
         }
     }
 
-    public StandardResponse<ResponseGetRolesWithPrivileges> getUserRolesWithPrivileges(String token, Long fkSystemId) throws Exception {
+    public StandardResponse<ResponseGetRolesWithPrivileges> getUserRolesWithPrivileges(String token, Long fkUserId, Long fkSystemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
-            UserDao user = UserDao.validate(token);
+            UserDao.validate(token);
             List<RoleWithPrivileges> rolesWithPrivileges = new LinkedList<>();
             List<RoleDao> roles = entityManager.createQuery("SELECT r FROM RoleDao r JOIN UserRoleDao ur ON r.id = ur.fkRoleId WHERE ur.fkUserId = :fkUserId AND r.fkSystemId = :fkSystemId")
-                    .setParameter("fkUserId", user.getId())
+                    .setParameter("fkUserId", fkUserId)
                     .setParameter("fkSystemId", fkSystemId)
                     .getResultList();
             RoleWithPrivileges roleWithPrivileges;
