@@ -16,7 +16,6 @@ public class AuthDao extends com.nrdc.policeHamrah.model.dto.AuthDto {
     }
 
     public AuthDao(UserDao user, SystemDao systemDao) throws Exception {
-        user.checkToken(systemDao);
         this.setToken(UUID.randomUUID().toString());
         this.setKey(UUID.randomUUID().toString());
         this.setFkSystemId(systemDao.getId());
