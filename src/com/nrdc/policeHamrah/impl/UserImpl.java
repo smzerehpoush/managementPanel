@@ -92,7 +92,7 @@ public class UserImpl {
             UserDao user = UserDao.validate(token);
             boolean isUserSysAdmin = isUserSysAdmin(user.getId(), requestAssignRole.getFkSystemId());
             List roleIdListInDb = entityManager.createQuery("SELECT r.id FROM RoleDao r JOIN UserRoleDao ur ON r.id = ur.fkRoleId WHERE ur.fkUserId = :fkUserId AND r.fkSystemId = :fkSystemId")
-                    .setParameter("fkUserId", user.getId())
+                    .setParameter("fkUserId", requestAssignRole.getFkUserId())
                     .setParameter("fkSystemId", requestAssignRole.getFkSystemId())
                     .getResultList();
 
