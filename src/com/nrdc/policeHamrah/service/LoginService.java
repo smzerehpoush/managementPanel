@@ -18,7 +18,7 @@ import javax.ws.rs.core.Response;
 public class LoginService {
     private static Logger logger = Logger.getLogger(LoginService.class.getName());
 
-    /***]
+    /***
      * 01
      * login to police hamrah system
      * @param requestLogin {@link RequestLogin}
