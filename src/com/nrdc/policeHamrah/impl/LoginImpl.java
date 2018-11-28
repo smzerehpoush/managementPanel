@@ -51,7 +51,14 @@ public class LoginImpl {
                 transaction.begin();
             if (!operationTransaction.isActive())
                 operationTransaction.begin();
-
+            SystemDao system = SystemDao.getSystem(SystemNames.POLICE_HAMRAH);
+            Long size = (Long) entityManager.createQuery("SELECT COUNT (a) FROM AuthDao a JOIN UserDao u ON u.id = a.fkUserId WHERE a.fkSystemId = :fkSystemId AND (u.phoneNumber = :phoneNumber OR u.username = :username )").setParameter("phoneNumber", requestLogin.getPhoneNumber())
+                    .setParameter("fkSystemId", system.getId())
+                    .setParameter("phoneNumber", requestLogin.getPhoneNumber())
+                    .setParameter("username", requestLogin.getUsername())
+                    .getSingleResult();
+            if (!size.equals(0L))
+                throw new Exception(Constants.ACTIVE_USER_EXISTS);
             UserDao user = verifyUser(requestLogin);
             SystemDao systemDao = SystemDao.getSystem(SystemNames.POLICE_HAMRAH);
             PrivilegeDto privilege = PrivilegeDao.getPrivilege(PrivilegeNames.LOGIN);
