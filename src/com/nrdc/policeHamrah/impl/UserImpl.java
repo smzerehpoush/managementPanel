@@ -320,8 +320,14 @@ public class UserImpl {
             user.checkPrivilege(PrivilegeNames.ADD_USER, requestAddUser.getFkSystemId());
             if (!transaction.isActive())
                 transaction.begin();
+            Long userId = (Long) entityManager.createQuery("SELECT MAX (u.id) FROM UserDao u").getSingleResult() + 1;
             checkRequestAddUser(requestAddUser);
             UserDao u = new UserDao(requestAddUser);
+            u.setId(userId);
+            SystemUserDao systemUser = new SystemUserDao();
+            systemUser.setFkSystemId(requestAddUser.getFkSystemId());
+            systemUser.setFkUserId(userId);
+            entityManager.persist(systemUser);
             entityManager.persist(u);
             if (transaction.isActive())
                 transaction.commit();
