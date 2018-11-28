@@ -326,8 +326,6 @@ public class UserImpl {
             if (transaction.isActive())
                 transaction.commit();
             StandardResponse response = new StandardResponse<>();
-
-
             return response;
         } catch (Exception ex) {
             if (transaction != null && transaction.isActive())
@@ -641,8 +639,6 @@ public class UserImpl {
             ResponseGetRolesWithPrivileges responseGetRolesWithPrivileges = new ResponseGetRolesWithPrivileges();
             responseGetRolesWithPrivileges.setRoleWithPrivileges(rolesWithPrivileges);
             StandardResponse<ResponseGetRolesWithPrivileges> response = new StandardResponse<>();
-
-
             response.setResponse(responseGetRolesWithPrivileges);
             return response;
         } finally {
