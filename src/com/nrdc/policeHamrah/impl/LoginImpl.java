@@ -156,11 +156,17 @@ public class LoginImpl {
 //            throw new Exception(Constants.NOT_VALID_SYSTEM);
 //        }
         responseLogin.setUser(user);
+        response.setResponse(responseLogin);
         return response;
     }
 
     private StandardResponse sendTokenKeyToSystem(UserDao user, AuthDao auth, SystemDao systemDao) throws Exception {
-        RequestAddTokenKey requestAddTokenKey = new RequestAddTokenKey(auth.getToken(), auth.getKey(), user.getId());
+        RequestAddTokenKey requestAddTokenKey = new RequestAddTokenKey();
+        requestAddTokenKey.setKey(auth.getKey());
+        requestAddTokenKey.setToken(auth.getToken());
+        requestAddTokenKey.setNationalId(user.getNationalId());
+        requestAddTokenKey.setPoliceCode(user.getPoliceCode());
+        requestAddTokenKey.setPhoneNumber(user.getPhoneNumber());
         URL url = new URL(systemDao.getSystemPath() + "/addTokenKey");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setDoOutput(true);
