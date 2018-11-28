@@ -97,8 +97,7 @@ public class LoginImpl {
             UserDao user = UserDao.getUser(token);
             user.isActive();
             SystemDao systemDao = SystemDao.getSystem(fkSystemId);
-            PrivilegeDao privilege = PrivilegeDao.getPrivilege(PrivilegeNames.LOGIN);
-            user.checkPrivilege(privilege, fkSystemId);
+            user.checkPrivilege(PrivilegeNames.LOGIN, fkSystemId);
             StandardResponse<ResponseLogin> response = loginToSystem(user, systemDao);
             if (transaction != null && transaction.isActive())
                 transaction.commit();
