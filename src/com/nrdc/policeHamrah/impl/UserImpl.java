@@ -96,7 +96,7 @@ public class UserImpl {
                     .setParameter("fkSystemId", requestAssignRole.getFkSystemId())
                     .getResultList();
 
-            mergeAndRemove(roleIdListInDb, requestAssignRole.getFkRoleIdList(), isUserSysAdmin, user.getId(), requestAssignRole.getFkSystemId());
+            mergeAndRemove(roleIdListInDb, requestAssignRole.getFkRoleIdList(), isUserSysAdmin, requestAssignRole.getFkUserId(), requestAssignRole.getFkSystemId());
             return new StandardResponse();
         } finally {
             if (entityManager.isOpen())
