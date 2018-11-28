@@ -324,15 +324,23 @@ public class UserImpl {
             checkRequestAddUser(requestAddUser);
             UserDao u = new UserDao(requestAddUser);
             u.setId(userId);
-            SystemUserDao systemUser = new SystemUserDao();
-            systemUser.setFkSystemId(requestAddUser.getFkSystemId());
-            systemUser.setFkUserId(userId);
-            entityManager.persist(systemUser);
             entityManager.persist(u);
-            if (transaction.isActive())
+            if (transaction.isActive()) {
                 transaction.commit();
-            StandardResponse response = new StandardResponse<>();
-            return response;
+                entityManager.close();
+                entityManager = Database.getEntityManager();
+                transaction = entityManager.getTransaction();
+                transaction.begin();
+                SystemUserDao systemUser = new SystemUserDao();
+                systemUser.setFkSystemId(requestAddUser.getFkSystemId());
+                systemUser.setFkUserId(userId);
+                entityManager.persist(systemUser);
+                transaction.commit();
+                StandardResponse response = new StandardResponse<>();
+                return response;
+            } else {
+                throw new Exception(Constants.UNKNOWN_ERROR);
+            }
         } catch (Exception ex) {
             if (transaction != null && transaction.isActive())
                 transaction.rollback();
