@@ -116,9 +116,7 @@ public class LoginImpl {
         user.checkKey(systemDao);
         user.checkToken(systemDao);
         AuthDao auth = new AuthDao(user, systemDao);
-//        StandardResponse responseAddTokenKey = sendTokenKeyToSystem(user, token, key, systemDao);
-        // TODO: 10/27/2018 implement addTokenKey service
-        StandardResponse responseAddTokenKey = new StandardResponse();
+        StandardResponse responseAddTokenKey = sendTokenKeyToSystem(user, auth , systemDao);
         if (responseAddTokenKey.getResultCode() == -1) {
             throw new Exception(responseAddTokenKey.getResultMessage());
         }
