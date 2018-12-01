@@ -348,5 +348,31 @@ public class UserServices {
         }
     }
 
-
+    /**
+     * 26
+     *
+     * @param encryptedRequest RequestAddUser
+     * @return simple StandardResponse to handle state
+     */
+    @Path("/systems/assign")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response assignUserToSystem(EncryptedRequest encryptedRequest) {
+        logger.info("++================== addUser SERVICE : START ==================++");
+        try {
+            RequestAssignSystemToUser request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestAssignSystemToUser.class);
+            StandardResponse response = new UserImpl().assignUserToSystem(encryptedRequest.getToken(), request);
+            String key = UserDao.getKey(encryptedRequest.getToken()).getKey();
+            EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
+            Response finalResponse = Response.status(200).entity(encryptedResponse).build();
+            logger.info("++================== addUser SERVICE : END ==================++");
+            return finalResponse;
+        } catch (Exception ex) {
+            logger.error("++================== addUser SERVICE : EXCEPTION ==================++");
+            logger.error(ex.getMessage(), ex);
+            StandardResponse response = StandardResponse.getNOKExceptions(ex);
+            return Response.status(200).entity(response).build();
+        }
+    }
 }
