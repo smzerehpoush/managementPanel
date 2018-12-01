@@ -21,6 +21,36 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class UserImpl {
+    public StandardResponse assignUserToSystem(String token, RequestAssignSystemToUser requestAssignSystemToUser) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            UserDao adminUser = UserDao.validate(token);
+            UserDao user = UserDao.getUser(requestAssignSystemToUser.getFkUserId());
+            for (Long fkSystemId : requestAssignSystemToUser.getFkSystemIdList()) {
+                adminUser.checkPrivilege(PrivilegeNames.ASSIGN_ROLE, fkSystemId);
+                Long size = (Long) entityManager.createQuery("SELECT COUNT (su) FROM SystemUserDao su WHERE su.fkSystemId = :fkSystemId AND su.fkUserId = :fkUserId")
+                        .setParameter("fkSystemId", fkSystemId)
+                        .setParameter("fkUserId", user.getId())
+                        .getSingleResult();
+                if (!size.equals(1L)) {
+                    SystemUserDao systemUserDao = new SystemUserDao();
+                    systemUserDao.setFkUserId(requestAssignSystemToUser.getFkUserId());
+                    systemUserDao.setFkSystemId(fkSystemId);
+                    entityManager.persist(systemUserDao);
+                }
+            }
+            if (transaction.isActive())
+                transaction.commit();
+            return new StandardResponse();
+        } finally {
+            if (entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+
     private void mergeAndRemove(List<Long> A, List<Long> B, boolean isSysAdmin, Long userId, Long fkSystemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -102,8 +132,6 @@ public class UserImpl {
             if (entityManager.isOpen())
                 entityManager.close();
         }
-
-
     }
 
     private boolean isUserSysAdmin(Long userId, Long fkSystemId) {
