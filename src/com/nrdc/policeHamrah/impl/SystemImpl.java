@@ -1,5 +1,6 @@
 package com.nrdc.policeHamrah.impl;
 
+import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.PrivilegeNames;
 import com.nrdc.policeHamrah.jsonModel.StandardResponse;
 import com.nrdc.policeHamrah.jsonModel.customizedModel.RoleWithPrivileges;
@@ -90,12 +91,12 @@ public class SystemImpl {
         } catch (Exception ex) {
             return StandardResponse.getNOKExceptions(ex);
         } finally {
-            if (entityManager != null && entityManager.isOpen())
+            if (entityManager.isOpen())
                 entityManager.close();
         }
     }
 
-    private List<SystemWithVersion> createSystemWithVersions(List<SystemDto> systemDtos) {
+    private List<SystemWithVersion> createSystemWithVersions(List<SystemDto> systemDtos) throws Exception {
         List<SystemWithVersion> systemWithVersions = new LinkedList<>();
         SystemWithVersion systemWithVersion;
         for (SystemDto systemDto : systemDtos) {
@@ -107,13 +108,15 @@ public class SystemImpl {
         return systemWithVersions;
     }
 
-    private SystemVersionDto getSystemVersion(Long fkSystemId) {
+    private SystemVersionDto getSystemVersion(Long fkSystemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             return (SystemVersionDto) entityManager.createQuery("SELECT v FROM SystemVersionDao v WHERE v.fkSystemId = :fkSystemId AND v.versionCode = (SELECT MAX (s.versionCode) FROM SystemVersionDao s WHERE s.fkSystemId = :fkSystemId)")
                     .setParameter("fkSystemId", fkSystemId)
                     .getSingleResult();
+        } catch (Exception ex) {
+            throw new Exception(Constants.NOT_VALID_SYSTEM + " بدون ورژن ");
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();
