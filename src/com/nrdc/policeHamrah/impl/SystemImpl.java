@@ -19,6 +19,26 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class SystemImpl {
+    public StandardResponse<ResponseGetSystems> getAllSystems(String token) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
+        try {
+            UserDao.validate(token);
+            List<SystemDto> systems = entityManager.createQuery("SELECT distinct (s) FROM SystemDao s ")
+                    .getResultList();
+            ResponseGetSystems responseGetSystems = new ResponseGetSystems();
+            responseGetSystems.setSystemDtos(systems);
+            StandardResponse<ResponseGetSystems> response = new StandardResponse<>();
+
+
+            response.setResponse(responseGetSystems);
+            return response;
+        } finally {
+            if (entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+
     public StandardResponse<ResponseGetRolesWithPrivileges> getSystemRolesWithPrivileges(String token, Long fkSystemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         entityManager.getEntityManagerFactory().getCache().evictAll();
