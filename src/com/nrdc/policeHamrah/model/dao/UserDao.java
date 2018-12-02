@@ -61,7 +61,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
         } catch (NonUniqueResultException ex2) {
             throw new Exception(Constants.NOT_VALID_USER);
         } finally {
-            if (entityManager != null && entityManager.isOpen())
+            if (entityManager.isOpen())
                 entityManager.close();
         }
     }
@@ -76,7 +76,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
         } catch (Exception ex) {
             throw new Exception(Constants.NOT_VALID_USER);
         } finally {
-            if (entityManager != null && entityManager.isOpen())
+            if (entityManager.isOpen())
                 entityManager.close();
         }
     }
@@ -118,7 +118,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
         } catch (NonUniqueResultException ex2) {
             throw new Exception(Constants.NOT_VALID_USER);
         } finally {
-            if (entityManager != null && entityManager.isOpen())
+            if (entityManager.isOpen())
                 entityManager.close();
         }
 
@@ -142,7 +142,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
                     .setParameter("fkSystemId", systemId)
                     .getSingleResult();
         } finally {
-            if (entityManager != null && entityManager.isOpen())
+            if (entityManager.isOpen())
                 entityManager.close();
         }
 
@@ -161,7 +161,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
         } catch (NonUniqueResultException | NoResultException ex) {
             throw new Exception(Constants.NOT_VALID_USER);
         } finally {
-            if (entityManager != null && entityManager.isOpen())
+            if (entityManager.isOpen())
                 entityManager.close();
         }
     }
@@ -184,7 +184,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
         } catch (NonUniqueResultException | NoResultException ex) {
             throw new Exception(Constants.NOT_VALID_USER);
         } finally {
-            if (entityManager != null && entityManager.isOpen())
+            if (entityManager.isOpen())
                 entityManager.close();
         }
     }
@@ -199,7 +199,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
                     .getResultList();
             return systemDaoList;
         } finally {
-            if (entityManager != null && entityManager.isOpen())
+            if (entityManager.isOpen())
                 entityManager.close();
         }
     }
@@ -225,7 +225,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
             return true;
 
         } finally {
-            if (entityManager != null && entityManager.isOpen())
+            if (entityManager.isOpen())
                 entityManager.close();
         }
     }
@@ -251,7 +251,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
             return true;
 
         } finally {
-            if (entityManager != null && entityManager.isOpen())
+            if (entityManager.isOpen())
                 entityManager.close();
         }
     }
@@ -428,7 +428,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
                 throw new Exception(Constants.PERMISSION_ERROR);
             }
         } finally {
-            if (entityManager != null && entityManager.isOpen())
+            if (entityManager.isOpen())
                 entityManager.close();
         }
     }

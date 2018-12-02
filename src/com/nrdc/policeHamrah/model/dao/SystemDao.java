@@ -31,7 +31,7 @@ public class SystemDao extends SystemDto {
         } catch (NoResultException | NonUniqueResultException ex1) {
             throw new Exception(Constants.NOT_VALID_SYSTEM);
         } finally {
-            if (entityManager != null && entityManager.isOpen())
+            if (entityManager.isOpen())
                 entityManager.close();
         }
     }
@@ -50,7 +50,7 @@ public class SystemDao extends SystemDto {
         } catch (NoResultException | NonUniqueResultException ex1) {
             throw new Exception(Constants.NOT_VALID_SYSTEM);
         } finally {
-            if (entityManager != null && entityManager.isOpen())
+            if (entityManager.isOpen())
                 entityManager.close();
         }
     }

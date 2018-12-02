@@ -224,7 +224,7 @@ public class LoginImpl {
         } catch (Exception ex) {
             throw new Exception(Constants.INCORRECT_USERNAME_OR_PASSWORD);
         } finally {
-            if (entityManager != null && entityManager.isOpen())
+            if (entityManager.isOpen())
                 entityManager.close();
         }
 

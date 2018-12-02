@@ -34,7 +34,7 @@ public class AuthDao extends com.nrdc.policeHamrah.model.dto.AuthDto {
                 throw new Exception(Constants.NOT_VALID_TOKEN);
             }
         } finally {
-            if (entityManager != null && entityManager.isOpen())
+            if (entityManager.isOpen())
                 entityManager.close();
         }
     }

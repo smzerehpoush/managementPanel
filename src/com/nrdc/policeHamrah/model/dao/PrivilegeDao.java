@@ -29,7 +29,7 @@ public class PrivilegeDao extends com.nrdc.policeHamrah.model.dto.PrivilegeDto {
         } catch (Exception ex) {
             throw new Exception(Constants.NOT_VALID_PRIVILEGE);
         } finally {
-            if (entityManager != null && entityManager.isOpen())
+            if (entityManager.isOpen())
                 entityManager.close();
         }
     }
