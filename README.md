@@ -53,3 +53,5 @@ base path : 192.168.250.53:9002/policeHamrah/api
 25:(/user/roles)@POST:assign a role to a user
 
 26:(/user/systems/assign)@POST: assign a user to other systems
+
+27:(/system?token)@: list of all systems
