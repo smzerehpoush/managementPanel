@@ -348,6 +348,34 @@ public class UserServices {
         }
     }
 
+    /***
+     * 28
+     * @param token token of a valid user
+     * @return returns list of systems of a specific user with fkUserId
+     */
+    @Path("/systems/id")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUserSystems(@QueryParam("token") String token, @QueryParam("fkUserId") Long fkUserId) {
+        logger.info("++================== getUserSystems SERVICE : START ==================++");
+        try {
+            if (token == null || fkUserId == null) {
+                throw new Exception(Constants.NOT_VALID_REQUEST);
+            }
+            StandardResponse<ResponseGetSystems> response = new SystemImpl().getUserSystems(token, fkUserId);
+            String key = UserDao.getKey(token).getKey();
+            EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
+            Response finalResponse = Response.status(200).entity(encryptedResponse).build();
+            logger.info("++================== getUserSystems SERVICE : END ==================++");
+            return finalResponse;
+        } catch (Exception ex) {
+            logger.error("++================== getUserSystems SERVICE : EXCEPTION ==================++");
+            logger.error(ex.getMessage(), ex);
+            StandardResponse response = StandardResponse.getNOKExceptions(ex);
+            return Response.status(200).entity(response).build();
+        }
+    }
+
     /**
      * 26
      *
@@ -359,17 +387,17 @@ public class UserServices {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response assignUserToSystem(EncryptedRequest encryptedRequest) {
-        logger.info("++================== addUser SERVICE : START ==================++");
+        logger.info("++================== assignSystemToUser SERVICE : START ==================++");
         try {
             RequestAssignSystemToUser request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestAssignSystemToUser.class);
             StandardResponse response = new UserImpl().assignUserToSystem(encryptedRequest.getToken(), request);
             String key = UserDao.getKey(encryptedRequest.getToken()).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
-            logger.info("++================== addUser SERVICE : END ==================++");
+            logger.info("++================== assignSystemToUser SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            logger.error("++================== addUser SERVICE : EXCEPTION ==================++");
+            logger.error("++================== assignSystemToUser SERVICE : EXCEPTION ==================++");
             logger.error(ex.getMessage(), ex);
             StandardResponse response = StandardResponse.getNOKExceptions(ex);
             return Response.status(200).entity(response).build();
