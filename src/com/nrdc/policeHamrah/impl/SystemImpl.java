@@ -23,7 +23,7 @@ public class SystemImpl {
         EntityManager entityManager = Database.getEntityManager();
         entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
-            UserDao user = UserDao.validate(token);
+            UserDao.validate(token);
             List<RoleWithPrivileges> rolesWithPrivileges = new LinkedList<>();
             List<RoleDao> roles = entityManager.createQuery("SELECT r FROM RoleDao r WHERE r.fkSystemId = :fkSystemId")
                     .setParameter("fkSystemId", fkSystemId)
