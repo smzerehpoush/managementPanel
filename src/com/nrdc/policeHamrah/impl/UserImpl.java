@@ -30,7 +30,7 @@ public class UserImpl {
             UserDao adminUser = UserDao.validate(token);
             UserDao user = UserDao.getUser(requestAssignSystemToUser.getFkUserId());
             for (Long fkSystemId : requestAssignSystemToUser.getFkSystemIdList()) {
-                adminUser.checkPrivilege(PrivilegeNames.ASSIGN_ROLE, fkSystemId);
+                adminUser.checkPrivilege(PrivilegeNames.ASSIGN_SYSTEM, fkSystemId);
                 Long size = (Long) entityManager.createQuery("SELECT COUNT (su) FROM SystemUserDao su WHERE su.fkSystemId = :fkSystemId AND su.fkUserId = :fkUserId")
                         .setParameter("fkSystemId", fkSystemId)
                         .setParameter("fkUserId", user.getId())
@@ -119,6 +119,7 @@ public class UserImpl {
         entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             UserDao user = UserDao.validate(token);
+            user.checkPrivilege(PrivilegeNames.ASSIGN_ROLE, requestAssignRole.getFkSystemId());
             boolean isUserSysAdmin = isUserSysAdmin(user.getId(), requestAssignRole.getFkSystemId());
             List roleIdListInDb = entityManager.createQuery("SELECT r.id FROM RoleDao r JOIN UserRoleDao ur ON r.id = ur.fkRoleId WHERE ur.fkUserId = :fkUserId AND r.fkSystemId = :fkSystemId")
                     .setParameter("fkUserId", requestAssignRole.getFkUserId())
