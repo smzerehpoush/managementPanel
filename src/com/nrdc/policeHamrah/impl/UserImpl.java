@@ -104,10 +104,9 @@ public class UserImpl {
         entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             roleValidation(roleId);
-            RoleDao role = (RoleDao) entityManager.createQuery("SELECT r FROM RoleDao r WHERE r.id = :roleId ")
+            return (RoleDao) entityManager.createQuery("SELECT r FROM RoleDao r WHERE r.id = :roleId ")
                     .setParameter("roleId", roleId)
                     .getSingleResult();
-            return role;
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();
@@ -226,18 +225,17 @@ public class UserImpl {
                     .getSingleResult();
             return size.equals(1L);
         } finally {
-            if (entityManager != null && entityManager.isOpen())
+            if (entityManager.isOpen())
                 entityManager.close();
         }
     }
 
-    private boolean checkPassword(RequestResetPassword requestResetPassword) {
+    private void checkPassword(RequestResetPassword requestResetPassword) throws Exception {
         String password = requestResetPassword.getNewPassword();
         if (password.length() < 8)
-            return false;
+            throw new Exception(Constants.NOT_VALID_PASSWORD);
 //        if (!password.matches("[[a-z][0-9]]"))
 //            return false;
-        return true;
     }
 
     private void setUserNewPassword(String username, RequestResetPassword requestResetPassword) {
@@ -416,7 +414,7 @@ public class UserImpl {
             if (size > 0)
                 throw new Exception("شماره تلفن تکراری می باشد.");
         } finally {
-            if (entityManager != null && entityManager.isOpen())
+            if (entityManager.isOpen())
                 entityManager.close();
         }
     }
@@ -436,24 +434,22 @@ public class UserImpl {
             if (!userSystemList.contains(systemDao)) {
                 throw new Exception(Constants.USER_SYSTEM_ERROR);
             }
-            try {
-                boolean b = user.checkPrivilege(PrivilegeNames.EDIT_USER, requestEditUser.getFkSystemId());
-                if (b)
-                    throw new Exception(Constants.CAN_NOT_EDIT_THIS_USER);
-            } catch (Exception ex) {
-                if (ex.getMessage().equals(Constants.CAN_NOT_EDIT_THIS_USER))
-                    throw ex;
-            }
+
             checkRequestEditUser(requestEditUser);
             if (!transaction.isActive())
                 transaction.begin();
-            entityManager.createQuery("UPDATE UserDao u SET u.username = :username , u.phoneNumber= :phoneNumber , u.phoneNumber = :phoneNumber , u.firstName = :firstName , u.lastName = :lastName , u.nationalId = :nationalId , u.policeCode = :policeCode WHERE u.id = :fkUserId")
+            entityManager.createQuery("UPDATE UserDao u SET " +
+                    " u.username = :username ," +
+                    " u.phoneNumber = :phoneNumber ," +
+                    " u.firstName = :firstName ," +
+                    " u.lastName = :lastName , " +
+                    " u.nationalId = :nationalId " +
+                    " WHERE u.id = :fkUserId")
                     .setParameter("username", requestEditUser.getUsername())
                     .setParameter("phoneNumber", requestEditUser.getPhoneNumber())
                     .setParameter("firstName", requestEditUser.getFirstName())
                     .setParameter("lastName", requestEditUser.getLastName())
                     .setParameter("nationalId", requestEditUser.getNationalId())
-                    .setParameter("policeCode", requestEditUser.getPoliceCode())
                     .setParameter("fkUserId", requestEditUser.getFkUserId())
                     .executeUpdate();
             if (transaction.isActive())
@@ -494,7 +490,7 @@ public class UserImpl {
             if (size > 1)
                 throw new Exception("نام کاربری تکراری می باشد.");
         } finally {
-            if (entityManager != null && entityManager.isOpen())
+            if (entityManager.isOpen())
                 entityManager.close();
         }
     }
@@ -521,7 +517,7 @@ public class UserImpl {
             if (size > 1)
                 throw new Exception("کد ملی تکراری می باشد.");
         } finally {
-            if (entityManager != null && entityManager.isOpen())
+            if (entityManager.isOpen())
                 entityManager.close();
         }
     }
@@ -548,7 +544,7 @@ public class UserImpl {
             if (size > 1)
                 throw new Exception("شماره تلفن تکراری می باشد.");
         } finally {
-            if (entityManager != null && entityManager.isOpen())
+            if (entityManager.isOpen())
                 entityManager.close();
         }
     }
@@ -573,7 +569,7 @@ public class UserImpl {
             if (size > 1)
                 throw new Exception("کد پلیس تکراری می باشد.");
         } finally {
-            if (entityManager != null && entityManager.isOpen())
+            if (entityManager.isOpen())
                 entityManager.close();
         }
     }
