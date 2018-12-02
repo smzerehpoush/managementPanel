@@ -94,6 +94,27 @@ public class SystemImpl {
         }
     }
 
+    public StandardResponse<ResponseGetSystems> getUserSystems(String token, Long fkUserId) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
+        try {
+            UserDao.validate(token);
+            List<SystemDto> systems = entityManager.createQuery("SELECT s FROM SystemDao s JOIN SystemUserDao su ON s.id = su.fkSystemId WHERE su.fkUserId = :fkUserId ")
+                    .setParameter("fkUserId", fkUserId)
+                    .getResultList();
+            ResponseGetSystems responseGetSystems = new ResponseGetSystems();
+            responseGetSystems.setSystemDtos(systems);
+            StandardResponse<ResponseGetSystems> response = new StandardResponse<>();
+
+
+            response.setResponse(responseGetSystems);
+            return response;
+        } finally {
+            if (entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+
     public StandardResponse<ResponseGetSystemWithVersions> getSystemVersions(String token) {
         EntityManager entityManager = Database.getEntityManager();
         entityManager.getEntityManagerFactory().getCache().evictAll();
