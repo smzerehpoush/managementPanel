@@ -55,3 +55,5 @@ base path : 192.168.250.53:9002/policeHamrah/api
 26:(/user/systems/assign)@POST: assign a user to other systems
 
 27:(/system?token)@GET: list of all systems
+
+28:(/user/systems/id?token&fkUserId)@GET : getUserSystems : list of systems of a specific user with fkUserId
