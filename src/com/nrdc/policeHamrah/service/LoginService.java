@@ -1,5 +1,6 @@
 package com.nrdc.policeHamrah.service;
 
+import com.nrdc.policeHamrah.exceptions.ServerException;
 import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.Encryption;
 import com.nrdc.policeHamrah.impl.LoginImpl;
@@ -53,7 +54,7 @@ public class LoginService {
     @Path("/system")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response loginToSystem(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) {
+    public Response loginToSystem(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) throws Exception {
         logger.info("++================== login-to-system SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null) {
@@ -66,10 +67,7 @@ public class LoginService {
             logger.info("++================== login-to-system SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            logger.error("++================== login-to-system SERVICE : EXCEPTION ==================++");
-            logger.error(ex.getMessage(), ex);
-            StandardResponse response = StandardResponse.getNOKExceptions(ex);
-            return Response.status(200).entity(response).build();
+            return ServerException.create("++================== login-to-system SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 

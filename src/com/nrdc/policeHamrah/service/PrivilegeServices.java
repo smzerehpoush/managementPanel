@@ -1,5 +1,6 @@
 package com.nrdc.policeHamrah.service;
 
+import com.nrdc.policeHamrah.exceptions.ServerException;
 import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.Encryption;
 import com.nrdc.policeHamrah.impl.PrivilegeImpl;
@@ -31,7 +32,7 @@ public class PrivilegeServices {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserPrivileges(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) {
+    public Response getUserPrivileges(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) throws Exception {
         logger.info("++================== getUserPrivileges SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null) {
@@ -44,10 +45,7 @@ public class PrivilegeServices {
             logger.info("++================== getUserPrivileges SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            logger.error("++================== getUserPrivileges SERVICE : EXCEPTION ==================++");
-            logger.error(ex.getMessage(), ex);
-            StandardResponse response = StandardResponse.getNOKExceptions(ex);
-            return Response.status(200).entity(response).build();
+            return ServerException.create("++================== getUserPrivileges SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 

@@ -1,5 +1,6 @@
 package com.nrdc.policeHamrah.service;
 
+import com.nrdc.policeHamrah.exceptions.ServerException;
 import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.Encryption;
 import com.nrdc.policeHamrah.impl.SystemImpl;
@@ -27,7 +28,7 @@ public class SystemServices {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllSystem(@QueryParam("token") String token) {
+    public Response getAllSystem(@QueryParam("token") String token) throws Exception {
         logger.info("++================== getAllSystems SERVICE : START ==================++");
         try {
             if (token == null) {
@@ -40,10 +41,7 @@ public class SystemServices {
             logger.info("++================== getAllSystems SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            logger.error("++================== getAllSystems SERVICE : EXCEPTION ==================++");
-            logger.error(ex.getMessage(), ex);
-            StandardResponse response = StandardResponse.getNOKExceptions(ex.getMessage());
-            return Response.status(200).entity(response).build();
+            return ServerException.create("++================== getAllSystems SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 
@@ -57,7 +55,7 @@ public class SystemServices {
     @Path("/versions")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getSystemWithVersion(@QueryParam("token") String token) {
+    public Response getSystemWithVersion(@QueryParam("token") String token) throws Exception {
         logger.info("++================== getSystemWithVersion SERVICE : START ==================++");
         try {
             if (token == null) {
@@ -70,10 +68,7 @@ public class SystemServices {
             logger.info("++================== getSystemWithVersion SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            logger.error("++================== getSystemWithVersion SERVICE : EXCEPTION ==================++");
-            logger.error(ex.getMessage(), ex);
-            StandardResponse response = StandardResponse.getNOKExceptions(ex.getMessage());
-            return Response.status(200).entity(response).build();
+            return ServerException.create("++================== getSystemWithVersion SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 
@@ -90,7 +85,7 @@ public class SystemServices {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getSystemUsers(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) {
+    public Response getSystemUsers(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) throws Exception {
         logger.info("++================== getSystemUsers SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null) {
@@ -103,10 +98,7 @@ public class SystemServices {
             logger.info("++================== getSystemUsers SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            logger.error("++================== getSystemUsers SERVICE : EXCEPTION ==================++");
-            logger.error(ex.getMessage(), ex);
-            StandardResponse response = StandardResponse.getNOKExceptions(ex);
-            return Response.status(200).entity(response).build();
+            return ServerException.create("++================== getSystemUsers SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 
@@ -122,7 +114,7 @@ public class SystemServices {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getSystemRoles(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) {
+    public Response getSystemRoles(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) throws Exception {
         logger.info("++================== getSystemRoles SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null) {
@@ -135,10 +127,7 @@ public class SystemServices {
             logger.info("++================== getSystemRoles SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            logger.error("++================== getSystemRoles SERVICE : EXCEPTION ==================++");
-            logger.error(ex.getMessage(), ex);
-            StandardResponse response = StandardResponse.getNOKExceptions(ex);
-            return Response.status(200).entity(response).build();
+            return ServerException.create("++================== gesSystemRoles SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 
@@ -153,7 +142,7 @@ public class SystemServices {
     @Path("/roles/privileges")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getSystemRolesWithPrivileges(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) {
+    public Response getSystemRolesWithPrivileges(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) throws Exception {
         logger.info("++================== getUserRolesWithPrivileges SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null) {
@@ -166,10 +155,7 @@ public class SystemServices {
             logger.info("++================== getUserRolesWithPrivileges SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            logger.error("++================== getUserRolesWithPrivileges SERVICE : EXCEPTION ==================++");
-            logger.error(ex.getMessage(), ex);
-            StandardResponse response = StandardResponse.getNOKExceptions(ex);
-            return Response.status(200).entity(response).build();
+            return ServerException.create("++================== getUserRolesWithPrivileges SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 

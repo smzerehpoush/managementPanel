@@ -1,5 +1,6 @@
 package com.nrdc.policeHamrah.service;
 
+import com.nrdc.policeHamrah.exceptions.ServerException;
 import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.Encryption;
 import com.nrdc.policeHamrah.impl.TokenImpl;
@@ -30,7 +31,7 @@ public class TokenServices {
      */
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-    public Response removeToken(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId, @QueryParam("fkUserId") Long fkUserId) {
+    public Response removeToken(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId, @QueryParam("fkUserId") Long fkUserId) throws Exception {
         logger.info("++================== removeToken SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null || fkUserId == null) {
@@ -43,10 +44,7 @@ public class TokenServices {
             logger.info("++================== removeToken SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            logger.error("++================== removeToken SERVICE : EXCEPTION ==================++");
-            logger.error(ex.getMessage(), ex);
-            StandardResponse response = StandardResponse.getNOKExceptions(ex);
-            return Response.status(200).entity(response).build();
+            return ServerException.create("++================== removeToken SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 }

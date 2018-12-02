@@ -1,5 +1,6 @@
 package com.nrdc.policeHamrah.service;
 
+import com.nrdc.policeHamrah.exceptions.ServerException;
 import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.Encryption;
 import com.nrdc.policeHamrah.impl.SystemImpl;
@@ -33,7 +34,7 @@ public class UserServices {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addUser(EncryptedRequest encryptedRequest) {
+    public Response addUser(EncryptedRequest encryptedRequest) throws Exception {
         logger.info("++================== addUser SERVICE : START ==================++");
         try {
             RequestAddUser request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestAddUser.class);
@@ -44,10 +45,7 @@ public class UserServices {
             logger.info("++================== addUser SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            logger.error("++================== addUser SERVICE : EXCEPTION ==================++");
-            logger.error(ex.getMessage(), ex);
-            StandardResponse response = StandardResponse.getNOKExceptions(ex);
-            return Response.status(200).entity(response).build();
+            return ServerException.create("++================== addUser SERVICE : EXCEPTION ==================++", ex, encryptedRequest.getToken());
         }
     }
 
@@ -60,7 +58,7 @@ public class UserServices {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response editUser(EncryptedRequest encryptedRequest) {
+    public Response editUser(EncryptedRequest encryptedRequest) throws Exception {
         logger.info("++================== editUser SERVICE : START ==================++");
         try {
             RequestEditUser request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestEditUser.class);
@@ -71,10 +69,7 @@ public class UserServices {
             logger.info("++================== editUser SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            logger.error("++================== editUser SERVICE : EXCEPTION ==================++");
-            logger.error(ex.getMessage(), ex);
-            StandardResponse response = StandardResponse.getNOKExceptions(ex);
-            return Response.status(200).entity(response).build();
+            return ServerException.create("++================== editUser SERVICE : EXCEPTION ==================++", ex, encryptedRequest.getToken());
         }
     }
 
@@ -89,7 +84,7 @@ public class UserServices {
     @Path("/active")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response activeUser(@QueryParam("token") String token, @QueryParam("fkUserId") Long fkUserId, @QueryParam("fkSystemId") Long fkSystemId) {
+    public Response activeUser(@QueryParam("token") String token, @QueryParam("fkUserId") Long fkUserId, @QueryParam("fkSystemId") Long fkSystemId) throws Exception {
         logger.info("++================== activeUser SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null || fkUserId == null) {
@@ -103,9 +98,7 @@ public class UserServices {
             return finalResponse;
         } catch (Exception ex) {
             logger.error("++================== activeUser SERVICE : EXCEPTION ==================++");
-            logger.error(ex.getMessage(), ex);
-            StandardResponse response = StandardResponse.getNOKExceptions(ex);
-            return Response.status(200).entity(response).build();
+            return ServerException.create("++================== activeUser SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 
@@ -120,7 +113,7 @@ public class UserServices {
     @Path("/deActive")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deActiveUser(@QueryParam("token") String token, @QueryParam("fkUserId") Long fkUserId, @QueryParam("fkSystemId") Long fkSystemId) {
+    public Response deActiveUser(@QueryParam("token") String token, @QueryParam("fkUserId") Long fkUserId, @QueryParam("fkSystemId") Long fkSystemId) throws Exception {
         logger.info("++================== deActiveUser SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null || fkUserId == null) {
@@ -133,10 +126,7 @@ public class UserServices {
             logger.info("++================== deActiveUser SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            logger.error("++================== deActiveUser SERVICE : EXCEPTION ==================++");
-            logger.error(ex.getMessage(), ex);
-            StandardResponse response = StandardResponse.getNOKExceptions(ex);
-            return Response.status(200).entity(response).build();
+            return ServerException.create("++================== deActiveUser SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 
@@ -151,7 +141,7 @@ public class UserServices {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response filterUsers(EncryptedRequest encryptedRequest) {
+    public Response filterUsers(EncryptedRequest encryptedRequest) throws Exception {
         logger.info("++================== filterUsers SERVICE : START ==================++");
         try {
             RequestFilterUsers request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestFilterUsers.class);
@@ -162,10 +152,7 @@ public class UserServices {
             logger.info("++================== filterUsers SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            logger.error("++================== filterUsers SERVICE : EXCEPTION ==================++");
-            logger.error(ex.getMessage(), ex);
-            StandardResponse response = StandardResponse.getNOKExceptions(ex);
-            return Response.status(200).entity(response).build();
+            return ServerException.create("++================== filterUsers SERVICE : EXCEPTION ==================++", ex, encryptedRequest.getToken());
         }
     }
 
@@ -180,7 +167,7 @@ public class UserServices {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response resetPassword(EncryptedRequest encryptedRequest) {
+    public Response resetPassword(EncryptedRequest encryptedRequest) throws Exception {
         logger.info("++================== resetPassword SERVICE : START ==================++");
         try {
             RequestResetPassword request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestResetPassword.class);
@@ -191,10 +178,7 @@ public class UserServices {
             logger.info("++================== resetPassword SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            logger.error("++================== resetPassword SERVICE : EXCEPTION ==================++");
-            logger.error(ex.getMessage(), ex);
-            StandardResponse response = StandardResponse.getNOKExceptions(ex);
-            return Response.status(200).entity(response).build();
+            return ServerException.create("++================== resetPassword SERVICE : EXCEPTION ==================++", ex, encryptedRequest.getToken());
         }
     }
 
@@ -210,7 +194,7 @@ public class UserServices {
     @Path("/roles")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserRoles(@QueryParam("token") String token, @QueryParam("fkUserId") Long fkUserId, @QueryParam("fkSystemId") Long fkSystemId) {
+    public Response getUserRoles(@QueryParam("token") String token, @QueryParam("fkUserId") Long fkUserId, @QueryParam("fkSystemId") Long fkSystemId) throws Exception {
         logger.info("++================== getRoles SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null) {
@@ -223,10 +207,7 @@ public class UserServices {
             logger.info("++================== getRoles SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            logger.error("++================== getRoles SERVICE : EXCEPTION ==================++");
-            logger.error(ex.getMessage(), ex);
-            StandardResponse response = StandardResponse.getNOKExceptions(ex);
-            return Response.status(200).entity(response).build();
+            return ServerException.create("++================== getRoles SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 
@@ -241,7 +222,7 @@ public class UserServices {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response assignRole(EncryptedRequest encryptedRequest) {
+    public Response assignRole(EncryptedRequest encryptedRequest) throws Exception {
         logger.info("++================== assignRoles SERVICE : START ==================++");
         try {
             RequestAssignRole request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestAssignRole.class);
@@ -252,10 +233,7 @@ public class UserServices {
             logger.info("++================== assignRoles SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            logger.error("++================== assignRoles SERVICE : EXCEPTION ==================++");
-            logger.error(ex.getMessage(), ex);
-            StandardResponse response = StandardResponse.getNOKExceptions(ex);
-            return Response.status(200).entity(response).build();
+            return ServerException.create("++================== assignRoles SERVICE : EXCEPTION ==================++", ex, encryptedRequest.getToken());
         }
     }
 
@@ -269,7 +247,7 @@ public class UserServices {
     @Path("/roles/privileges")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserRolesWithPrivileges(@QueryParam("token") String token, @QueryParam("fkUserId") Long fkUserId, @QueryParam("fkSystemId") Long fkSystemId) {
+    public Response getUserRolesWithPrivileges(@QueryParam("token") String token, @QueryParam("fkUserId") Long fkUserId, @QueryParam("fkSystemId") Long fkSystemId) throws Exception {
         logger.info("++================== getUserRolesWithPrivileges SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null) {
@@ -282,10 +260,7 @@ public class UserServices {
             logger.info("++================== getUserRolesWithPrivileges SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            logger.error("++================== getUserRolesWithPrivileges SERVICE : EXCEPTION ==================++");
-            logger.error(ex.getMessage(), ex);
-            StandardResponse response = StandardResponse.getNOKExceptions(ex);
-            return Response.status(200).entity(response).build();
+            return ServerException.create("++================== getUserRolesWithPrivileges SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 
@@ -300,7 +275,7 @@ public class UserServices {
     @Path("/privileges")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getPrivileges(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) {
+    public Response getPrivileges(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) throws Exception {
         logger.info("++================== getPrivileges SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null) {
@@ -313,10 +288,7 @@ public class UserServices {
             logger.info("++================== getPrivileges SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            logger.error("++================== getPrivileges SERVICE : EXCEPTION ==================++");
-            logger.error(ex.getMessage(), ex);
-            StandardResponse response = StandardResponse.getNOKExceptions(ex);
-            return Response.status(200).entity(response).build();
+            return ServerException.create("++================== getPrivileges SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 
@@ -328,7 +300,7 @@ public class UserServices {
     @Path("/systems")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserSystems(@QueryParam("token") String token) {
+    public Response getUserSystems(@QueryParam("token") String token) throws Exception {
         logger.info("++================== getUserSystems SERVICE : START ==================++");
         try {
             if (token == null) {
@@ -341,10 +313,7 @@ public class UserServices {
             logger.info("++================== getUserSystems SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            logger.error("++================== getUserSystems SERVICE : EXCEPTION ==================++");
-            logger.error(ex.getMessage(), ex);
-            StandardResponse response = StandardResponse.getNOKExceptions(ex);
-            return Response.status(200).entity(response).build();
+            return ServerException.create("++================== getUserSystems SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 
@@ -356,7 +325,7 @@ public class UserServices {
     @Path("/systems/id")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserSystems(@QueryParam("token") String token, @QueryParam("fkUserId") Long fkUserId) {
+    public Response getUserSystems(@QueryParam("token") String token, @QueryParam("fkUserId") Long fkUserId) throws Exception {
         logger.info("++================== getUserSystems SERVICE : START ==================++");
         try {
             if (token == null || fkUserId == null) {
@@ -369,10 +338,7 @@ public class UserServices {
             logger.info("++================== getUserSystems SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            logger.error("++================== getUserSystems SERVICE : EXCEPTION ==================++");
-            logger.error(ex.getMessage(), ex);
-            StandardResponse response = StandardResponse.getNOKExceptions(ex);
-            return Response.status(200).entity(response).build();
+            return ServerException.create("++================== getUserSystems SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 
@@ -386,7 +352,7 @@ public class UserServices {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response assignUserToSystem(EncryptedRequest encryptedRequest) {
+    public Response assignUserToSystem(EncryptedRequest encryptedRequest) throws Exception {
         logger.info("++================== assignSystemToUser SERVICE : START ==================++");
         try {
             RequestAssignSystemToUser request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestAssignSystemToUser.class);
@@ -397,10 +363,7 @@ public class UserServices {
             logger.info("++================== assignSystemToUser SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            logger.error("++================== assignSystemToUser SERVICE : EXCEPTION ==================++");
-            logger.error(ex.getMessage(), ex);
-            StandardResponse response = StandardResponse.getNOKExceptions(ex);
-            return Response.status(200).entity(response).build();
+            return ServerException.create("++================== assignSystemToUser SERVICE : EXCEPTION ==================++", ex, encryptedRequest.getToken());
         }
     }
 }

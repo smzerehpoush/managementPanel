@@ -1,5 +1,6 @@
 package com.nrdc.policeHamrah.service;
 
+import com.nrdc.policeHamrah.exceptions.ServerException;
 import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.Encryption;
 import com.nrdc.policeHamrah.impl.RoleImpl;
@@ -30,7 +31,7 @@ public class RoleServices {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addRole(EncryptedRequest encryptedRequest) {
+    public Response addRole(EncryptedRequest encryptedRequest) throws Exception {
         logger.info("++================== addRole SERVICE : START ==================++");
         ObjectMapper objectMapper = new ObjectMapper();
         try {
@@ -42,10 +43,7 @@ public class RoleServices {
             logger.info("++================== addRole SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            logger.error("++================== addRole SERVICE : EXCEPTION ==================++");
-            logger.error(ex.getMessage(), ex);
-            StandardResponse response = StandardResponse.getNOKExceptions(ex);
-            return Response.status(200).entity(response).build();
+            return ServerException.create("++================== addRoles SERVICE : EXCEPTION ==================++", ex, encryptedRequest.getToken());
         }
     }
 
@@ -59,7 +57,7 @@ public class RoleServices {
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response editRole(EncryptedRequest encryptedRequest) {
+    public Response editRole(EncryptedRequest encryptedRequest) throws Exception {
         logger.info("++================== editRole SERVICE : START ==================++");
         ObjectMapper objectMapper = new ObjectMapper();
         try {
@@ -71,10 +69,7 @@ public class RoleServices {
             logger.info("++================== editRole SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            logger.error("++================== editRole SERVICE : EXCEPTION ==================++");
-            logger.error(ex.getMessage(), ex);
-            StandardResponse response = StandardResponse.getNOKExceptions(ex);
-            return Response.status(200).entity(response).build();
+            return ServerException.create("++================== editRoles SERVICE : EXCEPTION ==================++", ex, encryptedRequest.getToken());
         }
     }
 
@@ -89,7 +84,7 @@ public class RoleServices {
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response removeRole(@QueryParam("token") String token, @QueryParam("fkRoleId") Long fkRoleId) {
+    public Response removeRole(@QueryParam("token") String token, @QueryParam("fkRoleId") Long fkRoleId) throws Exception {
         logger.info("++================== removeRole SERVICE : START ==================++");
         try {
             if (token == null || fkRoleId == null) {
@@ -102,10 +97,7 @@ public class RoleServices {
             logger.info("++================== removeRole SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            logger.error("++================== removeRole SERVICE : EXCEPTION ==================++");
-            logger.error(ex.getMessage(), ex);
-            StandardResponse response = StandardResponse.getNOKExceptions(ex);
-            return Response.status(200).entity(response).build();
+            return ServerException.create("++================== removeRoles SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 
@@ -120,7 +112,7 @@ public class RoleServices {
     @Path("/privileges")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getRolePrivileges(@QueryParam("token") String token, @QueryParam("fkRoleId") Long fkRoleId) {
+    public Response getRolePrivileges(@QueryParam("token") String token, @QueryParam("fkRoleId") Long fkRoleId) throws Exception {
         logger.info("++================== getRolePrivileges SERVICE : START ==================++");
         try {
             if (token == null || fkRoleId == null) {
@@ -133,11 +125,7 @@ public class RoleServices {
             logger.info("++================== getRolePrivileges SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            logger.error("++================== getRolePrivileges SERVICE : EXCEPTION ==================++");
-            logger.error(ex.getMessage(), ex);
-            StandardResponse response = StandardResponse.getNOKExceptions(ex);
-            return Response.status(200).entity(response).build();
-
+            return ServerException.create("++================== getRolePrivileges SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 }
