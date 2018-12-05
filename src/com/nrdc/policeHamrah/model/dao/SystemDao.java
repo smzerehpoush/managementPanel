@@ -12,7 +12,6 @@ import javax.persistence.*;
 @Table(name = "PH_SYSTEM", schema = Constants.SCHEMA)
 public class SystemDao extends SystemDto {
     public static final String tableName = "PH_SYSTEM";
-    private static Logger logger = Logger.getLogger(SystemDao.class.getName());
 
     public SystemDao() {
 
@@ -25,7 +24,6 @@ public class SystemDao extends SystemDto {
             SystemDao systemDao = (SystemDao) entityManager.createQuery("SELECT s FROM SystemDao s WHERE s.id = :id")
                     .setParameter("id", fkSystemId)
                     .getSingleResult();
-            logger.info(systemDao);
             return systemDao;
 
         } catch (NoResultException | NonUniqueResultException ex1) {
@@ -39,12 +37,10 @@ public class SystemDao extends SystemDto {
     public static SystemDao getSystem(String systemName) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         entityManager.getEntityManagerFactory().getCache().evictAll();
-        logger.info("Get SystemDto Info ");
         try {
             SystemDao systemDao = (SystemDao) entityManager.createQuery("SELECT s FROM SystemDao s WHERE s.systemName = :systemName")
                     .setParameter("systemName", systemName)
                     .getSingleResult();
-            logger.info(systemDao);
             return systemDao;
 
         } catch (NoResultException | NonUniqueResultException ex1) {

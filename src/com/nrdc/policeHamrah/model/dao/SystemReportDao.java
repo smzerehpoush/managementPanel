@@ -11,7 +11,6 @@ import javax.persistence.*;
 @Table(name = "PH_SYSTEM_REPORT", schema = Constants.SCHEMA)
 public class SystemReportDao extends SystemReportDto {
     public static final String tableName = "PH_SYSTEM_REPORT";
-    private static Logger logger = Logger.getLogger(SystemReportDao.class.getName());
 
     public SystemReportDao() {
     }
