@@ -7,11 +7,11 @@ import com.nrdc.policeHamrah.jsonModel.customizedModel.RoleWithPrivileges;
 import com.nrdc.policeHamrah.jsonModel.customizedModel.SystemWithVersion;
 import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestReportSystem;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.*;
-import com.nrdc.policeHamrah.model.dao.RoleDao;
-import com.nrdc.policeHamrah.model.dao.SystemDao;
-import com.nrdc.policeHamrah.model.dao.SystemReportDao;
-import com.nrdc.policeHamrah.model.dao.UserDao;
-import com.nrdc.policeHamrah.model.dto.*;
+import com.nrdc.policeHamrah.model.dao.*;
+import com.nrdc.policeHamrah.model.dto.RoleDto;
+import com.nrdc.policeHamrah.model.dto.SystemDto;
+import com.nrdc.policeHamrah.model.dto.SystemVersionDto;
+import com.nrdc.policeHamrah.model.dto.UserDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -27,7 +27,7 @@ public class SystemImpl {
             if (!transaction.isActive())
                 transaction.begin();
             UserDao user = UserDao.validate(token);
-            SystemDownloadDto systemDownload = new SystemDownloadDto();
+            SystemDownloadDao systemDownload = new SystemDownloadDao();
             systemDownload.setFkSystemId(fkSystemId);
             systemDownload.setFkUserId(user.getId());
             systemDownload.setVersionCode(versionCode);
@@ -60,7 +60,7 @@ public class SystemImpl {
             Long rateCount;
             Double rate;
             try {
-                SystemDao systemDao = (SystemDao) entityManager.createQuery("SELECT s.downloadCount FROM SystemDao s WHERE s.id = :fkSystemId")
+                SystemDao systemDao = (SystemDao) entityManager.createQuery("SELECT s FROM SystemDao s WHERE s.id = :fkSystemId")
                         .setParameter("fkSystemId", requestReportSystem.getFkSystemId())
                         .getSingleResult();
                 rateCount = systemDao.getRateCount();
@@ -69,9 +69,12 @@ public class SystemImpl {
                 throw new Exception(Constants.NOT_VALID_SYSTEM);
             }
             Double newRate = (rate * rateCount + requestReportSystem.getRate()) / (rateCount + 1L);
-            entityManager.createQuery("UPDATE SystemDao s SET s.rate = :newRate WHERE s.id = :systemId ")
+            entityManager.createQuery("UPDATE SystemDao s SET s.rate = :newRate  WHERE s.id = :systemId ")
                     .setParameter("systemId", requestReportSystem.getFkSystemId())
                     .setParameter("newRate", newRate)
+                    .executeUpdate();
+            entityManager.createQuery("UPDATE SystemDao s SET s.rateCount = s.rateCount +1 WHERE s.id = :systemId ")
+                    .setParameter("systemId", requestReportSystem.getFkSystemId())
                     .executeUpdate();
             entityManager.persist(systemReportDao);
             if (transaction.isActive())
@@ -183,7 +186,7 @@ public class SystemImpl {
         }
     }
 
-    public StandardResponse<ResponseGetSystemWithVersions> getSystemVersions(String token) {
+    public StandardResponse<ResponseGetSystemWithVersions> getSystemVersions(String token) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
@@ -198,7 +201,7 @@ public class SystemImpl {
             response.setResponse(responseGetSystems);
             return response;
         } catch (Exception ex) {
-            return StandardResponse.getNOKExceptions(ex);
+            throw ex;
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();
@@ -271,7 +274,7 @@ public class SystemImpl {
                     .getResultList();
             ResponseGetRoles responseGetRoles = new ResponseGetRoles();
             responseGetRoles.setRoles(roles);
-            StandardResponse response = new StandardResponse<>();
+            StandardResponse<ResponseGetRoles> response = new StandardResponse<>();
 
 
             response.setResponse(responseGetRoles);
