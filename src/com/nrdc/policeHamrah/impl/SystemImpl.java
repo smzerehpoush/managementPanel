@@ -5,20 +5,88 @@ import com.nrdc.policeHamrah.helper.PrivilegeNames;
 import com.nrdc.policeHamrah.jsonModel.StandardResponse;
 import com.nrdc.policeHamrah.jsonModel.customizedModel.RoleWithPrivileges;
 import com.nrdc.policeHamrah.jsonModel.customizedModel.SystemWithVersion;
+import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestReportSystem;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.*;
 import com.nrdc.policeHamrah.model.dao.RoleDao;
 import com.nrdc.policeHamrah.model.dao.SystemDao;
+import com.nrdc.policeHamrah.model.dao.SystemReportDao;
 import com.nrdc.policeHamrah.model.dao.UserDao;
-import com.nrdc.policeHamrah.model.dto.RoleDto;
-import com.nrdc.policeHamrah.model.dto.SystemDto;
-import com.nrdc.policeHamrah.model.dto.SystemVersionDto;
-import com.nrdc.policeHamrah.model.dto.UserDto;
+import com.nrdc.policeHamrah.model.dto.*;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import java.util.LinkedList;
 import java.util.List;
 
 public class SystemImpl {
+    public StandardResponse incrementDownloadCount(String token, Long fkSystemId, Long versionCode) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
+        try {
+            if (!transaction.isActive())
+                transaction.begin();
+            UserDao user = UserDao.validate(token);
+            SystemDownloadDto systemDownload = new SystemDownloadDto();
+            systemDownload.setFkSystemId(fkSystemId);
+            systemDownload.setFkUserId(user.getId());
+            systemDownload.setVersionCode(versionCode);
+            entityManager.createQuery("UPDATE SystemDao s SET s.downloadCount = s.downloadCount+1 WHERE s.id = :fkSystemId ")
+                    .setParameter("fkSystemId", fkSystemId)
+                    .executeUpdate();
+            entityManager.persist(systemDownload);
+            if (transaction.isActive())
+                transaction.commit();
+            return new StandardResponse();
+        } catch (Exception ex) {
+            if (transaction != null && transaction.isActive())
+                transaction.rollback();
+            throw ex;
+        } finally {
+            if (entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+
+    public StandardResponse reportSystem(String token, RequestReportSystem requestReportSystem) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
+        try {
+            if (!transaction.isActive())
+                transaction.begin();
+            UserDao user = UserDao.validate(token);
+            SystemReportDao systemReportDao = new SystemReportDao(requestReportSystem, user.getId());
+            Long rateCount;
+            Double rate;
+            try {
+                SystemDao systemDao = (SystemDao) entityManager.createQuery("SELECT s.downloadCount FROM SystemDao s WHERE s.id = :fkSystemId")
+                        .setParameter("fkSystemId", requestReportSystem.getFkSystemId())
+                        .getSingleResult();
+                rateCount = systemDao.getRateCount();
+                rate = systemDao.getRate();
+            } catch (Exception ex) {
+                throw new Exception(Constants.NOT_VALID_SYSTEM);
+            }
+            Double newRate = (rate * rateCount + requestReportSystem.getRate()) / (rateCount + 1L);
+            entityManager.createQuery("UPDATE SystemDao s SET s.rate = :newRate WHERE s.id = :systemId ")
+                    .setParameter("systemId", requestReportSystem.getFkSystemId())
+                    .setParameter("newRate", newRate)
+                    .executeUpdate();
+            entityManager.persist(systemReportDao);
+            if (transaction.isActive())
+                transaction.commit();
+            return new StandardResponse();
+        } catch (Exception ex) {
+            if (transaction != null && transaction.isActive())
+                transaction.rollback();
+            throw ex;
+        } finally {
+            if (entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+
     public StandardResponse<ResponseGetSystems> getAllSystems(String token) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         entityManager.getEntityManagerFactory().getCache().evictAll();

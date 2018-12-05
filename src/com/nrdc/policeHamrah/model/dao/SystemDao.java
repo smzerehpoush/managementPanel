@@ -124,5 +124,17 @@ public class SystemDao extends SystemDto {
         return super.getType();
     }
 
+    @Override
+    @Basic
+    @Column(name = "RATE", unique = true, table = tableName)
+    public Double getRate() {
+        return super.getRate();
+    }
 
+    @Override
+    @Basic
+    @Column(name = "RATE_COUNT", unique = true, table = tableName)
+    public Long getRateCount() {
+        return super.getRateCount();
+    }
 }

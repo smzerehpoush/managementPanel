@@ -4,11 +4,14 @@ import com.nrdc.policeHamrah.exceptions.ServerException;
 import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.Encryption;
 import com.nrdc.policeHamrah.impl.SystemImpl;
+import com.nrdc.policeHamrah.jsonModel.EncryptedRequest;
 import com.nrdc.policeHamrah.jsonModel.EncryptedResponse;
 import com.nrdc.policeHamrah.jsonModel.StandardResponse;
+import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestReportSystem;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.*;
 import com.nrdc.policeHamrah.model.dao.UserDao;
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.map.ObjectMapper;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -159,4 +162,58 @@ public class SystemServices {
         }
     }
 
+    /**
+     * 29
+     * reportSystem rate and other info of system
+     *
+     * @param encryptedRequest RequestResetPassword
+     * @return simple StandardResponse to handle state
+     */
+    @Path("/reportSystem")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response reportSystem(EncryptedRequest encryptedRequest) throws Exception {
+        logger.info("++================== reportSystem SERVICE : START ==================++");
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            RequestReportSystem request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestReportSystem.class);
+            StandardResponse response = new SystemImpl().reportSystem(encryptedRequest.getToken(), request);
+            String key = UserDao.getKey(encryptedRequest.getToken()).getKey();
+            EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
+            Response finalResponse = Response.status(200).entity(encryptedResponse).build();
+            logger.info("++================== reportSystem SERVICE : END ==================++");
+            return finalResponse;
+        } catch (Exception ex) {
+            return ServerException.create("++================== reportSystem SERVICE : EXCEPTION ==================++", ex, encryptedRequest.getToken());
+        }
+    }
+
+    /**
+     * 30
+     * list of roles with privileges of a system
+     *
+     * @param token      user token
+     * @param fkSystemId id of system
+     * @return list of roles with privileges of a system
+     */
+    @Path("/download")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response incrementDownloadCount(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId, @QueryParam("versionCode") Long versionCode) throws Exception {
+        logger.info("++================== incrementDownloadCount SERVICE : START ==================++");
+        try {
+            if (token == null || fkSystemId == null || versionCode == null) {
+                throw new Exception(Constants.NOT_VALID_REQUEST);
+            }
+            StandardResponse response = new SystemImpl().incrementDownloadCount(token, fkSystemId, versionCode);
+            String key = UserDao.getKey(token).getKey();
+            EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
+            Response finalResponse = Response.status(200).entity(encryptedResponse).build();
+            logger.info("++================== incrementDownloadCount SERVICE : END ==================++");
+            return finalResponse;
+        } catch (Exception ex) {
+            return ServerException.create("++================== incrementDownloadCount SERVICE : EXCEPTION ==================++", ex, token);
+        }
+    }
 }

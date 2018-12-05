@@ -13,6 +13,7 @@
         <class>com.nrdc.policeHamrah.model.dao.RolePrivilegeDao</class>
         <class>com.nrdc.policeHamrah.model.dao.SystemDao</class>
         <class>com.nrdc.policeHamrah.model.dao.SystemVersionDao</class>
+        <class>com.nrdc.policeHamrah.model.dao.SystemReportDao</class>
         <class>com.nrdc.policeHamrah.model.dao.AuthDao</class>
         <class>com.nrdc.policeHamrah.model.dao.UserDao</class>
         <class>com.nrdc.policeHamrah.model.dao.UserRoleDao</class>
