@@ -21,28 +21,28 @@ public class RoleDao extends com.nrdc.policeHamrah.model.dto.RoleDto {
     @Override
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID_PH_ROLE")
+    @Column(name = "ID_PH_ROLE", table = tableName)
     public Long getId() {
         return super.getId();
     }
 
     @Override
     @Basic
-    @Column(name = "ROLE_TEXT")
+    @Column(name = "ROLE_TEXT", table = tableName)
     public String getRole() {
         return super.getRole();
     }
 
     @Override
     @Basic
-    @Column(name = "FK_CREATOR_ID")
+    @Column(name = "FK_CREATOR_ID", table = tableName)
     public Long getFkCreatorId() {
         return super.getFkCreatorId();
     }
 
     @Override
     @Basic
-    @Column(name = "FK_SYSTEM_ID")
+    @Column(name = "FK_SYSTEM_ID", table = tableName)
     public Long getFkSystemId() {
         return super.getFkSystemId();
     }
