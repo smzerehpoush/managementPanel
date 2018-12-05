@@ -4,7 +4,6 @@ import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.SystemNames;
 import com.nrdc.policeHamrah.impl.Database;
 import com.nrdc.policeHamrah.model.dto.SystemDto;
-import org.apache.log4j.Logger;
 
 import javax.persistence.*;
 

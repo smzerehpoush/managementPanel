@@ -1,10 +1,7 @@
 package com.nrdc.policeHamrah.model.dao;
 
 import com.nrdc.policeHamrah.helper.Constants;
-import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestReportSystem;
 import com.nrdc.policeHamrah.model.dto.SystemDownloadDto;
-import com.nrdc.policeHamrah.model.dto.SystemReportDto;
-import org.apache.log4j.Logger;
 
 import javax.persistence.*;
 
