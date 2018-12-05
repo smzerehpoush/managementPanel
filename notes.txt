@@ -24,6 +24,8 @@
         } catch (Exception ex) {
             if (transaction != null && transaction.isActive())
                 transaction.rollback();
+            throw ex;
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();
+        }
