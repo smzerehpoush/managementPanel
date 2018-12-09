@@ -163,7 +163,7 @@ public class SystemServices {
     }
 
     /**
-     * 29
+     * 30
      * reportSystem rate and other info of system
      *
      * @param encryptedRequest RequestResetPassword
@@ -190,7 +190,7 @@ public class SystemServices {
     }
 
     /**
-     * 30
+     * 29
      * report download of a specific app
      *
      * @param token      user token
@@ -208,6 +208,33 @@ public class SystemServices {
                 throw new Exception(Constants.NOT_VALID_REQUEST);
             }
             StandardResponse response = new SystemImpl().incrementDownloadCount(token, fkSystemId, versionCode);
+            String key = UserDao.getKey(token).getKey();
+            EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
+            Response finalResponse = Response.status(200).entity(encryptedResponse).build();
+            logger.info("++================== incrementDownloadCount SERVICE : END ==================++");
+            return finalResponse;
+        } catch (Exception ex) {
+            return ServerException.create("++================== incrementDownloadCount SERVICE : EXCEPTION ==================++", ex, token);
+        }
+    }
+    /**
+     * 31
+     * get reports of a system sorted by time
+     *
+     * @param token      user token
+     * @param fkSystemId id of system
+     * @return simple standard response to handle state
+     */
+    @Path("/report")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSystemReports(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId, @QueryParam("versionCode") Long versionCode) throws Exception {
+        logger.info("++================== incrementDownloadCount SERVICE : START ==================++");
+        try {
+            if (token == null || fkSystemId == null) {
+                throw new Exception(Constants.NOT_VALID_REQUEST);
+            }
+            StandardResponse response = new SystemImpl().getSystemReports(token, fkSystemId);
             String key = UserDao.getKey(token).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
