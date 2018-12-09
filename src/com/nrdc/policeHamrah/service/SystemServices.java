@@ -169,7 +169,7 @@ public class SystemServices {
      * @param encryptedRequest RequestResetPassword
      * @return simple StandardResponse to handle state
      */
-    @Path("/reportSystem")
+    @Path("/report")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -191,11 +191,12 @@ public class SystemServices {
 
     /**
      * 30
-     * list of roles with privileges of a system
+     * report download of a specific app
      *
      * @param token      user token
      * @param fkSystemId id of system
-     * @return list of roles with privileges of a system
+     * @param versionCode version of application
+     * @return simple standard response to handle state
      */
     @Path("/download")
     @GET
