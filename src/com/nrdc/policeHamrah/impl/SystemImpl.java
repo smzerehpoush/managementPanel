@@ -19,6 +19,24 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class SystemImpl {
+    public StandardResponse getSystemReports(String token, Long fkSystemId) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
+        try {
+            UserDao.validate(token);
+            List<SystemReportDao> systemReportDaoList = entityManager.createQuery("SELECT s FROM SystemReportDao s WHERE s.fkSystemId = :fkSystemId ORDER BY s.time ")
+                    .setParameter("fkSystemId", fkSystemId)
+                    .getResultList();
+            ResponseGetSystemReports responseGetSystemReports = new ResponseGetSystemReports();
+            StandardResponse<ResponseGetSystemReports> response = new StandardResponse<>();
+            response.setResponse(responseGetSystemReports);
+            return response;
+        } finally {
+            if (entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+
     public StandardResponse incrementDownloadCount(String token, Long fkSystemId, Long versionCode) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
