@@ -57,3 +57,7 @@ base path : 192.168.250.53:9002/policeHamrah/api
 27:(/system?token)@GET: list of all systems
 
 28:(/user/systems/id?token&fkUserId)@GET : getUserSystems : list of systems of a specific user with fkUserId
+
+29:(/system/reportSystem)@POST : reportSystem : reportSystem rate and other info of system
+
+29:(/system/download?token&fkSystemId&versionCode)@GET : reportApplicationDownload : report download of a specific app
