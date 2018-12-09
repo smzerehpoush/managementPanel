@@ -5,6 +5,7 @@ import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestReportSystem;
 import com.nrdc.policeHamrah.model.dto.SystemReportDto;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "PH_SYSTEM_REPORT", schema = Constants.SCHEMA)
@@ -88,5 +89,13 @@ public class SystemReportDao extends SystemReportDto {
     @Column(name = "MANUFACTURER_CODE", table = tableName)
     public String getManufacturerCode() {
         return super.getManufacturerCode();
+    }
+
+    @Override
+    @Temporal(TemporalType.TIMESTAMP)
+    @Basic
+    @Column(name = "TIME", table = tableName)
+    public Date getTime() {
+        return super.getTime();
     }
 }
