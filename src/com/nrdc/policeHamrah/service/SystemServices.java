@@ -193,8 +193,8 @@ public class SystemServices {
      * 29
      * report download of a specific app
      *
-     * @param token      user token
-     * @param fkSystemId id of system
+     * @param token       user token
+     * @param fkSystemId  id of system
      * @param versionCode version of application
      * @return simple standard response to handle state
      */
@@ -217,6 +217,7 @@ public class SystemServices {
             return ServerException.create("++================== incrementDownloadCount SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
+
     /**
      * 31
      * get reports of a system sorted by time
@@ -228,7 +229,7 @@ public class SystemServices {
     @Path("/report")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getSystemReports(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId, @QueryParam("versionCode") Long versionCode) throws Exception {
+    public Response getSystemReports(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) throws Exception {
         logger.info("++================== incrementDownloadCount SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null) {
