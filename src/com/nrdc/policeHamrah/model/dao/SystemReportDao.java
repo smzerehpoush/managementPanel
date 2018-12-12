@@ -19,6 +19,7 @@ public class SystemReportDao extends SystemReportDto {
         super(requestReportSystem, fkUserId);
     }
 
+
     private Date time;
 
     @Override
@@ -98,6 +99,13 @@ public class SystemReportDao extends SystemReportDto {
     @Column(name = "TIME", table = tableName)
     public Date getTime() {
         return this.time;
+    }
+
+    @Override
+    @Basic
+    @Column(name = "FK_USER_ID", table = tableName)
+    public Long getFkUserId() {
+        return super.getFkUserId();
     }
 
     public void setTime(Date time) {
