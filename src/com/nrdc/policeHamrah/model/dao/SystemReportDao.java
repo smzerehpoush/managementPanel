@@ -19,6 +19,8 @@ public class SystemReportDao extends SystemReportDto {
         super(requestReportSystem, fkUserId);
     }
 
+    private Date time;
+
     @Override
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -91,11 +93,14 @@ public class SystemReportDao extends SystemReportDto {
         return super.getManufacturerCode();
     }
 
-    @Override
     @Temporal(TemporalType.TIMESTAMP)
     @Basic
     @Column(name = "TIME", table = tableName)
     public Date getTime() {
-        return super.getTime();
+        return this.time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
     }
 }
