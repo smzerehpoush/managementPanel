@@ -4,6 +4,7 @@ import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.PrivilegeNames;
 import com.nrdc.policeHamrah.jsonModel.StandardResponse;
 import com.nrdc.policeHamrah.jsonModel.customizedModel.RoleWithPrivileges;
+import com.nrdc.policeHamrah.jsonModel.customizedModel.SystemReportDto;
 import com.nrdc.policeHamrah.jsonModel.customizedModel.SystemWithVersion;
 import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestReportSystem;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.*;
@@ -27,7 +28,15 @@ public class SystemImpl {
             List<SystemReportDao> systemReportDaoList = entityManager.createQuery("SELECT s FROM SystemReportDao s WHERE s.fkSystemId = :fkSystemId ORDER BY s.time ")
                     .setParameter("fkSystemId", fkSystemId)
                     .getResultList();
+            List<com.nrdc.policeHamrah.jsonModel.customizedModel.SystemReportDto> systemReportDtoList = new LinkedList<>();
+            SystemReportDto systemReportDto;
+            for (SystemReportDao report : systemReportDaoList) {
+                UserDao userDao = UserDao.getUser(report.getFkUserId());
+                systemReportDto = new SystemReportDto(report, userDao.getFirstName(), userDao.getLastName());
+                systemReportDtoList.add(systemReportDto);
+            }
             ResponseGetSystemReports responseGetSystemReports = new ResponseGetSystemReports();
+            responseGetSystemReports.setSystemReportList(systemReportDtoList);
             StandardResponse<ResponseGetSystemReports> response = new StandardResponse<>();
             response.setResponse(responseGetSystemReports);
             return response;
