@@ -32,7 +32,7 @@ public class SystemImpl {
             SystemReportDto systemReportDto;
             for (SystemReportDao report : systemReportDaoList) {
                 UserDao userDao = UserDao.getUser(report.getFkUserId());
-                systemReportDto = new SystemReportDto(report, userDao.getFirstName(), userDao.getLastName());
+                systemReportDto = new SystemReportDto(report, userDao.getFirstName(), userDao.getLastName(), report.getTime().getTime());
                 systemReportDtoList.add(systemReportDto);
             }
             ResponseGetSystemReports responseGetSystemReports = new ResponseGetSystemReports();
