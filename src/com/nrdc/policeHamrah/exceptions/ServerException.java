@@ -1,5 +1,6 @@
 package com.nrdc.policeHamrah.exceptions;
 
+import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.Encryption;
 import com.nrdc.policeHamrah.jsonModel.EncryptedResponse;
 import com.nrdc.policeHamrah.jsonModel.StandardResponse;
@@ -16,11 +17,14 @@ public class ServerException extends Exception {
         logger.error(ex.getMessage());
         StandardResponse response = StandardResponse.getNOKExceptions(ex);
         String key;
-        try {
-            key = UserDao.getKey(token).getKey();
-        } catch (Exception e) {
-            key = "GOFYS";
-        }
+        if (token.equals(Constants.DEFAULT_KEY))
+            key = Constants.DEFAULT_KEY;
+        else
+            try {
+                key = UserDao.getKey(token).getKey();
+            } catch (Exception e) {
+                key = "GOFYS";
+            }
         EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
         return Response.status(200).entity(encryptedResponse).build();
     }
