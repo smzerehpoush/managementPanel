@@ -64,13 +64,13 @@ public class UserServices {
         try {
             RequestAddUser request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestAddUser.class);
             StandardResponse response = new UserImpl().addUser(encryptedRequest.getToken(), request, false);
-            String key = UserDao.getKey(encryptedRequest.getToken()).getKey();
+            String key = Constants.DEFAULT_KEY;
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
             logger.info("++================== addUser SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== addUser SERVICE : EXCEPTION ==================++", ex, encryptedRequest.getToken());
+            return ServerException.create("++================== addUser SERVICE : EXCEPTION ==================++", ex, Constants.DEFAULT_KEY);
         }
     }
 
