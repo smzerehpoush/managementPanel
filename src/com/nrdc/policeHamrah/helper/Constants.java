@@ -1,7 +1,11 @@
 package com.nrdc.policeHamrah.helper;
 
 public class Constants {
-
+    public static final String YOU_HAVE_PH_USER = "شما در سامانه پلیس همراه،کاربری دارید. با کاربری خود وارید شوید.";
+    public static final String DEFAULT_KEY = "Android";
+    public static final String USER_IS_IN_ANOTHER_SYSTEM = "کاربر در سامانه های دیگر وارد است.";
+    public static final String CAN_NOT_LOGOUT_FROM_SYSTEM = "ایراد در خروج از سامانه";
+    public static final String NAZER_NOT_APN_USER = "کاربر مذکور مربوط به سیستم apn نمی باشد.";
     public static final String NOT_VALID_PASSWORD = "رمز عبور معتبر نمی باشد. حداقل 8 کاراکتر";
     public static final String NOT_VALID_ROLE = "نقش وارد شده معتبر نمی باشد.";
     public static final String NOT_VALID_ROLE_SYSTEM = "نقش وارد شده هماهنگ با سامنه وارد شده نمی باشد";
