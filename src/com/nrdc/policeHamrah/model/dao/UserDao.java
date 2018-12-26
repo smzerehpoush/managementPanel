@@ -54,7 +54,8 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
                     .setParameter("token", token)
                     .setParameter("systemName", systemName)
                     .getSingleResult();
-            user.isActive();
+            if (!user.getIsActive())
+                throw new Exception(Constants.NOT_ACTIVE_USER);
             return user;
         } catch (NoResultException ex1) {
             throw new Exception(Constants.INCORRECT_USERNAME_OR_PASSWORD);
@@ -90,7 +91,8 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
                     .setParameter("phoneNumber", phoneNumber)
                     .setParameter("password", password);
             UserDao user = (UserDao) query.getSingleResult();
-            user.isActive();
+            if (!user.getIsActive())
+                throw new Exception(Constants.NOT_ACTIVE_USER);
             return user;
         } catch (NoResultException ex1) {
             throw new Exception(Constants.INCORRECT_USERNAME_OR_PASSWORD);
@@ -258,11 +260,6 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
 
     public boolean checkPrivilege(PrivilegeNames privilegeName, Long fkSystemId) throws Exception {
         return checkPrivilege(privilegeName.name(), fkSystemId);
-    }
-
-    public void isActive() throws Exception {
-        if (!this.getIsActive())
-            throw new Exception(Constants.USER_IS_NOT_ACTIVE);
     }
 
     @Override
