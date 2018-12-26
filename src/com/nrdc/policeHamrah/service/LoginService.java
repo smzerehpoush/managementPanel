@@ -3,13 +3,17 @@ package com.nrdc.policeHamrah.service;
 import com.nrdc.policeHamrah.exceptions.ServerException;
 import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.Encryption;
+import com.nrdc.policeHamrah.helper.SystemNames;
 import com.nrdc.policeHamrah.impl.LoginImpl;
+import com.nrdc.policeHamrah.jsonModel.EncryptedRequest;
 import com.nrdc.policeHamrah.jsonModel.EncryptedResponse;
 import com.nrdc.policeHamrah.jsonModel.StandardResponse;
+import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestAuthenticateUser;
 import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestLogin;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseLogin;
-import com.nrdc.policeHamrah.model.dao.UserDao;
+import com.nrdc.policeHamrah.model.dao.SystemDao;
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.map.ObjectMapper;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -28,7 +32,7 @@ public class LoginService {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response login(RequestLogin requestLogin) {
+    public Response login(RequestLogin requestLogin) throws Exception {
         logger.info("++================== login SERVICE : START ==================++");
         try {
             StandardResponse response = new LoginImpl().login(requestLogin);
@@ -36,12 +40,35 @@ public class LoginService {
             logger.info("++================== login SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            logger.error("++================== login SERVICE : EXCEPTION ==================++");
-            logger.error(ex.getMessage(), ex);
-            StandardResponse response = StandardResponse.getNOKExceptions(ex);
-            return Response.status(200).entity(response).build();
+            return ServerException.create("++================== login SERVICE : EXCEPTION ==================++", ex);
         }
     }
+
+    /**
+     * 32
+     *
+     * @param encryptedRequest RequestAddUser
+     * @return simple StandardResponse to handle state
+     */
+    @Path("/authenticateUser")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response authenticateUser(EncryptedRequest encryptedRequest) throws Exception {
+        logger.info("++================== authenticateUser SERVICE : START ==================++");
+        try {
+            RequestAuthenticateUser request = new ObjectMapper().readValue(Encryption.decryptRequest(encryptedRequest), RequestAuthenticateUser.class);
+            StandardResponse response = new LoginImpl().authenticateUser(request);
+            String key = Constants.DEFAULT_KEY;
+            EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
+            Response finalResponse = Response.status(200).entity(encryptedResponse).build();
+            logger.info("++================== authenticateUser SERVICE : END ==================++");
+            return finalResponse;
+        } catch (Exception ex) {
+            return ServerException.create("++================== authenticateUser SERVICE : EXCEPTION ==================++", ex, encryptedRequest.getToken());
+        }
+    }
+
 
     /**
      * 02
@@ -61,7 +88,11 @@ public class LoginService {
                 throw new Exception(Constants.NOT_VALID_REQUEST);
             }
             StandardResponse<ResponseLogin> response = new LoginImpl().loginToSystem(token, fkSystemId);
-            String key = UserDao.getKey(token).getKey();
+            SystemDao systemDao = SystemDao.getSystem(fkSystemId);
+            if (systemDao.getSystemName().equals(SystemNames.VEHICLE_TICKET.name()))
+                return Response.status(200).entity(response).build();
+
+            String key = "Android";
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
             logger.info("++================== login-to-system SERVICE : END ==================++");
@@ -70,5 +101,4 @@ public class LoginService {
             return ServerException.create("++================== login-to-system SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
-
 }
