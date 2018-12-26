@@ -29,3 +29,24 @@
             if (entityManager.isOpen())
                 entityManager.close();
         }
+
+//sample to call a rest service
+
+    URL url = new URL("/path");
+    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+    connection.setDoOutput(true);
+    connection.setRequestMethod("POST");
+    connection.setRequestProperty("Content-Type", "application/json");
+    String input = new ObjectMapper().writeValueAsString(requestAddTokenKey);
+    OutputStream outputStream = connection.getOutputStream();
+    outputStream.write(input.getBytes());
+    outputStream.flush();
+    if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+        throw new Exception("Can not add token to system : " + connection.getResponseCode());
+    }
+    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+    StringBuilder output = new StringBuilder();
+    int c;
+    while ((c = bufferedReader.read()) != -1)
+        output.append((char) c);
+    return new ObjectMapper().readValue(output.toString(), StandardResponse.class);
