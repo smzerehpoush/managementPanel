@@ -1,0 +1,4 @@
+97/09/27
+    adding release notes
+    uncheck login privilege
+    fix bugs
