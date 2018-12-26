@@ -47,7 +47,12 @@ public class Encryption {
     }
 
     public static String decryptRequest(EncryptedRequest request) throws Exception {
-        String key = UserDao.getKey(request.getToken()).getKey();
+
+        String key;
+        if (request.getToken().equals("Android"))
+            key = "Android";
+        else
+            key = UserDao.getKey(request.getToken()).getKey();
         String decrypted = decryptOrNull(key, request.getData());
         logger.info(decrypted);
         return decrypted;
