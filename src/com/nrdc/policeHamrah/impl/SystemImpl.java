@@ -16,6 +16,7 @@ import com.nrdc.policeHamrah.model.dto.UserDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -84,6 +85,7 @@ public class SystemImpl {
                 transaction.begin();
             UserDao user = UserDao.validate(token);
             SystemReportDao systemReportDao = new SystemReportDao(requestReportSystem, user.getId());
+            systemReportDao.setTime(new Date());
             Long rateCount;
             Double rate;
             try {
@@ -122,6 +124,25 @@ public class SystemImpl {
         entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             UserDao.validate(token);
+            List<SystemDto> systems = entityManager.createQuery("SELECT distinct (s) FROM SystemDao s ")
+                    .getResultList();
+            ResponseGetSystems responseGetSystems = new ResponseGetSystems();
+            responseGetSystems.setSystemDtos(systems);
+            StandardResponse<ResponseGetSystems> response = new StandardResponse<>();
+
+
+            response.setResponse(responseGetSystems);
+            return response;
+        } finally {
+            if (entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+
+    public StandardResponse<ResponseGetSystems> getAllSystems() throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
+        try {
             List<SystemDto> systems = entityManager.createQuery("SELECT distinct (s) FROM SystemDao s ")
                     .getResultList();
             ResponseGetSystems responseGetSystems = new ResponseGetSystems();
@@ -177,6 +198,30 @@ public class SystemImpl {
             UserDto user = UserDao.validate(token);
 //            user.checkPrivilege(PrivilegeNames.GET_SYSTEMS);
             List<SystemDto> systems = entityManager.createQuery("SELECT s FROM SystemDao s JOIN SystemUserDao su ON s.id = su.fkSystemId WHERE su.fkUserId = :fkUserId ")
+                    .setParameter("fkUserId", user.getId())
+                    .getResultList();
+            ResponseGetSystems responseGetSystems = new ResponseGetSystems();
+            responseGetSystems.setSystemDtos(systems);
+            StandardResponse<ResponseGetSystems> response = new StandardResponse<>();
+
+
+            response.setResponse(responseGetSystems);
+            return response;
+        } finally {
+            if (entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+
+    public StandardResponse<ResponseGetSystems> getUserLoginSystems(String token) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
+        try {
+            UserDto user = UserDao.validate(token);
+//            user.checkPrivilege(PrivilegeNames.GET_SYSTEMS);
+            List<SystemDto> systems = entityManager.createQuery("SELECT s FROM SystemDao s " +
+                    "JOIN SystemUserDao su ON s.id = su.fkSystemId " +
+                    "JOIN AuthDao a ON a.fkSystemId = su.fkSystemId WHERE a.fkUserId = :fkUserId  AND su.fkUserId = :fkUserId ")
                     .setParameter("fkUserId", user.getId())
                     .getResultList();
             ResponseGetSystems responseGetSystems = new ResponseGetSystems();
