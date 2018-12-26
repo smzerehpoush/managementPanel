@@ -1,6 +1,7 @@
 package com.nrdc.policeHamrah.service;
 
 import com.nrdc.policeHamrah.helper.PersianCalender;
+import com.nrdc.policeHamrah.helper.SystemNames;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseVerify;
 import org.apache.log4j.Logger;
 
@@ -23,11 +24,11 @@ public class VerifyService {
         logger.info("++================== VERIFY SERVICE : START ==================++");
 
         ResponseVerify response = new ResponseVerify();
-        response.setName("Police Hamrah");
+        response.setName(SystemNames.POLICE_HAMRAH.name());
         response.setStatusCode(200);
         response.setStatusMessage("OK");
         response.setTime(PersianCalender.getDate() + " - " + PersianCalender.getTime());
-        response.setDeployDate("1397/09/21");
+        response.setDeployDate("1397/10/05");
         Response finalResponse = Response.status(200).entity(response).build();
         logger.info("++================== VERIFY SERVICE : END ==================++");
         return finalResponse;
