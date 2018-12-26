@@ -49,6 +49,29 @@ public class SystemServices {
     }
 
     /**
+     * 34
+     * list of systems with last version of them
+     *
+     * @return list of all systems
+     */
+    @Path("/get")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllSystem() throws Exception {
+        logger.info("++================== getAllSystems SERVICE : START ==================++");
+        try {
+            StandardResponse<ResponseGetSystems> response = new SystemImpl().getAllSystems();
+            String key = Constants.DEFAULT_KEY;
+            EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
+            Response finalResponse = Response.status(200).entity(encryptedResponse).build();
+            logger.info("++================== getAllSystems SERVICE : END ==================++");
+            return finalResponse;
+        } catch (Exception ex) {
+            return ServerException.create("++================== getAllSystems SERVICE : EXCEPTION ==================++", ex, Constants.DEFAULT_KEY);
+        }
+    }
+
+    /**
      * 09
      * list of systems with last version of them
      *
