@@ -65,7 +65,7 @@ public class LoginService {
             logger.info("++================== authenticateUser SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== authenticateUser SERVICE : EXCEPTION ==================++", ex, encryptedRequest.getToken());
+            return ServerException.create("++================== authenticateUser SERVICE : EXCEPTION ==================++", ex, Constants.DEFAULT_KEY);
         }
     }
 
