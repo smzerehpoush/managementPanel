@@ -66,5 +66,7 @@ base path : 192.168.250.53:9002/policeHamrah/api
 
 32:(/login/authenticateUser)@POST : authenticate user by sending data to application server
 static encryption
-33
-34
+
+33:(/user/register)@POST: registerUser
+
+34:(/system/get)@GET: getAllSystem
