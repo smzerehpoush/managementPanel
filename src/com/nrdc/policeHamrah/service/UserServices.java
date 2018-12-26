@@ -38,7 +38,32 @@ public class UserServices {
         logger.info("++================== addUser SERVICE : START ==================++");
         try {
             RequestAddUser request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestAddUser.class);
-            StandardResponse response = new UserImpl().addUser(encryptedRequest.getToken(), request);
+            StandardResponse response = new UserImpl().addUser(encryptedRequest.getToken(), request, true);
+            String key = UserDao.getKey(encryptedRequest.getToken()).getKey();
+            EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
+            Response finalResponse = Response.status(200).entity(encryptedResponse).build();
+            logger.info("++================== addUser SERVICE : END ==================++");
+            return finalResponse;
+        } catch (Exception ex) {
+            return ServerException.create("++================== addUser SERVICE : EXCEPTION ==================++", ex, encryptedRequest.getToken());
+        }
+    }
+
+    /**
+     * 33
+     *
+     * @param encryptedRequest RequestAddUser
+     * @return simple StandardResponse to handle state
+     */
+    @Path("/register")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response registerUser(EncryptedRequest encryptedRequest) throws Exception {
+        logger.info("++================== addUser SERVICE : START ==================++");
+        try {
+            RequestAddUser request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestAddUser.class);
+            StandardResponse response = new UserImpl().addUser(encryptedRequest.getToken(), request, false);
             String key = UserDao.getKey(encryptedRequest.getToken()).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
@@ -97,7 +122,6 @@ public class UserServices {
             logger.info("++================== activeUser SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            logger.error("++================== activeUser SERVICE : EXCEPTION ==================++");
             return ServerException.create("++================== activeUser SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
@@ -314,6 +338,31 @@ public class UserServices {
             return finalResponse;
         } catch (Exception ex) {
             return ServerException.create("++================== getUserSystems SERVICE : EXCEPTION ==================++", ex, token);
+        }
+    }
+
+    /***
+     * 32
+     * @param token token of a valid user
+     * @return returns list of systems of a specific user that logs on
+     */
+    @Path("/systems/login")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUserLoginSystems(@QueryParam("token") String token) throws Exception {
+        logger.info("++================== getUserLoginSystems SERVICE : START ==================++");
+        try {
+            if (token == null) {
+                throw new Exception(Constants.NOT_VALID_REQUEST);
+            }
+            StandardResponse<ResponseGetSystems> response = new SystemImpl().getUserLoginSystems(token);
+            String key = UserDao.getKey(token).getKey();
+            EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
+            Response finalResponse = Response.status(200).entity(encryptedResponse).build();
+            logger.info("++================== getUserLoginSystems SERVICE : END ==================++");
+            return finalResponse;
+        } catch (Exception ex) {
+            return ServerException.create("++================== getUserLoginSystems SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 
