@@ -1,5 +1,6 @@
 package com.nrdc.policeHamrah.impl;
 
+import com.google.gson.Gson;
 import com.nrdc.policeHamrah.helper.*;
 import com.nrdc.policeHamrah.jsonModel.StandardResponse;
 import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestAuthenticateUser;
@@ -10,7 +11,6 @@ import com.nrdc.policeHamrah.model.dto.AuthDto;
 import com.nrdc.policeHamrah.model.dto.PrivilegeDto;
 import com.nrdc.policeHamrah.model.dto.UserDto;
 import org.apache.log4j.Logger;
-import org.codehaus.jackson.map.ObjectMapper;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -61,7 +61,7 @@ public class LoginImpl {
 
             } else if (systemDao.getSystemName().equals(SystemNames.VEHICLE_TICKET.name())) {
                 size = (Long) entityManager.createQuery("SELECT COUNT (u) FROM UserDao u WHERE u.policeCode = :policeCode ")
-                        .setParameter("policeCode", requestAuthenticateUser.getPhoneNumber())
+                        .setParameter("policeCode", requestAuthenticateUser.getPoliceCode())
                         .getSingleResult();
             }
             if (size.compareTo(0L) > 0)
@@ -78,7 +78,7 @@ public class LoginImpl {
         SystemDao systemDao = SystemDao.getSystem(requestAuthenticateUser.getFkSystemId());
         Object request = fillRequestBySystemId(systemDao.getSystemName(), requestAuthenticateUser);
         String output = CallWebService.callPostService(systemDao.getSystemPath() + "/authenticateUser", request);
-        StandardResponse response = new ObjectMapper().readValue(output, StandardResponse.class);
+        StandardResponse response = new Gson().fromJson(output, StandardResponse.class);
         if (response.getResultCode() == -1) {
             if (response.getResultMessage().trim().equals("1"))
                 response.setResultMessage(Constants.UNKNOWN_USER);
