@@ -63,3 +63,8 @@ base path : 192.168.250.53:9002/policeHamrah/api
 30:(/system/report)@POST : reportSystem : reportSystem rate and other info of system
 
 31:(/system/report?token&fkSystemId)@GET : getSystemReports : get reports of a system sorted by time
+
+32:(/login/authenticateUser)@POST : authenticate user by sending data to application server
+static encryption
+33
+34
