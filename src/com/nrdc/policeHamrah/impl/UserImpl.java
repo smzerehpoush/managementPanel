@@ -2,6 +2,7 @@ package com.nrdc.policeHamrah.impl;
 
 import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.PrivilegeNames;
+import com.nrdc.policeHamrah.helper.SystemNames;
 import com.nrdc.policeHamrah.jsonModel.StandardResponse;
 import com.nrdc.policeHamrah.jsonModel.customizedModel.RoleWithPrivileges;
 import com.nrdc.policeHamrah.jsonModel.jsonRequest.*;
@@ -338,13 +339,15 @@ public class UserImpl {
     }
 
 
-    public StandardResponse addUser(String token, RequestAddUser requestAddUser) {
+    public StandardResponse addUser(String token, RequestAddUser requestAddUser, boolean checkPrivilege) {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
-            UserDao user = UserDao.validate(token);
-            user.checkPrivilege(PrivilegeNames.ADD_USER, requestAddUser.getFkSystemId());
+            if (checkPrivilege) {
+                UserDao user = UserDao.validate(token);
+                user.checkPrivilege(PrivilegeNames.ADD_USER, requestAddUser.getFkSystemId());
+            }
             if (!transaction.isActive())
                 transaction.begin();
             Long userId = (Long) entityManager.createQuery("SELECT MAX (u.id) FROM UserDao u").getSingleResult() + 1;
@@ -361,10 +364,16 @@ public class UserImpl {
                 SystemUserDao systemUser = new SystemUserDao();
                 systemUser.setFkSystemId(requestAddUser.getFkSystemId());
                 systemUser.setFkUserId(userId);
+                SystemUserDao systemUser2 = new SystemUserDao();
+                SystemDao phSystem = SystemDao.getSystem(SystemNames.POLICE_HAMRAH);
                 entityManager.persist(systemUser);
+                if (!phSystem.getId().equals(requestAddUser.getFkSystemId())) {
+                    systemUser2.setFkSystemId(phSystem.getId());
+                    systemUser2.setFkUserId(userId);
+                    entityManager.persist(systemUser2);
+                }
                 transaction.commit();
-                StandardResponse response = new StandardResponse<>();
-                return response;
+                return new StandardResponse<>();
             } else {
                 throw new Exception(Constants.UNKNOWN_ERROR);
             }
