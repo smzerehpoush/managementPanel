@@ -1,0 +1,11 @@
+97/09/27
+    adding release notes
+    uncheck login privilege
+    fix bugs
+97/10/08
+    add agahi to systems
+    update model libraries
+    add services : authenticateUser
+    update way of logging errors (just log the error message not stack trace)
+    add helper class : CallWebService to call get/post services
+    add more error constants
