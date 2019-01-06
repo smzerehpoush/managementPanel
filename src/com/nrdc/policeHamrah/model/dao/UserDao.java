@@ -22,16 +22,37 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
     public UserDao() {
     }
 
-    public UserDao(RequestAddUser requestAddUser) {
+    public UserDao(RequestAddUser requestAddUser) throws Exception {
+        checkUsername(requestAddUser.getUsername());
         this.setUsername(requestAddUser.getUsername());
         this.setPassword(requestAddUser.getPassword());
+        checkPhoneNumber(requestAddUser.getPhoneNumber());
         this.setPhoneNumber(requestAddUser.getPhoneNumber());
         this.setFirstName(requestAddUser.getFirstName());
         this.setLastName(requestAddUser.getLastName());
+        checkNationalId(requestAddUser.getNationalId());
         this.setNationalId(requestAddUser.getNationalId());
         this.setPoliceCode(requestAddUser.getPoliceCode());
         this.setIsActive(true);
     }
+
+    private void checkUsername(String username) throws Exception {
+        if (username != null && username.matches("^[a-zA-Z0-9]{5,}$"))
+            throw new Exception("نام کاربری" + Constants.IS_NOT_VALID);
+    }
+
+    private void checkPhoneNumber(String phoneNumber) throws Exception {
+        if (phoneNumber != null && !phoneNumber.matches("0\\d{10}"))
+            throw new Exception("تلفن همراه" + Constants.IS_NOT_VALID);
+
+    }
+
+    private void checkNationalId(String nationalId) throws Exception {
+        if (nationalId != null && !nationalId.matches("\\d{10}"))
+            throw new Exception("کد ملی" + Constants.IS_NOT_VALID);
+
+    }
+
 
     //validate user and return it
     public static UserDao validate(String token) throws Exception {
