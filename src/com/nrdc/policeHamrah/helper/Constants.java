@@ -12,6 +12,7 @@ public class Constants {
     public static final String NOT_VALID_TOKEN = "توکن معتبر نیست.";
     public static final String NOT_VALID_SYSTEM = "سیستم معتبر نمی باشد. یا هنوز اضافه نشده است.";
     public static final String NOT_VALID_USER = "کاربر معتبر نمی باشد";
+    public static final String IS_NOT_VALID = " معتبر نمی باشد";
     public static final String NOT_VALID_PRIVILEGE = "دسترسی معتبر نمی باشد";
 
     public static final String NOT_VALID_REQUEST = "درخواست از سمت انئروید معتبر نمی باشد.";
