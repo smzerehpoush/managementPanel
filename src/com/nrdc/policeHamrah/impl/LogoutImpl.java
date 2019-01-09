@@ -48,14 +48,15 @@ public class LogoutImpl {
             List<AuthDao> authDaoList = entityManager.createQuery("SELECT (a) FROM AuthDao a WHERE a.fkUserId = :fkUserId ")
                     .setParameter("fkUserId", user.getId())
                     .getResultList();
+            int count = 0;
             for (int i = 0; i < authDaoList.size(); i++) {
                 AuthDao authDao = authDaoList.get(i);
-                if (authDao.getFkSystemId().equals(phSystem.getId()))
-                    authDaoList.remove(i);
+                if (!authDao.getFkSystemId().equals(phSystem.getId()))
+                    count++;
             }
 
             if (systemDao.getSystemName().equals(SystemNames.POLICE_HAMRAH.name())) {
-                if (authDaoList.size() > 0)
+                if (count > 0)
                     throw new Exception(Constants.USER_IS_IN_ANOTHER_SYSTEM);
             } else {
                 deleteAuthInfoFromAnotherSystemDatabase(anotherSystemToken, systemDao);
