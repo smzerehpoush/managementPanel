@@ -59,7 +59,7 @@ public class LoginImpl {
                         .setParameter("phoneNumber", requestAuthenticateUser.getPhoneNumber())
                         .getSingleResult();
 
-            } else if (systemDao.getSystemName().equals(SystemNames.VEHICLE_TICKET.name())) {
+            } else if (systemDao.getSystemName().equals(SystemNames.VEHICLE_TICKET.name()) || systemDao.getSystemName().equals(SystemNames.VT_REPORT.name())) {
                 size = (Long) entityManager.createQuery("SELECT COUNT (u) FROM UserDao u WHERE u.policeCode = :policeCode ")
                         .setParameter("policeCode", requestAuthenticateUser.getPoliceCode())
                         .getSingleResult();
