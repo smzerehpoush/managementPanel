@@ -63,6 +63,10 @@ public class Encryption {
         return decryptOrNull(key, data);
     }
 
+    public static EncryptedResponse encryptResponse(Object response) {
+        return encryptResponse(Constants.DEFAULT_KEY, response);
+    }
+
     public static EncryptedResponse encryptResponse(String key, Object response) {
         EncryptedResponse encryptedResponse = new EncryptedResponse();
         try {
