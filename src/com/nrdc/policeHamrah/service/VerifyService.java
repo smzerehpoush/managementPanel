@@ -28,7 +28,7 @@ public class VerifyService {
         response.setStatusCode(200);
         response.setStatusMessage("OK");
         response.setTime(PersianCalender.getDate() + " - " + PersianCalender.getTime());
-        response.setDeployDate("1397/10/08");
+        response.setDeployDate("1397/10/19");
         Response finalResponse = Response.status(200).entity(response).build();
         logger.info("++================== VERIFY SERVICE : END ==================++");
         return finalResponse;
