@@ -30,9 +30,6 @@ public class ServerException extends Exception {
     }
 
     public static Response create(String message, Exception ex) {
-        logger.error(message);
-        logger.error(ex.getMessage());
-        StandardResponse response = StandardResponse.getNOKExceptions(ex);
-        return Response.status(200).entity(response).build();
+        return create(message,ex,Constants.DEFAULT_KEY);
     }
 }
