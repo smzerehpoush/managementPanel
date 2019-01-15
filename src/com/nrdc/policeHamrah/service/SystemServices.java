@@ -10,6 +10,7 @@ import com.nrdc.policeHamrah.jsonModel.StandardResponse;
 import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestReportSystem;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.*;
 import com.nrdc.policeHamrah.model.dao.UserDao;
+import com.nrdc.policeHamrah.model.dto.SystemDto;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -95,6 +96,22 @@ public class SystemServices {
             return finalResponse;
         } catch (Exception ex) {
             return ServerException.create("++================== getSystemWithVersion SERVICE : EXCEPTION ==================++", ex, token);
+        }
+    }
+
+    @Path("/version/{systemName}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSystem(@PathParam(value = "systemName") String systemName) throws Exception {
+        logger.info("++================== getSystemWithVersion SERVICE : START ==================++");
+        try {
+            StandardResponse<SystemDto> response = new SystemImpl().getSystem(systemName);
+            Response finalResponse = Response.status(200).entity(response).build();
+            logger.info("++================== getSystemWithVersion SERVICE : END ==================++");
+            return finalResponse;
+        } catch (Exception ex) {
+            StandardResponse response = StandardResponse.getNOKExceptions(ex);
+            return Response.status(200).entity(response).build();
         }
     }
 
