@@ -110,7 +110,7 @@ public class LogoutImpl {
         }
     }
 
-    private void deleteAuthInfoFromAnotherSystemDatabase(String token, SystemDao systemDao) throws Exception {
+    void deleteAuthInfoFromAnotherSystemDatabase(String token, SystemDao systemDao) throws Exception {
         TokenRequest request = new TokenRequest();
         request.setToken(token);
         EncryptedResponse encryptedRequest = Encryption.encryptResponse(Constants.DEFAULT_KEY, request);
