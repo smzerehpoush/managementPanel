@@ -279,6 +279,21 @@ public class SystemImpl {
                 entityManager.close();
         }
     }
+    public StandardResponse<SystemDto> getSystem (String systemName) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
+        try {
+            SystemDto systemDto = SystemDao.getSystem(systemName);
+            StandardResponse<SystemDto> response = new StandardResponse<>();
+            response.setResponse(systemDto);
+            return response;
+        } catch (Exception ex) {
+            throw ex;
+        } finally {
+            if (entityManager.isOpen())
+                entityManager.close();
+        }
+    }
 
     private List<SystemWithVersion> createSystemWithVersions(List<SystemDto> systemDtos) throws Exception {
         List<SystemWithVersion> systemWithVersions = new LinkedList<>();
