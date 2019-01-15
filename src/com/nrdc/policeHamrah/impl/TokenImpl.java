@@ -41,7 +41,7 @@ public class TokenImpl {
                     .setParameter("fkUserId", fkUserId)
                     .setParameter("fkSystemId", fkSystemId)
                     .executeUpdate();
-
+            new LogoutImpl().deleteAuthInfoFromAnotherSystemDatabase(dbToken, inputSystem);
             if (transaction.isActive())
                 transaction.commit();
 
