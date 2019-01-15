@@ -89,7 +89,7 @@ public class LoginService {
             }
             StandardResponse<ResponseLogin> response = new LoginImpl().loginToSystem(token, fkSystemId);
             SystemDao systemDao = SystemDao.getSystem(fkSystemId);
-            if (systemDao.getSystemName().equals(SystemNames.VEHICLE_TICKET.name()) || systemDao.getSystemName().equals(SystemNames.AGAHI.name()))
+            if (systemDao.getSystemName().equals(SystemNames.VT_REPORT.name()) || systemDao.getSystemName().equals(SystemNames.VEHICLE_TICKET.name()) || systemDao.getSystemName().equals(SystemNames.AGAHI.name()))
                 return Response.status(200).entity(response).build();
 
             String key = "Android";
