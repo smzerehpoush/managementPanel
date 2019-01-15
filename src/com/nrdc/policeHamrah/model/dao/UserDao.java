@@ -37,7 +37,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
     }
 
     private void checkUsername(String username) throws Exception {
-        if (username != null && username.matches("^[a-zA-Z0-9]{5,}$"))
+        if (username != null && !username.matches("^[a-zA-Z0-9]{5,}$"))
             throw new Exception("نام کاربری" + Constants.IS_NOT_VALID);
     }
 
