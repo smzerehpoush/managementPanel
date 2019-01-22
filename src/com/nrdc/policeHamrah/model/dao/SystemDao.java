@@ -2,8 +2,8 @@ package com.nrdc.policeHamrah.model.dao;
 
 import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.SystemNames;
+import com.nrdc.policeHamrah.impl.Database;
 import com.nrdc.policeHamrah.model.dto.SystemDto;
-import org.apache.log4j.Logger;
 
 import javax.persistence.*;
 
@@ -11,43 +11,41 @@ import javax.persistence.*;
 @Table(name = "PH_SYSTEM", schema = Constants.SCHEMA)
 public class SystemDao extends SystemDto {
     public static final String tableName = "PH_SYSTEM";
-    private static Logger logger = Logger.getLogger(SystemDao.class.getName());
 
     public SystemDao() {
 
     }
 
     public static SystemDao getSystem(Long fkSystemId) throws Exception {
-        EntityManager entityManager = com.nrdc.policeHamrah.impl.Database.getEntityManager();
+        EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             SystemDao systemDao = (SystemDao) entityManager.createQuery("SELECT s FROM SystemDao s WHERE s.id = :id")
                     .setParameter("id", fkSystemId)
                     .getSingleResult();
-            logger.info(systemDao);
             return systemDao;
 
         } catch (NoResultException | NonUniqueResultException ex1) {
             throw new Exception(Constants.NOT_VALID_SYSTEM);
         } finally {
-            if (entityManager != null && entityManager.isOpen())
+            if (entityManager.isOpen())
                 entityManager.close();
         }
     }
 
     public static SystemDao getSystem(String systemName) throws Exception {
-        EntityManager entityManager = com.nrdc.policeHamrah.impl.Database.getEntityManager();
-        logger.info("Get SystemDto Info ");
+        EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             SystemDao systemDao = (SystemDao) entityManager.createQuery("SELECT s FROM SystemDao s WHERE s.systemName = :systemName")
                     .setParameter("systemName", systemName)
                     .getSingleResult();
-            logger.info(systemDao);
             return systemDao;
 
         } catch (NoResultException | NonUniqueResultException ex1) {
             throw new Exception(Constants.NOT_VALID_SYSTEM);
         } finally {
-            if (entityManager != null && entityManager.isOpen())
+            if (entityManager.isOpen())
                 entityManager.close();
         }
     }
@@ -121,5 +119,17 @@ public class SystemDao extends SystemDto {
         return super.getType();
     }
 
+    @Override
+    @Basic
+    @Column(name = "RATE", unique = true, table = tableName)
+    public Double getRate() {
+        return super.getRate();
+    }
 
+    @Override
+    @Basic
+    @Column(name = "RATE_COUNT", unique = true, table = tableName)
+    public Long getRateCount() {
+        return super.getRateCount();
+    }
 }

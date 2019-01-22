@@ -16,7 +16,6 @@ public class AuthDao extends com.nrdc.policeHamrah.model.dto.AuthDto {
     }
 
     public AuthDao(UserDao user, SystemDao systemDao) throws Exception {
-        user.checkToken(systemDao);
         this.setToken(UUID.randomUUID().toString());
         this.setKey(UUID.randomUUID().toString());
         this.setFkSystemId(systemDao.getId());
@@ -25,7 +24,7 @@ public class AuthDao extends com.nrdc.policeHamrah.model.dto.AuthDto {
 
     public static void validateToken(String token, String systemName) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
-
+        entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             Long size = (Long) entityManager.createQuery("SELECT count (t) FROM AuthDao t JOIN SystemDao s ON s.id = t.fkSystemId WHERE t.token = :token AND s.systemName = :systemName")
                     .setParameter("systemName", systemName)
@@ -35,7 +34,7 @@ public class AuthDao extends com.nrdc.policeHamrah.model.dto.AuthDto {
                 throw new Exception(Constants.NOT_VALID_TOKEN);
             }
         } finally {
-            if (entityManager != null && entityManager.isOpen())
+            if (entityManager.isOpen())
                 entityManager.close();
         }
     }
