@@ -99,13 +99,13 @@ public class SystemServices {
         }
     }
 
-    @Path("/version/{systemName}")
+    @Path("/version")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getSystem(@PathParam(value = "systemName") String systemName) throws Exception {
+    public Response getSystem() throws Exception {
         logger.info("++================== getSystemWithVersion SERVICE : START ==================++");
         try {
-            StandardResponse<SystemDto> response = new SystemImpl().getSystem(systemName);
+            StandardResponse<SystemDto> response = new SystemImpl().getSystem();
             Response finalResponse = Response.status(200).entity(response).build();
             logger.info("++================== getSystemWithVersion SERVICE : END ==================++");
             return finalResponse;

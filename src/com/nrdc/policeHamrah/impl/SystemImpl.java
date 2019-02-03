@@ -272,20 +272,88 @@ public class SystemImpl {
             StandardResponse<ResponseGetSystemWithVersions> response = new StandardResponse<>();
             response.setResponse(responseGetSystems);
             return response;
-        } catch (Exception ex) {
-            throw ex;
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();
         }
     }
-    public StandardResponse<SystemDto> getSystem (String systemName) throws Exception {
+
+    private class ResponseLastSystem {
+        private String systemName;
+        private Long fkSystemId;
+        private Long versionCode;
+        private String versionName;
+        private String apkPath;
+
+        public Long getFkSystemId() {
+            return fkSystemId;
+        }
+
+        public void setFkSystemId(Long fkSystemId) {
+            this.fkSystemId = fkSystemId;
+        }
+
+        public String getSystemName() {
+            return systemName;
+        }
+
+        public void setSystemName(String systemName) {
+            this.systemName = systemName;
+        }
+
+        public Long getVersionCode() {
+            return versionCode;
+        }
+
+        public void setVersionCode(Long versionCode) {
+            this.versionCode = versionCode;
+        }
+
+        public String getVersionName() {
+            return versionName;
+        }
+
+        public void setVersionName(String versionName) {
+            this.versionName = versionName;
+        }
+
+        public String getApkPath() {
+            return apkPath;
+        }
+
+        public void setApkPath(String apkPath) {
+            this.apkPath = apkPath;
+        }
+    }
+
+    public StandardResponse<SystemDto> getSystem() throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
-            SystemDto systemDto = SystemDao.getSystem(systemName);
-            StandardResponse<SystemDto> response = new StandardResponse<>();
-            response.setResponse(systemDto);
+            List<SystemDao> fkSystemIdList = entityManager.createQuery("SELECT DISTINCT (s) FROM SystemDao s ")
+                    .getResultList();
+            List<ResponseLastSystem> responseLastSystemList = new LinkedList<>();
+            for (SystemDao systemDao : fkSystemIdList) {
+                ResponseLastSystem responseLastSystem = new ResponseLastSystem();
+                responseLastSystem.setFkSystemId(systemDao.getId());
+                responseLastSystem.setSystemName(systemDao.getSystemName());
+                try {
+                    SystemVersionDao systemVersionDao = (SystemVersionDao) entityManager.createQuery("SELECT sv FROM SystemVersionDao sv WHERE sv.fkSystemId = :fkSystemId AND sv.versionCode = (SELECT MAX (sv.versionCode) FROM SystemVersionDao sv WHERE sv.fkSystemId = :fkSystemId )")
+                            .setParameter("fkSystemId", systemDao.getId())
+                            .getSingleResult();
+                    responseLastSystem.setVersionName(systemVersionDao.getVersionName());
+                    responseLastSystem.setVersionCode(systemVersionDao.getVersionCode());
+                    responseLastSystem.setApkPath(systemVersionDao.getApkPath());
+                } catch (Exception e) {
+                    responseLastSystem.setVersionName(null);
+                    responseLastSystem.setVersionCode(null);
+                    responseLastSystem.setApkPath(null);
+                }
+                responseLastSystemList.add(responseLastSystem);
+
+            }
+            StandardResponse response = new StandardResponse();
+            response.setResponse(responseLastSystemList);
             return response;
         } catch (Exception ex) {
             throw ex;
