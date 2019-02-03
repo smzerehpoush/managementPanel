@@ -170,7 +170,6 @@ public class UserImpl {
 
     public StandardResponse resetPassword(String token, RequestResetPassword requestResetPassword) throws Exception {
 //        OperationDao operation = new OperationDao();
-        PrivilegeDao privilege = PrivilegeDao.getPrivilege(PrivilegeNames.RESET_PASSWORD);
 //        operation.setFkPrivilegeId(privilege.getId());
         UserDao user = UserDao.validate(token);
 //        operation.setUserToken(token);
@@ -180,7 +179,34 @@ public class UserImpl {
             if (!checkUserOldPassword(user.getUsername(), requestResetPassword))
                 throw new Exception(Constants.INCORRECT_USERNAME_OR_PASSWORD);
             checkPassword(requestResetPassword);
-            setUserNewPassword(user.getUsername(), requestResetPassword);
+            setUserNewPassword(user.getUsername(), requestResetPassword.getNewPassword());
+            StandardResponse response = new StandardResponse();
+//            operation.setStatusCode(1L);
+            String description = createResetPasswordLog(user);
+//            operation.setDescription(description);
+//            operation.persist();
+            return response;
+        } catch (Exception ex) {
+//            operation.setStatusCode(-1L);
+            String description = createResetPasswordLog(user, ex.getMessage());
+//            operation.setDescription(description);
+//            operation.persist();
+            return StandardResponse.getNOKExceptions(ex);
+        }
+    }
+
+    public StandardResponse resetPassword(String token, Long fkUserId) throws Exception {
+//        OperationDao operation = new OperationDao();
+        UserDao user = UserDao.validate(token);
+        SystemDao phSystem = SystemDao.getSystem(SystemNames.POLICE_HAMRAH);
+        user.checkPrivilege(PrivilegeNames.RESET_PASSWORD, phSystem.getId());
+        UserDao user2 = UserDao.getUser(fkUserId);
+//        operation.setFkPrivilegeId(privilege.getId());
+//        operation.setUserToken(token);
+//        operation.setFkUserId(user.getId());
+//        operation.setTime(new Date());
+        try {
+            setUserNewPassword(user2.getUsername(), "123456");
             StandardResponse response = new StandardResponse();
 //            operation.setStatusCode(1L);
             String description = createResetPasswordLog(user);
@@ -240,7 +266,7 @@ public class UserImpl {
 //            return false;
     }
 
-    private void setUserNewPassword(String username, RequestResetPassword requestResetPassword) {
+    private void setUserNewPassword(String username, String password) {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         entityManager.getEntityManagerFactory().getCache().evictAll();
@@ -249,7 +275,7 @@ public class UserImpl {
                 transaction.begin();
             entityManager.createQuery("UPDATE UserDao u SET u.password = :newPassword WHERE u.username = :username")
                     .setParameter("username", username)
-                    .setParameter("newPassword", requestResetPassword.getNewPassword())
+                    .setParameter("newPassword", password)
                     .executeUpdate();
             if (transaction.isActive())
                 transaction.commit();

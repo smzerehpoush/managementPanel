@@ -205,6 +205,32 @@ public class UserServices {
         }
     }
 
+    /***
+     * reset password of user for his boss
+     * @param token
+     * @param fkUserId
+     * @return
+     * @throws Exception
+     */
+    @Path("/resetPassword")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response resetPassword(@QueryParam("token") String token, @QueryParam("fkUserId") Long fkUserId) throws Exception {
+        logger.info("++================== getRoles SERVICE : START ==================++");
+        try {
+            if (token == null || fkUserId == null) {
+                throw new Exception(Constants.NOT_VALID_REQUEST);
+            }
+            StandardResponse response = new UserImpl().resetPassword(token, fkUserId);
+            String key = UserDao.getKey(token).getKey();
+            EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
+            Response finalResponse = Response.status(200).entity(encryptedResponse).build();
+            logger.info("++================== getRoles SERVICE : END ==================++");
+            return finalResponse;
+        } catch (Exception ex) {
+            return ServerException.create("++================== getRoles SERVICE : EXCEPTION ==================++", ex, token);
+        }
+    }
 
     /**
      * 18
