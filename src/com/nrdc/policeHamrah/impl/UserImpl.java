@@ -176,9 +176,10 @@ public class UserImpl {
 //        operation.setFkUserId(user.getId());
 //        operation.setTime(new Date());
         try {
-            if (!checkUserOldPassword(user.getUsername(), requestResetPassword))
+            if (!checkUserPassword(user.getUsername(), requestResetPassword.getOldPassword()))
                 throw new Exception(Constants.INCORRECT_USERNAME_OR_PASSWORD);
-            checkPassword(requestResetPassword);
+            if (!checkPassword(requestResetPassword.getNewPassword()))
+                throw new Exception(Constants.NOT_VALID_PASSWORD);
             setUserNewPassword(user.getUsername(), requestResetPassword.getNewPassword());
             StandardResponse response = new StandardResponse();
 //            operation.setStatusCode(1L);
@@ -243,13 +244,13 @@ public class UserImpl {
         return stringBuilder.toString();
     }
 
-    private boolean checkUserOldPassword(String username, RequestResetPassword requestResetPassword) {
+    private boolean checkUserPassword(String username, String password) {
         EntityManager entityManager = Database.getEntityManager();
         entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
-            Long size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.username = :username AND u.password = :password ")
+            Long size = (Long) entityManager.createQuery("SELECT COUNT (u) FROM UserDao u WHERE u.username = :username AND u.password = :password ")
                     .setParameter("username", username)
-                    .setParameter("password", requestResetPassword.getOldPassword())
+                    .setParameter("password", password)
                     .getSingleResult();
             return size.equals(1L);
         } finally {
@@ -258,12 +259,8 @@ public class UserImpl {
         }
     }
 
-    private void checkPassword(RequestResetPassword requestResetPassword) throws Exception {
-        String password = requestResetPassword.getNewPassword();
-        if (password.length() < 8)
-            throw new Exception(Constants.NOT_VALID_PASSWORD);
-//        if (!password.matches("[[a-z][0-9]]"))
-//            return false;
+    private boolean checkPassword(String password) throws Exception {
+        return password.matches("^[a-zA-Z0-9]{5,}$");
     }
 
     private void setUserNewPassword(String username, String password) {
@@ -273,12 +270,16 @@ public class UserImpl {
         try {
             if (!transaction.isActive())
                 transaction.begin();
-            entityManager.createQuery("UPDATE UserDao u SET u.password = :newPassword WHERE u.username = :username")
+            entityManager.createQuery("UPDATE UserDao u SET u.password = :password WHERE u.username = :username")
                     .setParameter("username", username)
-                    .setParameter("newPassword", password)
+                    .setParameter("password", password)
                     .executeUpdate();
             if (transaction.isActive())
                 transaction.commit();
+            else {
+                transaction = entityManager.getTransaction();
+                transaction.begin();
+            }
         } catch (Exception ex) {
             if (transaction != null && transaction.isActive())
                 transaction.rollback();
@@ -471,21 +472,15 @@ public class UserImpl {
                 throw new Exception(Constants.USER_SYSTEM_ERROR);
             }
 
-            checkRequestEditUser(requestEditUser);
+//            checkRequestEditUser(requestEditUser);
             if (!transaction.isActive())
                 transaction.begin();
             entityManager.createQuery("UPDATE UserDao u SET " +
-                    " u.username = :username ," +
-                    " u.phoneNumber = :phoneNumber ," +
                     " u.firstName = :firstName ," +
-                    " u.lastName = :lastName , " +
-                    " u.nationalId = :nationalId " +
+                    " u.lastName = :lastName " +
                     " WHERE u.id = :fkUserId")
-                    .setParameter("username", requestEditUser.getUsername())
-                    .setParameter("phoneNumber", requestEditUser.getPhoneNumber())
                     .setParameter("firstName", requestEditUser.getFirstName())
                     .setParameter("lastName", requestEditUser.getLastName())
-                    .setParameter("nationalId", requestEditUser.getNationalId())
                     .setParameter("fkUserId", requestEditUser.getFkUserId())
                     .executeUpdate();
             if (transaction.isActive())
