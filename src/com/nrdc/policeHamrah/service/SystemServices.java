@@ -10,7 +10,6 @@ import com.nrdc.policeHamrah.jsonModel.StandardResponse;
 import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestReportSystem;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.*;
 import com.nrdc.policeHamrah.model.dao.UserDao;
-import com.nrdc.policeHamrah.model.dto.SystemDto;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -101,14 +100,40 @@ public class SystemServices {
 
     @Path("/version")
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_HTML)
     public Response getSystem() throws Exception {
         logger.info("++================== getSystemWithVersion SERVICE : START ==================++");
         try {
-            StandardResponse<SystemDto> response = new SystemImpl().getSystem();
+            String response = new SystemImpl().getSystem();
             Response finalResponse = Response.status(200).entity(response).build();
             logger.info("++================== getSystemWithVersion SERVICE : END ==================++");
             return finalResponse;
+        } catch (Exception ex) {
+            StandardResponse response = StandardResponse.getNOKExceptions(ex);
+            return Response.status(200).entity(response).build();
+        }
+    }
+
+    @Path("/version/{fkSystemId}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSystem(@PathParam("fkSystemId") Long fkSystemId) throws Exception {
+        logger.info("++================== getSystemWithVersion SERVICE : START ==================++");
+        try {
+            String result = new SystemImpl().getSystem(fkSystemId);
+//            String result = "http://localhost:9002/apk/ph-v8.apk";
+            EncryptedResponse encryptedResponse = new EncryptedResponse();
+            encryptedResponse.setData(result);
+            Response response = Response.status(200).entity(encryptedResponse)
+                    .header("Access-Control-Allow-Origin", "*")
+                    .header("Access-Control-Allow-Credentials", "true")
+                    .header("Access-Control-Allow-Headers",
+                            "origin, content-type, accept, authorization")
+                    .header("Access-Control-Allow-Methods", "GET")
+                    .build();
+
+            logger.info("++================== getSystemWithVersion SERVICE : END ==================++");
+            return response;
         } catch (Exception ex) {
             StandardResponse response = StandardResponse.getNOKExceptions(ex);
             return Response.status(200).entity(response).build();
