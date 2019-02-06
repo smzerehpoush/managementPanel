@@ -1,6 +1,7 @@
 package com.nrdc.policeHamrah.impl;
 
 import com.nrdc.policeHamrah.helper.Constants;
+import com.nrdc.policeHamrah.helper.MakeHTML;
 import com.nrdc.policeHamrah.helper.PrivilegeNames;
 import com.nrdc.policeHamrah.jsonModel.StandardResponse;
 import com.nrdc.policeHamrah.jsonModel.customizedModel.RoleWithPrivileges;
@@ -279,6 +280,18 @@ public class SystemImpl {
     }
 
     private class ResponseLastSystem {
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder("ResponseLastSystem{");
+            sb.append("systemName='").append(systemName).append('\'');
+            sb.append(", fkSystemId=").append(fkSystemId);
+            sb.append(", versionCode=").append(versionCode);
+            sb.append(", versionName='").append(versionName).append('\'');
+            sb.append(", apkPath='").append(apkPath).append('\'');
+            sb.append('}');
+            return sb.toString();
+        }
+
         private String systemName;
         private Long fkSystemId;
         private Long versionCode;
@@ -326,7 +339,20 @@ public class SystemImpl {
         }
     }
 
-    public StandardResponse<SystemDto> getSystem() throws Exception {
+    public String getSystem(Long fkSystemId) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
+        try {
+            return (String) entityManager.createQuery("SELECT s.apkPath FROM SystemVersionDao s WHERE s.fkSystemId = :fkSystemId AND s.versionCode = (SELECT max (s2.versionCode) FROM SystemVersionDao s2 WHERE s2.fkSystemId = :fkSystemId)")
+                    .setParameter("fkSystemId", fkSystemId)
+                    .getSingleResult();
+        } finally {
+            if (entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+
+    public String getSystem() throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
@@ -352,9 +378,19 @@ public class SystemImpl {
                 responseLastSystemList.add(responseLastSystem);
 
             }
-            StandardResponse response = new StandardResponse();
-            response.setResponse(responseLastSystemList);
-            return response;
+            StringBuilder sb = new StringBuilder();
+            sb.append("<table border=\"1\">");
+            sb.append("<tbody>");
+            for (ResponseLastSystem responseLastSystem : responseLastSystemList) {
+                sb.append(MakeHTML.makeHTML(responseLastSystem));
+                sb.append("<tr style=\"background: black \">\n" +
+                        "        <td>#</td>\n" +
+                        "        <td>#</td>\n" +
+                        "      </tr>");
+            }
+            sb.append("</tbody>");
+            sb.append("</table>");
+            return sb.toString();
         } catch (Exception ex) {
             throw ex;
         } finally {
