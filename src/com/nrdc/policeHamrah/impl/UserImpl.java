@@ -171,10 +171,13 @@ public class UserImpl {
     public StandardResponse resetPassword(String token, RequestResetPassword requestResetPassword) throws Exception {
 //        OperationDao operation = new OperationDao();
 //        operation.setFkPrivilegeId(privilege.getId());
-        UserDao user = UserDao.validate(token);
+        UserDao userDao = UserDao.validate(token);
+        SystemDao systemDao = SystemDao.getSystem(SystemNames.POLICE_HAMRAH);
+        userDao.checkPrivilege(PrivilegeNames.RESET_PASSWORD, systemDao.getId());
 //        operation.setUserToken(token);
 //        operation.setFkUserId(user.getId());
 //        operation.setTime(new Date());
+        UserDao user = UserDao.getUser(requestResetPassword.getFkUserId());
         try {
             if (!checkUserPassword(user.getUsername(), requestResetPassword.getOldPassword()))
                 throw new Exception(Constants.INCORRECT_USERNAME_OR_PASSWORD);
@@ -192,7 +195,7 @@ public class UserImpl {
             String description = createResetPasswordLog(user, ex.getMessage());
 //            operation.setDescription(description);
 //            operation.persist();
-            return StandardResponse.getNOKExceptions(ex);
+            throw ex;
         }
     }
 

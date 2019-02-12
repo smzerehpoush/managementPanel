@@ -193,7 +193,6 @@ public class UserServices {
     public Response resetPassword(EncryptedRequest encryptedRequest) throws Exception {
         logger.info("++================== resetPassword SERVICE : START ==================++");
         try {
-            logger.info("token : " + encryptedRequest.getToken());
             RequestResetPassword request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestResetPassword.class);
             StandardResponse response = new UserImpl().resetPassword(encryptedRequest.getToken(), request);
             String key = UserDao.getKey(encryptedRequest.getToken()).getKey();
