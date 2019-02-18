@@ -45,4 +45,11 @@ public class SystemVersionDao extends SystemVersionDto {
     public String getApkPath() {
         return super.getApkPath();
     }
+
+    @Override
+    @Basic
+    @Column(name = "MANDATORY", table = tableName)
+    public Long getMandatory() {
+        return super.getMandatory();
+    }
 }
