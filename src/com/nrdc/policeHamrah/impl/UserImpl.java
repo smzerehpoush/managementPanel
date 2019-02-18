@@ -1,5 +1,7 @@
 package com.nrdc.policeHamrah.impl;
 
+import com.google.gson.Gson;
+import com.nrdc.policeHamrah.helper.CallWebService;
 import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.PrivilegeNames;
 import com.nrdc.policeHamrah.helper.SystemNames;
@@ -41,6 +43,7 @@ public class UserImpl {
                     systemUserDao.setFkUserId(requestAssignSystemToUser.getFkUserId());
                     systemUserDao.setFkSystemId(fkSystemId);
                     entityManager.persist(systemUserDao);
+                    addUserToSystem(user, fkSystemId);
                 }
             }
             if (transaction.isActive())
@@ -50,6 +53,23 @@ public class UserImpl {
             if (entityManager.isOpen())
                 entityManager.close();
         }
+    }
+
+    private void addUserToSystem(UserDao user, Long fkSystemId) throws Exception {
+        RequestAddUser requestAddUser = new RequestAddUser();
+        requestAddUser.setFirstName(user.getFirstName());
+        requestAddUser.setLastName(user.getLastName());
+        requestAddUser.setNationalId(user.getNationalId());
+        requestAddUser.setPassword(user.getPassword());
+        requestAddUser.setPhoneNumber(user.getPhoneNumber());
+        requestAddUser.setPoliceCode(user.getPoliceCode());
+        requestAddUser.setUsername(user.getUsername());
+        String path = SystemDao.getSystem(fkSystemId).getSystemPath() +"/addUser";
+        String output = CallWebService.callPostService(path, requestAddUser);
+        StandardResponse response = new Gson().fromJson(output, StandardResponse.class);
+        if (response.getResultCode() != 1)
+            throw new Exception(response.getResultMessage());
+
     }
 
     private void mergeAndRemove(List<Long> A, List<Long> B, boolean isSysAdmin, Long userId, Long fkSystemId) throws Exception {
