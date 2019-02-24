@@ -102,7 +102,7 @@ public class LoginImpl {
             requestAuthenticateVT.setPassword(requestAuthenticateUser.getPassword());
             return requestAuthenticateVT;
         }
-        throw new Exception(Constants.NOT_VALID_SYSTEM);
+        throw new Exception(Constants.SYSTEM_IMPLEMENTATION_NOT_ADDED);
     }
 
     private class RequestAuthenticateVT {
