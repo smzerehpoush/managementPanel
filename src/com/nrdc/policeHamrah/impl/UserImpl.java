@@ -64,7 +64,7 @@ public class UserImpl {
         requestAddUser.setPhoneNumber(user.getPhoneNumber());
         requestAddUser.setPoliceCode(user.getPoliceCode());
         requestAddUser.setUsername(user.getUsername());
-        String path = SystemDao.getSystem(fkSystemId).getSystemPath() +"/addUser";
+        String path = SystemDao.getSystem(fkSystemId).getSystemPath() + "/addUser";
         String output = CallWebService.callPostService(path, requestAddUser);
         StandardResponse response = new Gson().fromJson(output, StandardResponse.class);
         if (response.getResultCode() != 1)
