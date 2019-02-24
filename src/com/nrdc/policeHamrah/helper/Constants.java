@@ -1,6 +1,7 @@
 package com.nrdc.policeHamrah.helper;
 
 public class Constants {
+    public static final String SYSTEM_IMPLEMENTATION_NOT_ADDED = "سرویس مذکور هنوز پیاده سازی نشده است.";
     public static final String YOU_HAVE_PH_USER = "شما در سامانه پلیس همراه،کاربری دارید. با کاربری خود وارید شوید.";
     public static final String DEFAULT_KEY = "Android";
     public static final String USER_IS_IN_ANOTHER_SYSTEM = "کاربر در سامانه های دیگر وارد است.";
