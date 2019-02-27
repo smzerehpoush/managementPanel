@@ -57,7 +57,7 @@ public class SystemServices {
     @Path("/get")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllSystem() throws Exception {
+    public Response getAllSystem() {
         logger.info("++================== getAllSystems SERVICE : START ==================++");
         try {
             StandardResponse<ResponseGetSystems> response = new SystemImpl().getAllSystems();
@@ -97,10 +97,15 @@ public class SystemServices {
         }
     }
 
+    /***
+     * 35
+     * return list of systems in tabular format
+     * @return tabular fromat of systems
+     */
     @Path("/version")
     @GET
     @Produces(MediaType.TEXT_HTML)
-    public Response getSystem() throws Exception {
+    public Response getSystem() {
         logger.info("++================== getSystemWithVersion SERVICE : START ==================++");
         try {
             String response = new SystemImpl().getSystem();
@@ -113,6 +118,14 @@ public class SystemServices {
         }
     }
 
+    /**
+     * 36
+     * get last version of given system
+     *
+     * @param fkSystemId
+     * @return json data
+     * @throws Exception
+     */
     @Path("/version/{fkSystemId}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
