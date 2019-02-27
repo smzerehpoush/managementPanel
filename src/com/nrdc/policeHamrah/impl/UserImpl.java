@@ -451,13 +451,13 @@ public class UserImpl {
             if (size > 0)
                 throw new Exception("نام کاربری تکراری می باشد.");
             //check nationalId
-            if (requestAddUser.getUsername() == null || requestAddUser.getUsername().equals(""))
-                throw new Exception("کد ملی اجباری شده");
-            size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.nationalId = :nationalId")
-                    .setParameter("nationalId", requestAddUser.getNationalId())
-                    .getSingleResult();
-            if (size > 0)
-                throw new Exception("کد ملی تکراری می باشد.");
+//            if (requestAddUser.getUsername() == null || requestAddUser.getUsername().equals(""))
+//                throw new Exception("کد ملی اجباری شده");
+//            size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.nationalId = :nationalId")
+//                    .setParameter("nationalId", requestAddUser.getNationalId())
+//                    .getSingleResult();
+//            if (size > 0)
+//                throw new Exception("کد ملی تکراری می باشد.");
             //check policeCode
             if (requestAddUser.getPoliceCode() != null && !requestAddUser.getPoliceCode().equals(""))
                 size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.policeCode= :policeCode")
