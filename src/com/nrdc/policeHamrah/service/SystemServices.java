@@ -61,8 +61,7 @@ public class SystemServices {
         logger.info("++================== getAllSystems SERVICE : START ==================++");
         try {
             StandardResponse<ResponseGetSystems> response = new SystemImpl().getAllSystems();
-            String key = Constants.DEFAULT_KEY;
-            EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
+            EncryptedResponse encryptedResponse = Encryption.encryptResponse(response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
             logger.info("++================== getAllSystems SERVICE : END ==================++");
             return finalResponse;
