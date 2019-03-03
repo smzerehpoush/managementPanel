@@ -43,7 +43,13 @@ public class UserImpl {
                     systemUserDao.setFkUserId(requestAssignSystemToUser.getFkUserId());
                     systemUserDao.setFkSystemId(fkSystemId);
                     entityManager.persist(systemUserDao);
-                    addUserToSystem(user, fkSystemId);
+                    SystemDao systemDao = SystemDao.getSystem(fkSystemId);
+                    if (systemDao.getSystemName().equals(SystemNames.VEHICLE_TICKET))
+                        addUserToSystem(user, fkSystemId);
+                    else if (systemDao.getSystemName().equals(SystemNames.GASHT) || systemDao.getSystemName().equals(SystemNames.CRASHES)) {
+                    } else {
+                        throw new Exception(Constants.FEATURE_NOT_SUPPORTED);
+                    }
                 }
             }
             if (transaction.isActive())
