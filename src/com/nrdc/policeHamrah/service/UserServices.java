@@ -426,7 +426,7 @@ public class UserServices {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response assignUserToSystem(EncryptedRequest encryptedRequest) throws Exception {
+    public Response assignUserToSystem(EncryptedRequest encryptedRequest) {
         logger.info("++================== assignSystemToUser SERVICE : START ==================++");
         try {
             RequestAssignSystemToUser request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestAssignSystemToUser.class);
