@@ -45,5 +45,6 @@ public class Constants {
     public static final String SCHEMA = "POLICE_HAMRAH";
     public static final String SYS_ADMIN = "SYS_ADMIN";
 
+    public static final String FEATURE_NOT_SUPPORTED = "این ویژگی در حال حاظر مورد پشتیبانی نمی باشد.";
 }
 
