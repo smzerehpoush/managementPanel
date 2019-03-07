@@ -20,6 +20,7 @@
         <class>com.nrdc.policeHamrah.model.dao.SystemUserDao</class>
         <class>com.nrdc.policeHamrah.model.dao.SystemDownloadDao</class>
         <class>com.nrdc.policeHamrah.model.dao.OperationDao</class>
+        <class>com.nrdc.policeHamrah.model.dao.ConstantDao</class>
 
     </persistence-unit>
 
