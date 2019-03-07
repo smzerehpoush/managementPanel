@@ -44,9 +44,9 @@ public class UserImpl {
                     systemUserDao.setFkSystemId(fkSystemId);
                     entityManager.persist(systemUserDao);
                     SystemDao systemDao = SystemDao.getSystem(fkSystemId);
-                    if (systemDao.getSystemName().equals(SystemNames.VEHICLE_TICKET))
+                    if (systemDao.getSystemName().equals(SystemNames.VEHICLE_TICKET.name()))
                         addUserToSystem(user, fkSystemId);
-                    else if (systemDao.getSystemName().equals(SystemNames.GASHT) || systemDao.getSystemName().equals(SystemNames.CRASHES)) {
+                    else if (systemDao.getSystemName().equals(SystemNames.GASHT.name()) || systemDao.getSystemName().equals(SystemNames.CRASHES.name())) {
                     } else {
                         throw new Exception(Constants.FEATURE_NOT_SUPPORTED);
                     }
