@@ -14,10 +14,11 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+@Path("/abis")
 public class ABISService {
     private static Logger logger = Logger.getLogger(ABISService.class.getName());
 
-    @Path("/abis/{serviceName}")
+    @Path("/{serviceName}")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -31,7 +32,7 @@ public class ABISService {
             logger.info("++================== ABIS SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== ABIS SERVICE : EXCEPTION ==================++", ex, Constants.DEFAULT_KEY);
+            return ServerException.create("++================== ABIS SERVICE : EXCEPTION ==================++", ex);
         }
     }
 }
