@@ -4,7 +4,9 @@
         entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
 
-        }finally {
+        }catch (Exception ex) {
+                     throw new Exception("" + Constants.IS_NOT_VALID);
+        } finally {
             if (entityManager.isOpen())
                 entityManager.close();
         }
