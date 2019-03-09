@@ -289,7 +289,7 @@ public class UserImpl {
     }
 
     private boolean checkPassword(String password) throws Exception {
-        return password.matches("^[a-zA-Z0-9]{5,}$");
+        return password.matches("^[a-zA-Z0-9]{5,10}$");
     }
 
     private void setUserNewPassword(String username, String password) {
