@@ -54,7 +54,6 @@ public class Encryption {
         else
             key = UserDao.getKey(request.getToken()).getKey();
         String decrypted = decryptOrNull(key, request.getData());
-        logger.info(decrypted);
         return decrypted;
     }
 
