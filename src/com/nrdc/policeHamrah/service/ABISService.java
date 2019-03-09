@@ -21,13 +21,11 @@ public class ABISService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response ABISService(EncryptedRequest encryptedRequest, @PathParam("serviceName") String serviceName) {
+    public Response ABISService(Object request, @PathParam("serviceName") String serviceName) {
         logger.info("++================== ABIS SERVICE : START ==================++");
         try {
-            Object request = new Gson().fromJson(Encryption.decryptRequest(encryptedRequest), Object.class);
             StandardResponse response = new ABISImpl().sendRequest(request, serviceName);
-            EncryptedResponse encryptedResponse = Encryption.encryptResponse(response);
-            Response finalResponse = Response.status(Response.Status.OK).entity(encryptedResponse).build();
+            Response finalResponse = Response.status(Response.Status.OK).entity(response).build();
             logger.info("++================== ABIS SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
@@ -43,8 +41,7 @@ public class ABISService {
         logger.info("++================== ABIS SERVICE : START ==================++");
         try {
             StandardResponse response = new ABISImpl().sendRequest(serviceName, pathParam);
-            EncryptedResponse encryptedResponse = Encryption.encryptResponse(response);
-            Response finalResponse = Response.status(Response.Status.OK).entity(encryptedResponse).build();
+            Response finalResponse = Response.status(Response.Status.OK).entity(response).build();
             logger.info("++================== ABIS SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
