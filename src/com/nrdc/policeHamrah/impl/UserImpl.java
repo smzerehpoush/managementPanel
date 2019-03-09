@@ -472,13 +472,13 @@ public class UserImpl {
             if (size > 0)
                 throw new Exception("کد پلیس تکراری می باشد.");
             //check phoneNumber
-            if (requestAddUser.getPhoneNumber() == null || requestAddUser.getPhoneNumber().equals(""))
-                throw new Exception("شماره تلفن اجباری شده");
-            size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.phoneNumber= :phoneNumber")
-                    .setParameter("phoneNumber", requestAddUser.getPhoneNumber())
-                    .getSingleResult();
-            if (size > 0)
-                throw new Exception("شماره تلفن تکراری می باشد.");
+            if (requestAddUser.getPhoneNumber() != null && !requestAddUser.getPhoneNumber().equals("")) {
+                size = (Long) entityManager.createQuery("SELECT COUNT (u) FROM UserDao u WHERE u.phoneNumber= :phoneNumber")
+                        .setParameter("phoneNumber", requestAddUser.getPhoneNumber())
+                        .getSingleResult();
+                if (size > 0)
+                    throw new Exception("شماره تلفن تکراری می باشد.");
+            }
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();
