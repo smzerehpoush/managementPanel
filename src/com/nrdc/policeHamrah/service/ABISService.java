@@ -3,7 +3,6 @@ package com.nrdc.policeHamrah.service;
 import com.google.gson.Gson;
 import com.nrdc.policeHamrah.exceptions.ServerException;
 import com.nrdc.policeHamrah.helper.ABISImpl;
-import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.Encryption;
 import com.nrdc.policeHamrah.jsonModel.EncryptedRequest;
 import com.nrdc.policeHamrah.jsonModel.EncryptedResponse;
@@ -27,6 +26,23 @@ public class ABISService {
         try {
             Object request = new Gson().fromJson(Encryption.decryptRequest(encryptedRequest), Object.class);
             StandardResponse response = new ABISImpl().sendRequest(request, serviceName);
+            EncryptedResponse encryptedResponse = Encryption.encryptResponse(response);
+            Response finalResponse = Response.status(Response.Status.OK).entity(encryptedResponse).build();
+            logger.info("++================== ABIS SERVICE : END ==================++");
+            return finalResponse;
+        } catch (Exception ex) {
+            return ServerException.create("++================== ABIS SERVICE : EXCEPTION ==================++", ex);
+        }
+    }
+
+    @Path("/{serviceName}/{pathParam}")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response ABISService(@PathParam("serviceName") String serviceName, @PathParam("pathParam") String pathParam) {
+        logger.info("++================== ABIS SERVICE : START ==================++");
+        try {
+            StandardResponse response = new ABISImpl().sendRequest(serviceName, pathParam);
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(response);
             Response finalResponse = Response.status(Response.Status.OK).entity(encryptedResponse).build();
             logger.info("++================== ABIS SERVICE : END ==================++");
