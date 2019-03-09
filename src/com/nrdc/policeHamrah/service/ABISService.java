@@ -24,7 +24,7 @@ public class ABISService {
     public Response ABISService(Object request, @PathParam("serviceName") String serviceName) {
         logger.info("++================== ABIS SERVICE : START ==================++");
         try {
-            StandardResponse response = new ABISImpl().sendRequest(request, serviceName);
+            String response = new ABISImpl().sendRequest(request, serviceName);
             Response finalResponse = Response.status(Response.Status.OK).entity(response).build();
             logger.info("++================== ABIS SERVICE : END ==================++");
             return finalResponse;
@@ -40,7 +40,7 @@ public class ABISService {
     public Response ABISService(@PathParam("serviceName") String serviceName, @PathParam("pathParam") String pathParam) {
         logger.info("++================== ABIS SERVICE : START ==================++");
         try {
-            StandardResponse response = new ABISImpl().sendRequest(serviceName, pathParam);
+            String response = new ABISImpl().sendRequest(serviceName, pathParam);
             Response finalResponse = Response.status(Response.Status.OK).entity(response).build();
             logger.info("++================== ABIS SERVICE : END ==================++");
             return finalResponse;
