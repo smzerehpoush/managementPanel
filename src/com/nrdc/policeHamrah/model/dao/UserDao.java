@@ -48,7 +48,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
     }
 
     private void checkNationalId(String nationalId) throws Exception {
-        if (nationalId != null && !nationalId.matches("\\d{10}"))
+        if (nationalId != null && !nationalId.equals("") && nationalId.matches("\\d{10}"))
             throw new Exception("کد ملی" + Constants.IS_NOT_VALID);
 
     }
