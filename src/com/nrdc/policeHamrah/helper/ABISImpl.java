@@ -1,7 +1,6 @@
 package com.nrdc.policeHamrah.helper;
 
 import com.google.gson.Gson;
-import com.nrdc.policeHamrah.jsonModel.StandardResponse;
 import com.nrdc.policeHamrah.model.dao.ConstantDao;
 import sun.misc.BASE64Encoder;
 
@@ -15,20 +14,14 @@ public class ABISImpl {
     private final static String username = "mobileClient";
     private final static String password = "422@Mobile";
 
-    public StandardResponse sendRequest(Object request, String serviceName) throws Exception {
+    public String sendRequest(Object request, String serviceName) throws Exception {
         String servicePath = ConstantDao.getConstant("ABIS_BASE_PATH") + ConstantDao.getConstant(serviceName);
-        String result = callPostService(servicePath, request);
-        StandardResponse<String> response = new StandardResponse<>();
-        response.setResponse(result);
-        return response;
+        return callPostService(servicePath, request);
     }
 
-    public StandardResponse sendRequest(String serviceName, String pathParam) throws Exception {
+    public String sendRequest(String serviceName, String pathParam) throws Exception {
         String servicePath = ConstantDao.getConstant("ABIS_BASE_PATH") + ConstantDao.getConstant(serviceName);
-        String result = callGetService(servicePath + "/" + pathParam);
-        StandardResponse<String> response = new StandardResponse<>();
-        response.setResponse(result);
-        return response;
+        return callGetService(servicePath + "/" + pathParam);
     }
 
 
@@ -71,16 +64,28 @@ public class ABISImpl {
         connection.setRequestProperty("Authorization", "Basic " + encodedAuthorization);
         connection.setDoOutput(true);
         int responceCode = connection.getResponseCode();
-        System.out.println(responceCode);
         //receiving response message
-        BufferedReader bufferedReader = new BufferedReader(new
-                InputStreamReader(connection.getInputStream()));
-        String inputLine;
-        StringBuffer resp = new StringBuffer();
-        while ((inputLine = bufferedReader.readLine()) != null) {
-            resp.append(inputLine);
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new
+                    InputStreamReader(connection.getInputStream()));
+            String inputLine;
+            StringBuffer resp = new StringBuffer();
+            while ((inputLine = bufferedReader.readLine()) != null) {
+                resp.append(inputLine);
+            }
+            bufferedReader.close();
+            return (resp.toString());
+        }catch (Exception ex){
+            BufferedReader bufferedReader = new BufferedReader(new
+                    InputStreamReader(connection.getErrorStream()));
+            String inputLine;
+            StringBuffer resp = new StringBuffer();
+            while ((inputLine = bufferedReader.readLine()) != null) {
+                resp.append(inputLine);
+            }
+            bufferedReader.close();
+            return (resp.toString());
         }
-        bufferedReader.close();
-        return (resp.toString());
+
     }
 }
