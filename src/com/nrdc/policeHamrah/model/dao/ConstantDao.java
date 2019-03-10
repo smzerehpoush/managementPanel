@@ -15,11 +15,11 @@ public class ConstantDao extends ConstantDto {
         EntityManager entityManager = Database.getEntityManager();
         entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
-            return (String)entityManager.createQuery("SELECT c.value FROM ConstantDao c WHERE c.key = :k ")
+            return (String) entityManager.createQuery("SELECT c.value FROM ConstantDao c WHERE c.key = :k ")
                     .setParameter("k", key)
                     .getSingleResult();
         } catch (Exception ex) {
-            throw new Exception("constant" + Constants.IS_NOT_VALID);
+            throw new Exception(Constants.CONSTANT + Constants.IS_NOT_VALID);
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();

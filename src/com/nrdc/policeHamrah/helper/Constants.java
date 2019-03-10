@@ -15,6 +15,10 @@ public class Constants {
     public static final String NOT_VALID_USER = "کاربر معتبر نمی باشد";
     public static final String IS_NOT_VALID = " معتبر نمی باشد";
     public static final String NOT_VALID_PRIVILEGE = "دسترسی معتبر نمی باشد";
+    public static final String USERNAME = "نام کاربری ";
+    public static final String PHONE_NUMBER = "تلفن همراه ";
+    public static final String NATIONAL_ID = "تلفن همراه ";
+    public static final String CONSTANT= "مقدار ثابت ";
 
     public static final String NOT_VALID_REQUEST = "درخواست از سمت انئروید معتبر نمی باشد.";
     public static final String NOT_LOGIN_ED = "کاربر وارد سامانه مذکور نشده است.";

@@ -38,18 +38,18 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
 
     private void checkUsername(String username) throws Exception {
         if (username != null && !username.matches("^[a-zA-Z0-9]{5,}$"))
-            throw new Exception("نام کاربری" + Constants.IS_NOT_VALID);
+            throw new Exception(Constants.USERNAME + Constants.IS_NOT_VALID);
     }
 
     private void checkPhoneNumber(String phoneNumber) throws Exception {
         if (phoneNumber != null && !phoneNumber.matches("0\\d{10}"))
-            throw new Exception("تلفن همراه" + Constants.IS_NOT_VALID);
+            throw new Exception(Constants.PHONE_NUMBER + Constants.IS_NOT_VALID);
 
     }
 
     private void checkNationalId(String nationalId) throws Exception {
         if (nationalId != null && !nationalId.equals("") && nationalId.matches("\\d{10}"))
-            throw new Exception("کد ملی" + Constants.IS_NOT_VALID);
+            throw new Exception(Constants.NATIONAL_ID + Constants.IS_NOT_VALID);
 
     }
 
