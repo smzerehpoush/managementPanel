@@ -1,6 +1,6 @@
 package com.nrdc.policeHamrah.service;
 
-import com.nrdc.policeHamrah.exceptions.ServerException;
+import com.nrdc.policeHamrah.exceptions.ExceptionHandler;
 import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.Encryption;
 import com.nrdc.policeHamrah.impl.TokenImpl;
@@ -44,7 +44,7 @@ public class TokenServices {
             logger.info("++================== removeToken SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== removeToken SERVICE : EXCEPTION ==================++", ex, token);
+            return ExceptionHandler.create("++================== removeToken SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 }

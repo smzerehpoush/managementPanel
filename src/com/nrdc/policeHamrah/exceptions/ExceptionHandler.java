@@ -9,8 +9,8 @@ import org.apache.log4j.Logger;
 
 import javax.ws.rs.core.Response;
 
-public class ServerException extends Exception {
-    private static Logger logger = Logger.getLogger(ServerException.class.getName());
+public class ExceptionHandler extends Exception {
+    private static Logger logger = Logger.getLogger(ExceptionHandler.class.getName());
 
     public static Response create(String message, Exception ex, String token) {
         logger.error(message);

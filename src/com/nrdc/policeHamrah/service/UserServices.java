@@ -1,6 +1,6 @@
 package com.nrdc.policeHamrah.service;
 
-import com.nrdc.policeHamrah.exceptions.ServerException;
+import com.nrdc.policeHamrah.exceptions.ExceptionHandler;
 import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.Encryption;
 import com.nrdc.policeHamrah.impl.SystemImpl;
@@ -45,7 +45,7 @@ public class UserServices {
             logger.info("++================== addUser SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== addUser SERVICE : EXCEPTION ==================++", ex, encryptedRequest.getToken());
+            return ExceptionHandler.create("++================== addUser SERVICE : EXCEPTION ==================++", ex, encryptedRequest.getToken());
         }
     }
 
@@ -69,7 +69,7 @@ public class UserServices {
             logger.info("++================== addUser SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== addUser SERVICE : EXCEPTION ==================++", ex);
+            return ExceptionHandler.create("++================== addUser SERVICE : EXCEPTION ==================++", ex);
         }
     }
 
@@ -93,7 +93,7 @@ public class UserServices {
             logger.info("++================== editUser SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== editUser SERVICE : EXCEPTION ==================++", ex, encryptedRequest.getToken());
+            return ExceptionHandler.create("++================== editUser SERVICE : EXCEPTION ==================++", ex, encryptedRequest.getToken());
         }
     }
 
@@ -121,7 +121,7 @@ public class UserServices {
             logger.info("++================== activeUser SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== activeUser SERVICE : EXCEPTION ==================++", ex, token);
+            return ExceptionHandler.create("++================== activeUser SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 
@@ -149,7 +149,7 @@ public class UserServices {
             logger.info("++================== deActiveUser SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== deActiveUser SERVICE : EXCEPTION ==================++", ex, token);
+            return ExceptionHandler.create("++================== deActiveUser SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 
@@ -175,7 +175,7 @@ public class UserServices {
             logger.info("++================== filterUsers SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== filterUsers SERVICE : EXCEPTION ==================++", ex, encryptedRequest.getToken());
+            return ExceptionHandler.create("++================== filterUsers SERVICE : EXCEPTION ==================++", ex, encryptedRequest.getToken());
         }
     }
 
@@ -201,7 +201,7 @@ public class UserServices {
             logger.info("++================== resetPassword SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== resetPassword SERVICE : EXCEPTION ==================++", ex, encryptedRequest.getToken());
+            return ExceptionHandler.create("++================== resetPassword SERVICE : EXCEPTION ==================++", ex, encryptedRequest.getToken());
         }
     }
 
@@ -228,7 +228,7 @@ public class UserServices {
             logger.info("++================== getRoles SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== getRoles SERVICE : EXCEPTION ==================++", ex, token);
+            return ExceptionHandler.create("++================== getRoles SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 
@@ -256,7 +256,7 @@ public class UserServices {
             logger.info("++================== getRoles SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== getRoles SERVICE : EXCEPTION ==================++", ex, token);
+            return ExceptionHandler.create("++================== getRoles SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 
@@ -282,7 +282,7 @@ public class UserServices {
             logger.info("++================== assignRoles SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== assignRoles SERVICE : EXCEPTION ==================++", ex, encryptedRequest.getToken());
+            return ExceptionHandler.create("++================== assignRoles SERVICE : EXCEPTION ==================++", ex, encryptedRequest.getToken());
         }
     }
 
@@ -309,7 +309,7 @@ public class UserServices {
             logger.info("++================== getUserRolesWithPrivileges SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== getUserRolesWithPrivileges SERVICE : EXCEPTION ==================++", ex, token);
+            return ExceptionHandler.create("++================== getUserRolesWithPrivileges SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 
@@ -337,7 +337,7 @@ public class UserServices {
             logger.info("++================== getPrivileges SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== getPrivileges SERVICE : EXCEPTION ==================++", ex, token);
+            return ExceptionHandler.create("++================== getPrivileges SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 
@@ -362,7 +362,7 @@ public class UserServices {
             logger.info("++================== getUserSystems SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== getUserSystems SERVICE : EXCEPTION ==================++", ex, token);
+            return ExceptionHandler.create("++================== getUserSystems SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 
@@ -387,7 +387,7 @@ public class UserServices {
             logger.info("++================== getUserLoginSystems SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== getUserLoginSystems SERVICE : EXCEPTION ==================++", ex, token);
+            return ExceptionHandler.create("++================== getUserLoginSystems SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 
@@ -412,7 +412,7 @@ public class UserServices {
             logger.info("++================== getUserSystems SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== getUserSystems SERVICE : EXCEPTION ==================++", ex, token);
+            return ExceptionHandler.create("++================== getUserSystems SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 
@@ -437,7 +437,7 @@ public class UserServices {
             logger.info("++================== assignSystemToUser SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== assignSystemToUser SERVICE : EXCEPTION ==================++", ex, encryptedRequest.getToken());
+            return ExceptionHandler.create("++================== assignSystemToUser SERVICE : EXCEPTION ==================++", ex, encryptedRequest.getToken());
         }
     }
 }

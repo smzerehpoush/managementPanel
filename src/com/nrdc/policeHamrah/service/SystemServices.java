@@ -1,6 +1,6 @@
 package com.nrdc.policeHamrah.service;
 
-import com.nrdc.policeHamrah.exceptions.ServerException;
+import com.nrdc.policeHamrah.exceptions.ExceptionHandler;
 import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.Encryption;
 import com.nrdc.policeHamrah.impl.SystemImpl;
@@ -44,7 +44,7 @@ public class SystemServices {
             logger.info("++================== getAllSystems SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== getAllSystems SERVICE : EXCEPTION ==================++", ex, token);
+            return ExceptionHandler.create("++================== getAllSystems SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 
@@ -66,7 +66,7 @@ public class SystemServices {
             logger.info("++================== getAllSystems SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== getAllSystems SERVICE : EXCEPTION ==================++", ex, Constants.DEFAULT_KEY);
+            return ExceptionHandler.create("++================== getAllSystems SERVICE : EXCEPTION ==================++", ex, Constants.DEFAULT_KEY);
         }
     }
 
@@ -93,7 +93,7 @@ public class SystemServices {
             logger.info("++================== getSystemWithVersion SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== getSystemWithVersion SERVICE : EXCEPTION ==================++", ex, token);
+            return ExceptionHandler.create("++================== getSystemWithVersion SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 
@@ -178,7 +178,7 @@ public class SystemServices {
             logger.info("++================== getSystemUsers SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== getSystemUsers SERVICE : EXCEPTION ==================++", ex, token);
+            return ExceptionHandler.create("++================== getSystemUsers SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 
@@ -207,7 +207,7 @@ public class SystemServices {
             logger.info("++================== getSystemRoles SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== gesSystemRoles SERVICE : EXCEPTION ==================++", ex, token);
+            return ExceptionHandler.create("++================== gesSystemRoles SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 
@@ -235,7 +235,7 @@ public class SystemServices {
             logger.info("++================== getUserRolesWithPrivileges SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== getUserRolesWithPrivileges SERVICE : EXCEPTION ==================++", ex, token);
+            return ExceptionHandler.create("++================== getUserRolesWithPrivileges SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 
@@ -262,7 +262,7 @@ public class SystemServices {
             logger.info("++================== reportSystem SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== reportSystem SERVICE : EXCEPTION ==================++", ex, encryptedRequest.getToken());
+            return ExceptionHandler.create("++================== reportSystem SERVICE : EXCEPTION ==================++", ex, encryptedRequest.getToken());
         }
     }
 
@@ -291,7 +291,7 @@ public class SystemServices {
             logger.info("++================== incrementDownloadCount SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== incrementDownloadCount SERVICE : EXCEPTION ==================++", ex, token);
+            return ExceptionHandler.create("++================== incrementDownloadCount SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 
@@ -319,7 +319,7 @@ public class SystemServices {
             logger.info("++================== incrementDownloadCount SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== incrementDownloadCount SERVICE : EXCEPTION ==================++", ex, token);
+            return ExceptionHandler.create("++================== incrementDownloadCount SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 }

@@ -1,6 +1,6 @@
 package com.nrdc.policeHamrah.service;
 
-import com.nrdc.policeHamrah.exceptions.ServerException;
+import com.nrdc.policeHamrah.exceptions.ExceptionHandler;
 import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.Encryption;
 import com.nrdc.policeHamrah.impl.RoleImpl;
@@ -43,7 +43,7 @@ public class RoleServices {
             logger.info("++================== addRole SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== addRoles SERVICE : EXCEPTION ==================++", ex, encryptedRequest.getToken());
+            return ExceptionHandler.create("++================== addRoles SERVICE : EXCEPTION ==================++", ex, encryptedRequest.getToken());
         }
     }
 
@@ -69,7 +69,7 @@ public class RoleServices {
             logger.info("++================== editRole SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== editRoles SERVICE : EXCEPTION ==================++", ex, encryptedRequest.getToken());
+            return ExceptionHandler.create("++================== editRoles SERVICE : EXCEPTION ==================++", ex, encryptedRequest.getToken());
         }
     }
 
@@ -97,7 +97,7 @@ public class RoleServices {
             logger.info("++================== removeRole SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== removeRoles SERVICE : EXCEPTION ==================++", ex, token);
+            return ExceptionHandler.create("++================== removeRoles SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 
@@ -125,7 +125,7 @@ public class RoleServices {
             logger.info("++================== getRolePrivileges SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== getRolePrivileges SERVICE : EXCEPTION ==================++", ex, token);
+            return ExceptionHandler.create("++================== getRolePrivileges SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 }

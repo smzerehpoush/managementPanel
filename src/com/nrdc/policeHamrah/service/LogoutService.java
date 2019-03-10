@@ -1,6 +1,6 @@
 package com.nrdc.policeHamrah.service;
 
-import com.nrdc.policeHamrah.exceptions.ServerException;
+import com.nrdc.policeHamrah.exceptions.ExceptionHandler;
 import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.impl.LogoutImpl;
 import com.nrdc.policeHamrah.jsonModel.StandardResponse;
@@ -40,7 +40,7 @@ public class LogoutService {
             logger.info("++================== logout SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== logout SERVICE : EXCEPTION ==================++", ex, token);
+            return ExceptionHandler.create("++================== logout SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 }

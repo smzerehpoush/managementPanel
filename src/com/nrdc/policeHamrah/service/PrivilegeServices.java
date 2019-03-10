@@ -1,6 +1,6 @@
 package com.nrdc.policeHamrah.service;
 
-import com.nrdc.policeHamrah.exceptions.ServerException;
+import com.nrdc.policeHamrah.exceptions.ExceptionHandler;
 import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.Encryption;
 import com.nrdc.policeHamrah.impl.PrivilegeImpl;
@@ -45,7 +45,7 @@ public class PrivilegeServices {
             logger.info("++================== getUserPrivileges SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== getUserPrivileges SERVICE : EXCEPTION ==================++", ex, token);
+            return ExceptionHandler.create("++================== getUserPrivileges SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 

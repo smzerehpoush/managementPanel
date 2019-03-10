@@ -1,6 +1,6 @@
 package com.nrdc.policeHamrah.service;
 
-import com.nrdc.policeHamrah.exceptions.ServerException;
+import com.nrdc.policeHamrah.exceptions.ExceptionHandler;
 import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.Encryption;
 import com.nrdc.policeHamrah.helper.SystemNames;
@@ -40,7 +40,7 @@ public class LoginService {
             logger.info("++================== login SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== login SERVICE : EXCEPTION ==================++", ex);
+            return ExceptionHandler.create("++================== login SERVICE : EXCEPTION ==================++", ex);
         }
     }
 
@@ -65,7 +65,7 @@ public class LoginService {
             logger.info("++================== authenticateUser SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== authenticateUser SERVICE : EXCEPTION ==================++", ex, Constants.DEFAULT_KEY);
+            return ExceptionHandler.create("++================== authenticateUser SERVICE : EXCEPTION ==================++", ex, Constants.DEFAULT_KEY);
         }
     }
 
@@ -98,7 +98,7 @@ public class LoginService {
             logger.info("++================== login-to-system SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== login-to-system SERVICE : EXCEPTION ==================++", ex, token);
+            return ExceptionHandler.create("++================== login-to-system SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 }
