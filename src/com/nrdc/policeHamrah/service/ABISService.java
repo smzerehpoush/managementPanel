@@ -1,12 +1,6 @@
 package com.nrdc.policeHamrah.service;
 
-import com.google.gson.Gson;
-import com.nrdc.policeHamrah.exceptions.ServerException;
 import com.nrdc.policeHamrah.helper.ABISImpl;
-import com.nrdc.policeHamrah.helper.Encryption;
-import com.nrdc.policeHamrah.jsonModel.EncryptedRequest;
-import com.nrdc.policeHamrah.jsonModel.EncryptedResponse;
-import com.nrdc.policeHamrah.jsonModel.StandardResponse;
 import org.apache.log4j.Logger;
 
 import javax.ws.rs.*;
@@ -29,7 +23,9 @@ public class ABISService {
             logger.info("++================== ABIS SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== ABIS SERVICE : EXCEPTION ==================++", ex);
+            ex.printStackTrace();
+            String response = "2000";
+            return Response.status(Response.Status.OK).entity(response).build();
         }
     }
 
@@ -45,7 +41,9 @@ public class ABISService {
             logger.info("++================== ABIS SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ServerException.create("++================== ABIS SERVICE : EXCEPTION ==================++", ex);
+            ex.printStackTrace();
+            String response = "2000";
+            return Response.status(Response.Status.OK).entity(response).build();
         }
     }
 }
