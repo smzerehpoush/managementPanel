@@ -1,6 +1,7 @@
 package com.nrdc.policeHamrah.service;
 
 import com.nrdc.policeHamrah.exceptions.ExceptionHandler;
+import com.nrdc.policeHamrah.exceptions.ServerException;
 import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.Encryption;
 import com.nrdc.policeHamrah.impl.PrivilegeImpl;
@@ -36,7 +37,7 @@ public class PrivilegeServices {
         logger.info("++================== getUserPrivileges SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null) {
-                throw new Exception(Constants.NOT_VALID_REQUEST);
+                throw new ServerException(Constants.NOT_VALID_REQUEST);
             }
             StandardResponse<ResponseGetPrivileges> response = new PrivilegeImpl().getPrivileges(token, fkSystemId);
             String key = UserDao.getKey(token).getKey();

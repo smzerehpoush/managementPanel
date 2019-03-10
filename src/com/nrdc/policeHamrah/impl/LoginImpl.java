@@ -1,6 +1,7 @@
 package com.nrdc.policeHamrah.impl;
 
 import com.google.gson.Gson;
+import com.nrdc.policeHamrah.exceptions.ServerException;
 import com.nrdc.policeHamrah.helper.*;
 import com.nrdc.policeHamrah.jsonModel.StandardResponse;
 import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestAuthenticateUser;
@@ -65,7 +66,7 @@ public class LoginImpl {
                         .getSingleResult();
             }
             if (size.compareTo(0L) > 0)
-                throw new Exception(Constants.YOU_HAVE_PH_USER);
+                throw new ServerException(Constants.YOU_HAVE_PH_USER);
 
         } finally {
             if (entityManager.isOpen())
@@ -102,7 +103,7 @@ public class LoginImpl {
             requestAuthenticateVT.setPassword(requestAuthenticateUser.getPassword());
             return requestAuthenticateVT;
         }
-        throw new Exception(Constants.SYSTEM_IMPLEMENTATION_NOT_ADDED);
+        throw new ServerException(Constants.SYSTEM_IMPLEMENTATION_NOT_ADDED);
     }
 
     private class RequestAuthenticateVT {
@@ -188,7 +189,7 @@ public class LoginImpl {
                     .setParameter("username", requestLogin.getUsername())
                     .getSingleResult();
             if (!size.equals(0L))
-                throw new Exception(Constants.ACTIVE_USER_EXISTS);
+                throw new ServerException(Constants.ACTIVE_USER_EXISTS);
             UserDao user = verifyUser(requestLogin);
             SystemDao systemDao = SystemDao.getSystem(SystemNames.POLICE_HAMRAH);
             PrivilegeDto privilege = PrivilegeDao.getPrivilege(PrivilegeNames.LOGIN);
@@ -240,7 +241,7 @@ public class LoginImpl {
             }
             UserDao user = UserDao.validate(policeHamrahToken);
             if (!user.getIsActive())
-                throw new Exception(Constants.USER_IS_NOT_ACTIVE);
+                throw new ServerException(Constants.USER_IS_NOT_ACTIVE);
             SystemDao systemDao = SystemDao.getSystem(fkSystemId);
             StandardResponse<ResponseLogin> response = loginToSystem(user, systemDao);
             if (transaction != null && transaction.isActive())
@@ -292,7 +293,7 @@ public class LoginImpl {
 //            user.setPassword("");
 //
 //        } else {
-//            throw new Exception(Constants.NOT_VALID_SYSTEM);
+//            throw new ServerException(Constants.NOT_VALID_SYSTEM);
 //        }
         responseLogin.setUser(user);
         response.setResponse(responseLogin);
@@ -316,7 +317,7 @@ public class LoginImpl {
 //        outputStream.write(input.getBytes());
 //        outputStream.flush();
 //        if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-//            throw new Exception("Can not add token to system : " + connection.getResponseCode());
+//            throw new ServerException("Can not add token to system : " + connection.getResponseCode());
 //        }
 //        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 //        StringBuilder output = new StringBuilder();
@@ -336,7 +337,7 @@ public class LoginImpl {
         if (user.getIsActive())
             return user;
         else
-            throw new Exception(Constants.NOT_ACTIVE_USER);
+            throw new ServerException(Constants.NOT_ACTIVE_USER);
     }
 
     private String decryptPassword(String username, String encryptedPassword) throws Exception {
@@ -353,7 +354,7 @@ public class LoginImpl {
                     .getSingleResult();
 
         } catch (Exception ex) {
-            throw new Exception(Constants.INCORRECT_USERNAME_OR_PASSWORD);
+            throw new ServerException(Constants.INCORRECT_USERNAME_OR_PASSWORD);
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();

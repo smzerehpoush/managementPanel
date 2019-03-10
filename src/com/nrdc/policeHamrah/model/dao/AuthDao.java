@@ -1,5 +1,6 @@
 package com.nrdc.policeHamrah.model.dao;
 
+import com.nrdc.policeHamrah.exceptions.ServerException;
 import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.SystemNames;
 import com.nrdc.policeHamrah.impl.Database;
@@ -31,7 +32,7 @@ public class AuthDao extends com.nrdc.policeHamrah.model.dto.AuthDto {
                     .setParameter("token", token)
                     .getSingleResult();
             if (!size.equals(1L)) {
-                throw new Exception(Constants.NOT_VALID_TOKEN);
+                throw new ServerException(Constants.NOT_VALID_TOKEN);
             }
         } finally {
             if (entityManager.isOpen())

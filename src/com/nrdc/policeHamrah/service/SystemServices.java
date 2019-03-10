@@ -1,6 +1,7 @@
 package com.nrdc.policeHamrah.service;
 
 import com.nrdc.policeHamrah.exceptions.ExceptionHandler;
+import com.nrdc.policeHamrah.exceptions.ServerException;
 import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.Encryption;
 import com.nrdc.policeHamrah.impl.SystemImpl;
@@ -35,7 +36,7 @@ public class SystemServices {
         logger.info("++================== getAllSystems SERVICE : START ==================++");
         try {
             if (token == null) {
-                throw new Exception(Constants.NOT_VALID_REQUEST);
+                throw new ServerException(Constants.NOT_VALID_REQUEST);
             }
             StandardResponse<ResponseGetSystems> response = new SystemImpl().getAllSystems(token);
             String key = UserDao.getKey(token).getKey();
@@ -84,7 +85,7 @@ public class SystemServices {
         logger.info("++================== getSystemWithVersion SERVICE : START ==================++");
         try {
             if (token == null) {
-                throw new Exception(Constants.NOT_VALID_REQUEST);
+                throw new ServerException(Constants.NOT_VALID_REQUEST);
             }
             StandardResponse<ResponseGetSystemWithVersions> response = new SystemImpl().getSystemVersions(token);
             String key = UserDao.getKey(token).getKey();
@@ -169,7 +170,7 @@ public class SystemServices {
         logger.info("++================== getSystemUsers SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null) {
-                throw new Exception(Constants.NOT_VALID_REQUEST);
+                throw new ServerException(Constants.NOT_VALID_REQUEST);
             }
             StandardResponse<ResponseGetUsers> response = new SystemImpl().getSystemUsers(token, fkSystemId);
             String key = UserDao.getKey(token).getKey();
@@ -198,7 +199,7 @@ public class SystemServices {
         logger.info("++================== getSystemRoles SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null) {
-                throw new Exception(Constants.NOT_VALID_REQUEST);
+                throw new ServerException(Constants.NOT_VALID_REQUEST);
             }
             StandardResponse<ResponseGetRoles> response = new SystemImpl().getSystemRoles(token, fkSystemId);
             String key = UserDao.getKey(token).getKey();
@@ -226,7 +227,7 @@ public class SystemServices {
         logger.info("++================== getUserRolesWithPrivileges SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null) {
-                throw new Exception(Constants.NOT_VALID_REQUEST);
+                throw new ServerException(Constants.NOT_VALID_REQUEST);
             }
             StandardResponse<ResponseGetRolesWithPrivileges> response = new SystemImpl().getSystemRolesWithPrivileges(token, fkSystemId);
             String key = UserDao.getKey(token).getKey();
@@ -282,7 +283,7 @@ public class SystemServices {
         logger.info("++================== incrementDownloadCount SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null || versionCode == null) {
-                throw new Exception(Constants.NOT_VALID_REQUEST);
+                throw new ServerException(Constants.NOT_VALID_REQUEST);
             }
             StandardResponse response = new SystemImpl().incrementDownloadCount(token, fkSystemId, versionCode);
             String key = UserDao.getKey(token).getKey();
@@ -310,7 +311,7 @@ public class SystemServices {
         logger.info("++================== incrementDownloadCount SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null) {
-                throw new Exception(Constants.NOT_VALID_REQUEST);
+                throw new ServerException(Constants.NOT_VALID_REQUEST);
             }
             StandardResponse response = new SystemImpl().getSystemReports(token, fkSystemId);
             String key = UserDao.getKey(token).getKey();

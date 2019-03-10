@@ -1,5 +1,6 @@
 package com.nrdc.policeHamrah.impl;
 
+import com.nrdc.policeHamrah.exceptions.ServerException;
 import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.MakeHTML;
 import com.nrdc.policeHamrah.helper.PrivilegeNames;
@@ -96,7 +97,7 @@ public class SystemImpl {
                 rateCount = systemDao.getRateCount();
                 rate = systemDao.getRate();
             } catch (Exception ex) {
-                throw new Exception(Constants.NOT_VALID_SYSTEM);
+                throw new ServerException(Constants.NOT_VALID_SYSTEM);
             }
             Double newRate = (rate * rateCount + requestReportSystem.getRate()) / (rateCount + 1L);
             entityManager.createQuery("UPDATE SystemDao s SET s.rate = :newRate  WHERE s.id = :systemId ")
@@ -419,7 +420,7 @@ public class SystemImpl {
                     .setParameter("fkSystemId", fkSystemId)
                     .getSingleResult();
         } catch (Exception ex) {
-            throw new Exception(Constants.NOT_VALID_SYSTEM + " بدون ورژن ");
+            throw new ServerException(Constants.NOT_VALID_SYSTEM + " بدون ورژن ");
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();

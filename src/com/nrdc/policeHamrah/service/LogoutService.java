@@ -1,6 +1,7 @@
 package com.nrdc.policeHamrah.service;
 
 import com.nrdc.policeHamrah.exceptions.ExceptionHandler;
+import com.nrdc.policeHamrah.exceptions.ServerException;
 import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.impl.LogoutImpl;
 import com.nrdc.policeHamrah.jsonModel.StandardResponse;
@@ -32,7 +33,7 @@ public class LogoutService {
         logger.info("++================== logout SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null) {
-                throw new Exception(Constants.NOT_VALID_REQUEST);
+                throw new ServerException(Constants.NOT_VALID_REQUEST);
             }
             logger.info("Request Logout = { token : " + token + " , fkSystemId : " + fkSystemId + " }");
             StandardResponse response = new LogoutImpl().logout(token, fkSystemId);

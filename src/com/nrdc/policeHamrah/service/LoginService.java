@@ -1,6 +1,7 @@
 package com.nrdc.policeHamrah.service;
 
 import com.nrdc.policeHamrah.exceptions.ExceptionHandler;
+import com.nrdc.policeHamrah.exceptions.ServerException;
 import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.Encryption;
 import com.nrdc.policeHamrah.helper.SystemNames;
@@ -85,7 +86,7 @@ public class LoginService {
         logger.info("++================== login-to-system SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null) {
-                throw new Exception(Constants.NOT_VALID_REQUEST);
+                throw new ServerException(Constants.NOT_VALID_REQUEST);
             }
             StandardResponse<ResponseLogin> response = new LoginImpl().loginToSystem(token, fkSystemId);
             SystemDao systemDao = SystemDao.getSystem(fkSystemId);

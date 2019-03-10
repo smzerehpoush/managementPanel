@@ -5,7 +5,7 @@
         try {
 
         }catch (Exception ex) {
-                     throw new Exception("" + Constants.IS_NOT_VALID);
+                     throw new ServerException("" + Constants.IS_NOT_VALID);
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();
@@ -44,7 +44,7 @@
     outputStream.write(input.getBytes());
     outputStream.flush();
     if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-        throw new Exception("Can not add token to system : " + connection.getResponseCode());
+        throw new ServerException("Can not add token to system : " + connection.getResponseCode());
     }
     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
     StringBuilder output = new StringBuilder();

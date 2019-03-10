@@ -1,6 +1,7 @@
 package com.nrdc.policeHamrah.impl;
 
 import com.google.gson.Gson;
+import com.nrdc.policeHamrah.exceptions.ServerException;
 import com.nrdc.policeHamrah.helper.CallWebService;
 import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.PrivilegeNames;
@@ -48,7 +49,7 @@ public class UserImpl {
                         addUserToSystem(user, fkSystemId);
                     else if (systemDao.getSystemName().equals(SystemNames.GASHT.name()) || systemDao.getSystemName().equals(SystemNames.CRASHES.name())) {
                     } else {
-                        throw new Exception(Constants.FEATURE_NOT_SUPPORTED);
+                        throw new ServerException(Constants.FEATURE_NOT_SUPPORTED);
                     }
                 }
             }
@@ -74,7 +75,7 @@ public class UserImpl {
         String output = CallWebService.callPostService(path, requestAddUser);
         StandardResponse response = new Gson().fromJson(output, StandardResponse.class);
         if (response.getResultCode() != 1)
-            throw new Exception(response.getResultMessage());
+            throw new ServerException(response.getResultMessage());
 
     }
 
@@ -91,10 +92,10 @@ public class UserImpl {
                 RoleDao role = getRole(b);
                 if (role.getRole().equals(Constants.SYS_ADMIN)) {
                     if (!isSysAdmin)
-                        throw new Exception(Constants.CAN_NOT_ASSIGN_THIS_ROLE);
+                        throw new ServerException(Constants.CAN_NOT_ASSIGN_THIS_ROLE);
                 }
                 if (!role.getFkSystemId().equals(fkSystemId))
-                    throw new Exception(Constants.NOT_VALID_ROLE_SYSTEM);
+                    throw new ServerException(Constants.NOT_VALID_ROLE_SYSTEM);
                 UserRoleDao ur = new UserRoleDao();
                 ur.setFkRoleId(b);
                 ur.setFkUserId(userId);
@@ -105,10 +106,10 @@ public class UserImpl {
                 RoleDao role = getRole(a);
                 if (role.getRole().equals(Constants.SYS_ADMIN)) {
                     if (!isSysAdmin)
-                        throw new Exception(Constants.CAN_NOT_ASSIGN_THIS_ROLE);
+                        throw new ServerException(Constants.CAN_NOT_ASSIGN_THIS_ROLE);
                 }
                 if (!role.getFkSystemId().equals(fkSystemId))
-                    throw new Exception(Constants.NOT_VALID_ROLE_SYSTEM);
+                    throw new ServerException(Constants.NOT_VALID_ROLE_SYSTEM);
                 entityManager.createQuery("DELETE FROM UserRoleDao ur WHERE ur.fkRoleId = :fkRoleId AND ur.fkUserId = :fkUserId ")
                         .setParameter("fkUserId", userId)
                         .setParameter("fkRoleId", a)
@@ -186,7 +187,7 @@ public class UserImpl {
                     .setParameter("roleId", roleId)
                     .getSingleResult();
             if (!size.equals(1L))
-                throw new Exception(Constants.NOT_VALID_ROLE);
+                throw new ServerException(Constants.NOT_VALID_ROLE);
 
         } finally {
             if (entityManager.isOpen())
@@ -206,9 +207,9 @@ public class UserImpl {
         UserDao user = UserDao.getUser(requestResetPassword.getFkUserId());
         try {
             if (!checkUserPassword(user.getUsername(), requestResetPassword.getOldPassword()))
-                throw new Exception(Constants.INCORRECT_USERNAME_OR_PASSWORD);
+                throw new ServerException(Constants.INCORRECT_USERNAME_OR_PASSWORD);
             if (!checkPassword(requestResetPassword.getNewPassword()))
-                throw new Exception(Constants.NOT_VALID_PASSWORD);
+                throw new ServerException(Constants.NOT_VALID_PASSWORD);
             setUserNewPassword(user.getUsername(), requestResetPassword.getNewPassword());
             StandardResponse response = new StandardResponse();
 //            operation.setStatusCode(1L);
@@ -326,13 +327,13 @@ public class UserImpl {
         try {
             UserDao user1 = UserDao.validate(token);
             if (user1.getId().equals(fkUserId))
-                throw new Exception(Constants.CAN_NOT_DE_ACTIVE_THIS_USER);
+                throw new ServerException(Constants.CAN_NOT_DE_ACTIVE_THIS_USER);
             user1.checkPrivilege(PrivilegeNames.ACTIVE_USER, fkSystemId);
             SystemDao systemDao = SystemDao.getSystem(fkSystemId);
             UserDao user2 = UserDao.getUser(fkUserId);
             List<SystemDao> user2SystemList = user2.systems();
             if (!user2SystemList.contains(systemDao)) {
-                throw new Exception(Constants.USER_SYSTEM_ERROR);
+                throw new ServerException(Constants.USER_SYSTEM_ERROR);
             }
             if (transaction != null && !transaction.isActive())
                 transaction.begin();
@@ -367,10 +368,10 @@ public class UserImpl {
             SystemDao systemDao = SystemDao.getSystem(fkSystemId);
             UserDao user2 = UserDao.getUser(fkUserId);
             if (user1.getId().equals(user2.getId()))
-                throw new Exception(Constants.CAN_NOT_DE_ACTIVE_YOURSELF);
+                throw new ServerException(Constants.CAN_NOT_DE_ACTIVE_YOURSELF);
             List<SystemDao> user2SystemList = user2.systems();
             if (!user2SystemList.contains(systemDao)) {
-                throw new Exception(Constants.USER_SYSTEM_ERROR);
+                throw new ServerException(Constants.USER_SYSTEM_ERROR);
             }
             if (transaction != null && !transaction.isActive())
                 transaction.begin();
@@ -431,7 +432,7 @@ public class UserImpl {
                 transaction.commit();
                 return new StandardResponse<>();
             } else {
-                throw new Exception(Constants.UNKNOWN_ERROR);
+                throw new ServerException(Constants.UNKNOWN_ERROR);
             }
         } catch (Exception ex) {
             if (transaction != null && transaction.isActive())
@@ -450,34 +451,34 @@ public class UserImpl {
         try {
             //check username
             if (requestAddUser.getUsername() == null || requestAddUser.getUsername().equals(""))
-                throw new Exception("نام کاربری اجباری می باشد;");
+                throw new ServerException("نام کاربری اجباری می باشد;");
             size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.username = :username")
                     .setParameter("username", requestAddUser.getUsername())
                     .getSingleResult();
             if (size > 0)
-                throw new Exception("نام کاربری تکراری می باشد.");
+                throw new ServerException("نام کاربری تکراری می باشد.");
             //check nationalId
 //            if (requestAddUser.getUsername() == null || requestAddUser.getUsername().equals(""))
-//                throw new Exception("کد ملی اجباری شده");
+//                throw new ServerException("کد ملی اجباری شده");
 //            size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.nationalId = :nationalId")
 //                    .setParameter("nationalId", requestAddUser.getNationalId())
 //                    .getSingleResult();
 //            if (size > 0)
-//                throw new Exception("کد ملی تکراری می باشد.");
+//                throw new ServerException("کد ملی تکراری می باشد.");
             //check policeCode
             if (requestAddUser.getPoliceCode() != null && !requestAddUser.getPoliceCode().equals(""))
                 size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.policeCode= :policeCode")
                         .setParameter("policeCode", requestAddUser.getPoliceCode())
                         .getSingleResult();
             if (size > 0)
-                throw new Exception("کد پلیس تکراری می باشد.");
+                throw new ServerException("کد پلیس تکراری می باشد.");
             //check phoneNumber
             if (requestAddUser.getPhoneNumber() != null && !requestAddUser.getPhoneNumber().equals("")) {
                 size = (Long) entityManager.createQuery("SELECT COUNT (u) FROM UserDao u WHERE u.phoneNumber= :phoneNumber")
                         .setParameter("phoneNumber", requestAddUser.getPhoneNumber())
                         .getSingleResult();
                 if (size > 0)
-                    throw new Exception("شماره تلفن تکراری می باشد.");
+                    throw new ServerException("شماره تلفن تکراری می باشد.");
             }
         } finally {
             if (entityManager.isOpen())
@@ -498,7 +499,7 @@ public class UserImpl {
             UserDao user = UserDao.getUser(requestEditUser.getFkUserId());
             List<SystemDao> userSystemList = user.systems();
             if (!userSystemList.contains(systemDao)) {
-                throw new Exception(Constants.USER_SYSTEM_ERROR);
+                throw new ServerException(Constants.USER_SYSTEM_ERROR);
             }
 
 //            checkRequestEditUser(requestEditUser);
@@ -535,7 +536,7 @@ public class UserImpl {
         try {
             //check username
             if (username == null || username.equals(""))
-                throw new Exception("نام کاربری اجباری می باشد;");
+                throw new ServerException("نام کاربری اجباری می باشد;");
             size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.username = :username")
                     .setParameter("username", username)
                     .getSingleResult();
@@ -544,11 +545,11 @@ public class UserImpl {
                         .setParameter("username", username)
                         .getSingleResult();
                 if (!id.equals(fkUserId))
-                    throw new Exception("نام کاربری تکراری می باشد.");
+                    throw new ServerException("نام کاربری تکراری می باشد.");
 
             }
             if (size > 1)
-                throw new Exception("نام کاربری تکراری می باشد.");
+                throw new ServerException("نام کاربری تکراری می باشد.");
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();
@@ -562,7 +563,7 @@ public class UserImpl {
         try {
             //check nationalId
             if (nationalId == null || nationalId.equals(""))
-                throw new Exception("کد ملی اجباری می باشد;");
+                throw new ServerException("کد ملی اجباری می باشد;");
             size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.nationalId = :username")
                     .setParameter("username", nationalId)
                     .getSingleResult();
@@ -571,11 +572,11 @@ public class UserImpl {
                         .setParameter("nationalId", nationalId)
                         .getSingleResult();
                 if (!id.equals(fkUserId))
-                    throw new Exception("کد ملی تکراری می باشد.");
+                    throw new ServerException("کد ملی تکراری می باشد.");
 
             }
             if (size > 1)
-                throw new Exception("کد ملی تکراری می باشد.");
+                throw new ServerException("کد ملی تکراری می باشد.");
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();
@@ -589,7 +590,7 @@ public class UserImpl {
         try {
             //check phoneNumber
             if (phoneNumber == null || phoneNumber.equals(""))
-                throw new Exception("شماره تلفن اجباری می باشد;");
+                throw new ServerException("شماره تلفن اجباری می باشد;");
             size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.phoneNumber = :phoneNumber")
                     .setParameter("phoneNumber", phoneNumber)
                     .getSingleResult();
@@ -598,11 +599,11 @@ public class UserImpl {
                         .setParameter("phoneNumber", phoneNumber)
                         .getSingleResult();
                 if (!id.equals(fkUserId))
-                    throw new Exception("شماره تلفن تکراری می باشد.");
+                    throw new ServerException("شماره تلفن تکراری می باشد.");
 
             }
             if (size > 1)
-                throw new Exception("شماره تلفن تکراری می باشد.");
+                throw new ServerException("شماره تلفن تکراری می باشد.");
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();
@@ -623,11 +624,11 @@ public class UserImpl {
                         .setParameter("policeCode", policeCode)
                         .getSingleResult();
                 if (!id.equals(fkUserId))
-                    throw new Exception("کد پلیس  تکراری می باشد.");
+                    throw new ServerException("کد پلیس  تکراری می باشد.");
 
             }
             if (size > 1)
-                throw new Exception("کد پلیس تکراری می باشد.");
+                throw new ServerException("کد پلیس تکراری می باشد.");
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();

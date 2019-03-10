@@ -1,5 +1,6 @@
 package com.nrdc.policeHamrah.impl;
 
+import com.nrdc.policeHamrah.exceptions.ServerException;
 import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.PrivilegeNames;
 import com.nrdc.policeHamrah.jsonModel.StandardResponse;
@@ -27,17 +28,17 @@ public class RoleImpl {
             SystemDao systemDao = SystemDao.getSystem(requestAddRole.getFkSystemId());
             List<SystemDao> userSystems = user.systems();
             if (!userSystems.contains(systemDao))
-                throw new Exception(Constants.USER_SYSTEM_ERROR);
+                throw new ServerException(Constants.USER_SYSTEM_ERROR);
 
             user.checkPrivilege(PrivilegeNames.ADD_ROLE, requestAddRole.getFkSystemId());
             if (requestAddRole.getRoleText().equals(Constants.SYS_ADMIN))
-                throw new Exception(Constants.CAN_NOT_CREATE_SYSADMIN);
+                throw new ServerException(Constants.CAN_NOT_CREATE_SYSADMIN);
             List<Long> roleIdList = entityManager.createQuery("SELECT (r.id) FROM RoleDao r WHERE r.fkSystemId = :fkSystemId")
                     .setParameter("fkSystemId", requestAddRole.getFkSystemId())
                     .getResultList();
             roleIdList.removeAll(requestAddRole.getPrivileges());
             if (roleIdList.size() == 0)
-                throw new Exception(Constants.CAN_NOT_CREATE_SYSADMIN);
+                throw new ServerException(Constants.CAN_NOT_CREATE_SYSADMIN);
             RoleDao role = new RoleDao(requestAddRole.getRoleText(), requestAddRole.getFkSystemId(), user.getId());
             Long roleId = (Long) (entityManager.createQuery("SELECT MAX (r.id) FROM RoleDao r")
                     .getSingleResult())
@@ -76,9 +77,9 @@ public class RoleImpl {
                         .setParameter("roleId", requestEditRole.getFkRoleId())
                         .getSingleResult();
                 if (role.getRole().equals(Constants.SYS_ADMIN))
-                    throw new Exception(Constants.CAN_NOT_EDIT_SYSADMIN);
+                    throw new ServerException(Constants.CAN_NOT_EDIT_SYSADMIN);
             } catch (NonUniqueResultException | NoResultException ex) {
-                throw new Exception(Constants.NOT_VALID_ROLE);
+                throw new ServerException(Constants.NOT_VALID_ROLE);
             }
             UserDao user = UserDao.validate(token);
             Long fkSystemId = (Long) entityManager.createQuery("SELECT r.fkSystemId FROM RoleDao r WHERE r.id = :fkRoleId ")
@@ -128,7 +129,7 @@ public class RoleImpl {
                     .setParameter("roleId", fkRoleId)
                     .getSingleResult();
             if (size.equals(1L))
-                throw new Exception(Constants.CAN_NOT_REMOVE_SYSADMIN);
+                throw new ServerException(Constants.CAN_NOT_REMOVE_SYSADMIN);
 
             entityManager.createQuery("DELETE FROM RoleDao r WHERE r.id = :roleId")
                     .setParameter("roleId", fkRoleId)

@@ -1,5 +1,6 @@
 package com.nrdc.policeHamrah.impl;
 
+import com.nrdc.policeHamrah.exceptions.ServerException;
 import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.PrivilegeNames;
 import com.nrdc.policeHamrah.jsonModel.StandardResponse;
@@ -26,10 +27,10 @@ public class TokenImpl {
                         .setParameter("fkSystemId", fkSystemId)
                         .getSingleResult();
             } catch (Exception ex) {
-                throw new Exception(Constants.NOT_LOGIN_ED);
+                throw new ServerException(Constants.NOT_LOGIN_ED);
             }
             if (token.equals(dbToken))
-                throw new Exception(Constants.CAN_NOT_DELETE_TOKEN);
+                throw new ServerException(Constants.CAN_NOT_DELETE_TOKEN);
             SystemDao inputSystem = SystemDao.getSystem(fkSystemId);
             List<SystemDao> userSystems = user.systems();
             checkUserSystems(inputSystem, userSystems);
@@ -62,7 +63,7 @@ public class TokenImpl {
             if (system.getId().equals(inputSystem.getId()))
                 return;
         }
-        throw new Exception(Constants.USER_SYSTEM_ERROR);
+        throw new ServerException(Constants.USER_SYSTEM_ERROR);
     }
 
 }

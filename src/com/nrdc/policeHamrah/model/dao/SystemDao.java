@@ -1,5 +1,6 @@
 package com.nrdc.policeHamrah.model.dao;
 
+import com.nrdc.policeHamrah.exceptions.ServerException;
 import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.SystemNames;
 import com.nrdc.policeHamrah.impl.Database;
@@ -26,7 +27,7 @@ public class SystemDao extends SystemDto {
             return systemDao;
 
         } catch (NoResultException | NonUniqueResultException ex1) {
-            throw new Exception(Constants.NOT_VALID_SYSTEM);
+            throw new ServerException(Constants.NOT_VALID_SYSTEM);
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();
@@ -43,7 +44,7 @@ public class SystemDao extends SystemDto {
             return systemDao;
 
         } catch (NoResultException | NonUniqueResultException ex1) {
-            throw new Exception(Constants.NOT_VALID_SYSTEM);
+            throw new ServerException(Constants.NOT_VALID_SYSTEM);
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();

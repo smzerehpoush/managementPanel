@@ -1,6 +1,7 @@
 package com.nrdc.policeHamrah.impl;
 
 import com.google.gson.Gson;
+import com.nrdc.policeHamrah.exceptions.ServerException;
 import com.nrdc.policeHamrah.helper.*;
 import com.nrdc.policeHamrah.jsonModel.EncryptedRequest;
 import com.nrdc.policeHamrah.jsonModel.EncryptedResponse;
@@ -57,7 +58,7 @@ public class LogoutImpl {
 
             if (systemDao.getSystemName().equals(SystemNames.POLICE_HAMRAH.name())) {
                 if (count > 0)
-                    throw new Exception(Constants.USER_IS_IN_ANOTHER_SYSTEM);
+                    throw new ServerException(Constants.USER_IS_IN_ANOTHER_SYSTEM);
             } else {
                 deleteAuthInfoFromAnotherSystemDatabase(anotherSystemToken, systemDao);
             }
@@ -91,7 +92,7 @@ public class LogoutImpl {
                     .setParameter("fkUserId", user.getId())
                     .getSingleResult();
         } catch (Exception ex) {
-            throw new Exception(Constants.NOT_VALID_TOKEN);
+            throw new ServerException(Constants.NOT_VALID_TOKEN);
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();
@@ -119,7 +120,7 @@ public class LogoutImpl {
         encryptedResponse.setToken("Android");
         StandardResponse response = new Gson().fromJson(Encryption.decryptRequest(encryptedResponse), StandardResponse.class);
         if (response.getResultCode() == -1)
-            throw new Exception(Constants.CAN_NOT_LOGOUT_FROM_SYSTEM + systemDao.getTitle());
+            throw new ServerException(Constants.CAN_NOT_LOGOUT_FROM_SYSTEM + systemDao.getTitle());
 
     }
 

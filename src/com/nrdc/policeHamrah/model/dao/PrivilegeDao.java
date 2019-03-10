@@ -1,5 +1,6 @@
 package com.nrdc.policeHamrah.model.dao;
 
+import com.nrdc.policeHamrah.exceptions.ServerException;
 import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.PrivilegeNames;
 import com.nrdc.policeHamrah.impl.Database;
@@ -27,7 +28,7 @@ public class PrivilegeDao extends com.nrdc.policeHamrah.model.dto.PrivilegeDto {
                     .setParameter("privilegeText", privilege)
                     .getSingleResult();
         } catch (Exception ex) {
-            throw new Exception(Constants.NOT_VALID_PRIVILEGE);
+            throw new ServerException(Constants.NOT_VALID_PRIVILEGE);
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();
