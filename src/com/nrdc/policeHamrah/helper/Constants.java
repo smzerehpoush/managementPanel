@@ -12,14 +12,18 @@ public class Constants {
     public static final String NOT_VALID_ROLE_SYSTEM = "نقش وارد شده هماهنگ با سامنه وارد شده نمی باشد";
     public static final String NOT_VALID_TOKEN = "توکن معتبر نیست.";
     public static final String NOT_VALID_SYSTEM = "سیستم معتبر نمی باشد. یا هنوز اضافه نشده است.";
+    public static final String VERSION = "شماره نسخه";
     public static final String NOT_VALID_USER = "کاربر معتبر نمی باشد";
     public static final String IS_NOT_VALID = " معتبر نمی باشد";
     public static final String NOT_VALID_PRIVILEGE = "دسترسی معتبر نمی باشد";
     public static final String USERNAME = "نام کاربری ";
+    public static final String IS_REQUIRED = " اجباری می باشد.";
     public static final String PHONE_NUMBER = "تلفن همراه ";
     public static final String NATIONAL_ID = "تلفن همراه ";
-    public static final String CONSTANT= "مقدار ثابت ";
-    public static final String SERVER_EXCEPTION= "خطای داخلی سرور.";
+    public static final String CONSTANT = "مقدار ثابت ";
+    public static final String SERVER_EXCEPTION = "خطای داخلی سرور.";
+    public static final String TOKEN = " توکن ";
+    public static final String POLICE_CODE= " کد پلیس ";
 
     public static final String NOT_VALID_REQUEST = "درخواست از سمت انئروید معتبر نمی باشد.";
     public static final String NOT_LOGIN_ED = "کاربر وارد سامانه مذکور نشده است.";
@@ -37,7 +41,9 @@ public class Constants {
 
 
     public static final String USER_IS_NOT_ACTIVE = "کاربر فعال نمی باشد";
-    public static final String ACTIVE_USER_EXISTS = "چنین کاربری فعال می باشد.";
+    public static final String ACTIVE_USER = "کاربر مذکور فعال می باشد.";
+    public static final String EXISTS = " موجود می باشد.";
+    public static final String DUPLICATED = " تکراری می باشد.";
     public static final String INCORRECT_USERNAME_OR_PASSWORD = "نام کاربری یا رمز عبور اشتباه می باشد.";
     public static final String UNKNOWN_ERROR = "اشتباهی رخ داده است. دوباره تلاش کنید.";
     public static final String UNKNOWN_USER = "چنین کاربری وجود ندارد.";
