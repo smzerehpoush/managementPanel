@@ -1,6 +1,7 @@
 package com.nrdc.policeHamrah.service;
 
 import com.nrdc.policeHamrah.exceptions.ExceptionHandler;
+import com.nrdc.policeHamrah.exceptions.ServerException;
 import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.Encryption;
 import com.nrdc.policeHamrah.impl.RoleImpl;
@@ -88,7 +89,7 @@ public class RoleServices {
         logger.info("++================== removeRole SERVICE : START ==================++");
         try {
             if (token == null || fkRoleId == null) {
-                throw new Exception(Constants.NOT_VALID_REQUEST);
+                throw new ServerException(Constants.NOT_VALID_REQUEST);
             }
             StandardResponse response = new RoleImpl().removeRole(token, fkRoleId);
             String key = UserDao.getKey(token).getKey();
@@ -116,7 +117,7 @@ public class RoleServices {
         logger.info("++================== getRolePrivileges SERVICE : START ==================++");
         try {
             if (token == null || fkRoleId == null) {
-                throw new Exception(Constants.NOT_VALID_REQUEST);
+                throw new ServerException(Constants.NOT_VALID_REQUEST);
             }
             StandardResponse response = new RoleImpl().getRolePrivileges(token, fkRoleId);
             String key = UserDao.getKey(token).getKey();

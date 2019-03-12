@@ -1,5 +1,6 @@
 package com.nrdc.policeHamrah.model.dao;
 
+import com.nrdc.policeHamrah.exceptions.ServerException;
 import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.impl.Database;
 import com.nrdc.policeHamrah.model.dto.ConstantDto;
@@ -19,7 +20,7 @@ public class ConstantDao extends ConstantDto {
                     .setParameter("k", key)
                     .getSingleResult();
         } catch (Exception ex) {
-            throw new Exception(Constants.CONSTANT + Constants.IS_NOT_VALID);
+            throw new ServerException(Constants.CONSTANT + Constants.IS_NOT_VALID);
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();
