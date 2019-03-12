@@ -19,6 +19,7 @@ public class Constants {
     public static final String PHONE_NUMBER = "تلفن همراه ";
     public static final String NATIONAL_ID = "تلفن همراه ";
     public static final String CONSTANT= "مقدار ثابت ";
+    public static final String SERVER_EXCEPTION= "خطای داخلی سرور.";
 
     public static final String NOT_VALID_REQUEST = "درخواست از سمت انئروید معتبر نمی باشد.";
     public static final String NOT_LOGIN_ED = "کاربر وارد سامانه مذکور نشده است.";
