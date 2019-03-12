@@ -366,7 +366,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
                     .setParameter("fkUserId", super.getId())
                     .getSingleResult();
             if (!size.equals(0L))
-                throw new ServerException(Constants.ACTIVE_USER_EXISTS + "کلید تکراری");
+                throw new ServerException(Constants.ACTIVE_USER);
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();
@@ -383,7 +383,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
                     .getSingleResult();
 
             if (!size.equals(0L))
-                throw new ServerException(Constants.ACTIVE_USER_EXISTS + "کلید تکراری");
+                throw new ServerException(Constants.ACTIVE_USER);
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();
@@ -401,7 +401,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
                     .setParameter("fkUserId", super.getId())
                     .getSingleResult();
             if (!size.equals(0L))
-                throw new ServerException(Constants.ACTIVE_USER_EXISTS + "توکن تکراری");
+                throw new ServerException(Constants.ACTIVE_USER);
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();
@@ -418,7 +418,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
                     .setParameter("fkUserId", super.getId())
                     .getSingleResult();
             if (!size.equals(0L))
-                throw new ServerException(Constants.ACTIVE_USER_EXISTS + "توکن تکراری");
+                throw new ServerException(Constants.ACTIVE_USER + Constants.TOKEN + Constants.EXISTS);
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();
