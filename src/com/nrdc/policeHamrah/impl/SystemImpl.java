@@ -420,7 +420,7 @@ public class SystemImpl {
                     .setParameter("fkSystemId", fkSystemId)
                     .getSingleResult();
         } catch (Exception ex) {
-            throw new ServerException(Constants.NOT_VALID_SYSTEM + " بدون ورژن ");
+            throw new ServerException(Constants.NOT_VALID_SYSTEM + Constants.VERSION + Constants.IS_NOT_VALID);
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();

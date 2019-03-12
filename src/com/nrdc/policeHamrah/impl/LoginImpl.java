@@ -189,7 +189,7 @@ public class LoginImpl {
                     .setParameter("username", requestLogin.getUsername())
                     .getSingleResult();
             if (!size.equals(0L))
-                throw new ServerException(Constants.ACTIVE_USER_EXISTS);
+                throw new ServerException(Constants.ACTIVE_USER);
             UserDao user = verifyUser(requestLogin);
             SystemDao systemDao = SystemDao.getSystem(SystemNames.POLICE_HAMRAH);
             PrivilegeDto privilege = PrivilegeDao.getPrivilege(PrivilegeNames.LOGIN);

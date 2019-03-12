@@ -451,12 +451,12 @@ public class UserImpl {
         try {
             //check username
             if (requestAddUser.getUsername() == null || requestAddUser.getUsername().equals(""))
-                throw new ServerException("نام کاربری اجباری می باشد;");
+                throw new ServerException(Constants.USERNAME + Constants.IS_REQUIRED);
             size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.username = :username")
                     .setParameter("username", requestAddUser.getUsername())
                     .getSingleResult();
             if (size > 0)
-                throw new ServerException("نام کاربری تکراری می باشد.");
+                throw new ServerException(Constants.USERNAME + Constants.ACTIVE_USER);
             //check nationalId
 //            if (requestAddUser.getUsername() == null || requestAddUser.getUsername().equals(""))
 //                throw new ServerException("کد ملی اجباری شده");
@@ -471,14 +471,14 @@ public class UserImpl {
                         .setParameter("policeCode", requestAddUser.getPoliceCode())
                         .getSingleResult();
             if (size > 0)
-                throw new ServerException("کد پلیس تکراری می باشد.");
+                throw new ServerException(Constants.POLICE_CODE + Constants.DUPLICATED);
             //check phoneNumber
             if (requestAddUser.getPhoneNumber() != null && !requestAddUser.getPhoneNumber().equals("")) {
                 size = (Long) entityManager.createQuery("SELECT COUNT (u) FROM UserDao u WHERE u.phoneNumber= :phoneNumber")
                         .setParameter("phoneNumber", requestAddUser.getPhoneNumber())
                         .getSingleResult();
                 if (size > 0)
-                    throw new ServerException("شماره تلفن تکراری می باشد.");
+                    throw new ServerException(Constants.PHONE_NUMBER + Constants.DUPLICATED);
             }
         } finally {
             if (entityManager.isOpen())
@@ -536,7 +536,7 @@ public class UserImpl {
         try {
             //check username
             if (username == null || username.equals(""))
-                throw new ServerException("نام کاربری اجباری می باشد;");
+                throw new ServerException(Constants.USERNAME + Constants.IS_REQUIRED);
             size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.username = :username")
                     .setParameter("username", username)
                     .getSingleResult();
@@ -545,11 +545,11 @@ public class UserImpl {
                         .setParameter("username", username)
                         .getSingleResult();
                 if (!id.equals(fkUserId))
-                    throw new ServerException("نام کاربری تکراری می باشد.");
+                    throw new ServerException(Constants.USERNAME + Constants.DUPLICATED);
 
             }
             if (size > 1)
-                throw new ServerException("نام کاربری تکراری می باشد.");
+                throw new ServerException(Constants.USERNAME + Constants.DUPLICATED);
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();
@@ -563,7 +563,7 @@ public class UserImpl {
         try {
             //check nationalId
             if (nationalId == null || nationalId.equals(""))
-                throw new ServerException("کد ملی اجباری می باشد;");
+                throw new ServerException(Constants.NATIONAL_ID + Constants.IS_REQUIRED);
             size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.nationalId = :username")
                     .setParameter("username", nationalId)
                     .getSingleResult();
@@ -572,11 +572,11 @@ public class UserImpl {
                         .setParameter("nationalId", nationalId)
                         .getSingleResult();
                 if (!id.equals(fkUserId))
-                    throw new ServerException("کد ملی تکراری می باشد.");
+                    throw new ServerException(Constants.NATIONAL_ID + Constants.IS_NOT_VALID);
 
             }
             if (size > 1)
-                throw new ServerException("کد ملی تکراری می باشد.");
+                throw new ServerException(Constants.NATIONAL_ID + Constants.DUPLICATED);
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();
@@ -590,7 +590,7 @@ public class UserImpl {
         try {
             //check phoneNumber
             if (phoneNumber == null || phoneNumber.equals(""))
-                throw new ServerException("شماره تلفن اجباری می باشد;");
+                throw new ServerException(Constants.PHONE_NUMBER + Constants.IS_REQUIRED);
             size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.phoneNumber = :phoneNumber")
                     .setParameter("phoneNumber", phoneNumber)
                     .getSingleResult();
@@ -599,11 +599,11 @@ public class UserImpl {
                         .setParameter("phoneNumber", phoneNumber)
                         .getSingleResult();
                 if (!id.equals(fkUserId))
-                    throw new ServerException("شماره تلفن تکراری می باشد.");
+                    throw new ServerException(Constants.PHONE_NUMBER + Constants.IS_NOT_VALID);
 
             }
             if (size > 1)
-                throw new ServerException("شماره تلفن تکراری می باشد.");
+                throw new ServerException(Constants.PHONE_NUMBER + Constants.DUPLICATED);
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();
@@ -624,11 +624,11 @@ public class UserImpl {
                         .setParameter("policeCode", policeCode)
                         .getSingleResult();
                 if (!id.equals(fkUserId))
-                    throw new ServerException("کد پلیس  تکراری می باشد.");
+                    throw new ServerException(Constants.POLICE_CODE + Constants.IS_NOT_VALID);
 
             }
             if (size > 1)
-                throw new ServerException("کد پلیس تکراری می باشد.");
+                throw new ServerException(Constants.POLICE_CODE + Constants.DUPLICATED);
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();
