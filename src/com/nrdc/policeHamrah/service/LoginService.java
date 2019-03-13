@@ -94,8 +94,7 @@ public class LoginService {
             if (systemDao.getSystemName().equals(SystemNames.VT_REPORT.name()) || systemDao.getSystemName().equals(SystemNames.VEHICLE_TICKET.name()) || systemDao.getSystemName().equals(SystemNames.AGAHI.name()))
                 return Response.status(200).entity(response).build();
 
-            String key = "Android";
-            EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
+            EncryptedResponse encryptedResponse = Encryption.encryptResponse(response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
             logger.info("++================== login-to-system SERVICE : END ==================++");
             return finalResponse;
