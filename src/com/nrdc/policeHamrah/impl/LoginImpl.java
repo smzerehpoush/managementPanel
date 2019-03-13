@@ -243,7 +243,11 @@ public class LoginImpl {
             if (!user.getIsActive())
                 throw new ServerException(Constants.USER_IS_NOT_ACTIVE);
             SystemDao systemDao = SystemDao.getSystem(fkSystemId);
-            StandardResponse<ResponseLogin> response = loginToSystem(user, systemDao);
+            entityManager.createQuery("DELETE FROM AuthDao WHERE fkUserId = :fkUserId AND fkSystemId = :fkSystemId")
+                    .setParameter("fkUserId", user.getId())
+                    .setParameter("fkSystemId", fkSystemId)
+                    .executeUpdate();
+            StandardResponse<ResponseLogin> response = loginToSystem(user, systemDao, entityManager);
             if (transaction != null && transaction.isActive())
                 transaction.commit();
             return response;
@@ -257,30 +261,11 @@ public class LoginImpl {
         }
     }
 
-    private StandardResponse<ResponseLogin> loginToSystem(UserDao user, SystemDao systemDao) throws Exception {
-        user.checkKey(systemDao);
-        user.checkToken(systemDao);
+    private StandardResponse<ResponseLogin> loginToSystem(UserDao user, SystemDao systemDao, EntityManager entityManager) throws Exception {
+
         AuthDao auth = new AuthDao(user, systemDao);
-        EntityManager entityManager = Database.getEntityManager();
-        entityManager.getEntityManagerFactory().getCache().evictAll();
-        EntityTransaction transaction = entityManager.getTransaction();
-        try {
-            if (transaction != null && !transaction.isActive())
-                transaction.begin();
-            entityManager.persist(auth);
-            if (transaction != null && transaction.isActive())
-                transaction.commit();
-            return createResponseLogin(user, systemDao, auth);
-
-        } catch (Exception ex) {
-            if (transaction != null && transaction.isActive())
-                transaction.rollback();
-            throw ex;
-
-        } finally {
-            if (entityManager.isOpen())
-                entityManager.close();
-        }
+        entityManager.persist(auth);
+        return createResponseLogin(user, systemDao, auth);
     }
 
     private StandardResponse<ResponseLogin> createResponseLogin(UserDao dbUser, SystemDao systemDao, AuthDao auth) throws Exception {
