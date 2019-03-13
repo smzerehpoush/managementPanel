@@ -408,6 +408,7 @@ public class UserImpl {
             if (!transaction.isActive())
                 transaction.begin();
             Long userId = (Long) entityManager.createQuery("SELECT MAX (u.id) FROM UserDao u").getSingleResult() + 1;
+//            if (!requestAddUser.getPhoneNumber().equals("09121316873") && !requestAddUser.getPoliceCode().equals("270030"))
             checkRequestAddUser(requestAddUser);
             UserDao u = new UserDao(requestAddUser);
             u.setId(userId);
