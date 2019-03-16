@@ -9,7 +9,6 @@ public class Constants {
     public static final String PHONE_NUMBER = "تلفن همراه ";
     public static final String NATIONAL_ID = "کد ملی ";
     public static final String CONSTANT = "مقدار ثابت ";
-    public static final String SERVER_EXCEPTION = "خطای داخلی سرور.";
     public static final String TOKEN = " توکن ";
     public static final String POLICE_CODE = " کد پلیس ";
     public static final String USERNAME = "نام کاربری ";
@@ -30,6 +29,7 @@ public class Constants {
     public static final String DUPLICATED = " تکراری می باشد.";
 
 
+    public static final String SERVER_EXCEPTION = "خطای داخلی سرور.";
     public static final String NOT_VALID_ROLE_SYSTEM = "نقش وارد شده هماهنگ با سامنه وارد شده نمی باشد";
     public static final String NOT_LOGIN_ED = "کاربر وارد سامانه مذکور نشده است.";
     public static final String FEATURE_NOT_SUPPORTED = "این ویژگی در حال حاظر مورد پشتیبانی نمی باشد.";
@@ -44,13 +44,13 @@ public class Constants {
 
 
     public static final String CAN_NOT_DE_ACTIVE_YOURSELF = "نمی توانید خودتان را غیر فغال کنید.";
-    public static final String CAN_NOT_ASSIGN_THIS_ROLE = "شما نمی توانید نقش مدیر ارشد را به دیگران تخصیص دهید.";
-    public static final String CAN_NOT_DELETE_TOKEN = "شما نمی توانید توکن خودتان را حذف کنید.";
-    public static final String CAN_NOT_EDIT_SYSADMIN = "شما نمی توانید نقش مدیر ارشد را تغییر دهید";
-    public static final String CAN_NOT_CREATE_SYSADMIN = "شما نمی توانید نقش مدیر ارشد را تعریف کنید. نقشی که همه دسترسی ها را شامل شود.";
-    public static final String CAN_NOT_REMOVE_SYSADMIN = "شما نمی توانید نقش مدیر ارشد را حذف کنید";
-    public static final String CAN_NOT_DE_ACTIVE_THIS_USER = "شما دسترسی غیر فعال کردن کارری با چنین سیتمی را ندارید.";
-    public static final String CAN_NOT_LOGOUT_FROM_SYSTEM = "شما نمیتوانید از این سیستم خارج شوید.";
+    public static final String CAN_NOT_ASSIGN_THIS_ROLE = "نمی توانید نقش مدیر ارشد را به دیگران تخصیص دهید.";
+    public static final String CAN_NOT_DELETE_TOKEN = "نمی توانید توکن خودتان را حذف کنید.";
+    public static final String CAN_NOT_EDIT_SYSADMIN = "نمی توانید نقش مدیر ارشد را تغییر دهید";
+    public static final String CAN_NOT_CREATE_SYSADMIN = "نمی توانید نقش مدیر ارشد را تعریف کنید. نقشی که همه دسترسی ها را شامل شود.";
+    public static final String CAN_NOT_REMOVE_SYSADMIN = "نمی توانید نقش مدیر ارشد را حذف کنید";
+    public static final String CAN_NOT_DE_ACTIVE_THIS_USER = "دسترسی غیر فعال کردن کارری با چنین سیتمی را ندارید.";
+    public static final String CAN_NOT_LOGOUT_FROM_SYSTEM = "نمیتوانید از این سیستم خارج شوید.";
 
 
 }

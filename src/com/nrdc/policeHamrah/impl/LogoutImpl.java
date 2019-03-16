@@ -99,18 +99,6 @@ public class LogoutImpl {
         }
     }
 
-    private class TokenRequest {
-        private String token;
-
-        public String getToken() {
-            return token;
-        }
-
-        public void setToken(String token) {
-            this.token = token;
-        }
-    }
-
     void deleteAuthInfoFromAnotherSystemDatabase(String token, SystemDao systemDao) throws Exception {
         TokenRequest request = new TokenRequest();
         request.setToken(token);
@@ -130,6 +118,18 @@ public class LogoutImpl {
                 .setParameter("fkSystemId", systemDao.getId())
                 .executeUpdate();
 
+    }
+
+    private class TokenRequest {
+        private String token;
+
+        public String getToken() {
+            return token;
+        }
+
+        public void setToken(String token) {
+            this.token = token;
+        }
     }
 
 }

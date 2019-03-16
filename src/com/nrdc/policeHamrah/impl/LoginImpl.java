@@ -106,57 +106,6 @@ public class LoginImpl {
         throw new ServerException(Constants.SYSTEM_IMPLEMENTATION_NOT_ADDED);
     }
 
-    private class RequestAuthenticateVT {
-        private String policeCode;
-        private String password;
-
-        public String getPoliceCode() {
-            return policeCode;
-        }
-
-        public void setPoliceCode(String policeCode) {
-            this.policeCode = policeCode;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public void setPassword(String password) {
-            this.password = password;
-        }
-    }
-
-    private class RequestAuthenticateNazer {
-        private String phoneNumber;
-        private String password;
-
-        public String getPhoneNumber() {
-            return phoneNumber;
-        }
-
-        public void setPhoneNumber(String phoneNumber) {
-            this.phoneNumber = phoneNumber;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public void setPassword(String password) {
-            this.password = password;
-        }
-
-        @Override
-        public String toString() {
-            final StringBuilder sb = new StringBuilder("RequestAuthenticateNazer{");
-            sb.append("phoneNumber='").append(phoneNumber).append('\'');
-            sb.append(", password='").append(password).append('\'');
-            sb.append('}');
-            return sb.toString();
-        }
-    }
-
     /**
      * @param requestLogin username, phoneNumber, password to login into Police Hamrah
      * @return StandardResponse with value of {@link ResponseLogin}
@@ -285,6 +234,23 @@ public class LoginImpl {
         return response;
     }
 
+    private UserDao verifyUser(RequestLogin requestLogin) throws Exception {
+        String username = requestLogin.getUsername();
+        String encryptedPassword = requestLogin.getPassword();
+        String phoneNumber = requestLogin.getPhoneNumber();
+        String password = decryptPassword(username, encryptedPassword);
+        UserDao user = UserDao.getUser(username, password, phoneNumber);
+        if (user.getIsActive())
+            return user;
+        else
+            throw new ServerException(Constants.USER + Constants.IS_NOT_ACTIVE);
+    }
+
+    private String decryptPassword(String username, String encryptedPassword) throws Exception {
+        String key = getUserPassword(username);
+        return Encryption.decryptPassword(key, encryptedPassword);
+    }
+
 //    private StandardResponse sendTokenKeyToSystem(UserDao user, AuthDao auth, SystemDao systemDao) throws Exception {
 //        RequestAddTokenKey requestAddTokenKey = new RequestAddTokenKey();
 //        requestAddTokenKey.setKey(auth.getKey());
@@ -313,23 +279,6 @@ public class LoginImpl {
 //
 //    }
 
-    private UserDao verifyUser(RequestLogin requestLogin) throws Exception {
-        String username = requestLogin.getUsername();
-        String encryptedPassword = requestLogin.getPassword();
-        String phoneNumber = requestLogin.getPhoneNumber();
-        String password = decryptPassword(username, encryptedPassword);
-        UserDao user = UserDao.getUser(username, password, phoneNumber);
-        if (user.getIsActive())
-            return user;
-        else
-            throw new ServerException(Constants.USER + Constants.IS_NOT_ACTIVE);
-    }
-
-    private String decryptPassword(String username, String encryptedPassword) throws Exception {
-        String key = getUserPassword(username);
-        return Encryption.decryptPassword(key, encryptedPassword);
-    }
-
     private String getUserPassword(String username) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         entityManager.getEntityManagerFactory().getCache().evictAll();
@@ -345,5 +294,56 @@ public class LoginImpl {
                 entityManager.close();
         }
 
+    }
+
+    private class RequestAuthenticateVT {
+        private String policeCode;
+        private String password;
+
+        public String getPoliceCode() {
+            return policeCode;
+        }
+
+        public void setPoliceCode(String policeCode) {
+            this.policeCode = policeCode;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
+    }
+
+    private class RequestAuthenticateNazer {
+        private String phoneNumber;
+        private String password;
+
+        public String getPhoneNumber() {
+            return phoneNumber;
+        }
+
+        public void setPhoneNumber(String phoneNumber) {
+            this.phoneNumber = phoneNumber;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
+
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder("RequestAuthenticateNazer{");
+            sb.append("phoneNumber='").append(phoneNumber).append('\'');
+            sb.append(", password='").append(password).append('\'');
+            sb.append('}');
+            return sb.toString();
+        }
     }
 }

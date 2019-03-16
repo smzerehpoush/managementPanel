@@ -35,24 +35,6 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
         this.setIsActive(true);
     }
 
-    private void checkUsername(String username) throws Exception {
-        if (username != null && !username.matches("^[a-zA-Z0-9]{5,}$"))
-            throw new ServerException(Constants.USERNAME + Constants.IS_NOT_VALID);
-    }
-
-    private void checkPhoneNumber(String phoneNumber) throws Exception {
-        if (phoneNumber != null && !phoneNumber.matches("0\\d{10}"))
-            throw new ServerException(Constants.PHONE_NUMBER + Constants.IS_NOT_VALID);
-
-    }
-
-    private void checkNationalId(String nationalId) throws Exception {
-        if (nationalId != null && !nationalId.equals("") && nationalId.matches("\\d{10}"))
-            throw new ServerException(Constants.NATIONAL_ID + Constants.IS_NOT_VALID);
-
-    }
-
-
     //validate user and return it
     public static UserDao validate(String token) throws Exception {
         return validate(token, SystemNames.POLICE_HAMRAH);
@@ -170,7 +152,6 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
 
     }
 
-
     public static AuthDao getKey(String token, String systemName) throws Exception {
         AuthDao.validateToken(token, systemName);
         EntityManager entityManager = Database.getEntityManager();
@@ -211,6 +192,22 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
         }
     }
 
+    private void checkUsername(String username) throws Exception {
+        if (username != null && !username.matches("^[a-zA-Z0-9]{5,}$"))
+            throw new ServerException(Constants.USERNAME + Constants.IS_NOT_VALID);
+    }
+
+    private void checkPhoneNumber(String phoneNumber) throws Exception {
+        if (phoneNumber != null && !phoneNumber.matches("0\\d{10}"))
+            throw new ServerException(Constants.PHONE_NUMBER + Constants.IS_NOT_VALID);
+
+    }
+
+    private void checkNationalId(String nationalId) throws Exception {
+        if (nationalId != null && !nationalId.equals("") && nationalId.matches("\\d{10}"))
+            throw new ServerException(Constants.NATIONAL_ID + Constants.IS_NOT_VALID);
+
+    }
 
     public List<SystemDao> systems() {
         EntityManager entityManager = Database.getEntityManager();
@@ -242,7 +239,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
                     .getResultList()
                     .size();
             if (size < 1) {
-                throw new ServerException(Constants.PRIVILEGE+ Constants.IS_NOT_VALID);
+                throw new ServerException(Constants.PRIVILEGE + Constants.IS_NOT_VALID);
             }
             return true;
 

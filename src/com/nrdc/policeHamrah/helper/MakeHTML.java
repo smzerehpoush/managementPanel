@@ -4,6 +4,10 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class MakeHTML {
+    static public String makeHTML(Object object) {
+        return ReflectionToStringBuilder.toString(object, new HTMLStyle());
+    }
+
     private static final class HTMLStyle extends ToStringStyle {
 
         HTMLStyle() {
@@ -30,9 +34,5 @@ public class MakeHTML {
                 buffer.append(ReflectionToStringBuilder.toString(value, this));
             }
         }
-    }
-
-    static public String makeHTML(Object object) {
-        return ReflectionToStringBuilder.toString(object, new HTMLStyle());
     }
 }

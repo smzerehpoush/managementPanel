@@ -280,66 +280,6 @@ public class SystemImpl {
         }
     }
 
-    private class ResponseLastSystem {
-        @Override
-        public String toString() {
-            final StringBuilder sb = new StringBuilder("ResponseLastSystem{");
-            sb.append("systemName='").append(systemName).append('\'');
-            sb.append(", fkSystemId=").append(fkSystemId);
-            sb.append(", versionCode=").append(versionCode);
-            sb.append(", versionName='").append(versionName).append('\'');
-            sb.append(", apkPath='").append(apkPath).append('\'');
-            sb.append('}');
-            return sb.toString();
-        }
-
-        private String systemName;
-        private Long fkSystemId;
-        private Long versionCode;
-        private String versionName;
-        private String apkPath;
-
-        public Long getFkSystemId() {
-            return fkSystemId;
-        }
-
-        public void setFkSystemId(Long fkSystemId) {
-            this.fkSystemId = fkSystemId;
-        }
-
-        public String getSystemName() {
-            return systemName;
-        }
-
-        public void setSystemName(String systemName) {
-            this.systemName = systemName;
-        }
-
-        public Long getVersionCode() {
-            return versionCode;
-        }
-
-        public void setVersionCode(Long versionCode) {
-            this.versionCode = versionCode;
-        }
-
-        public String getVersionName() {
-            return versionName;
-        }
-
-        public void setVersionName(String versionName) {
-            this.versionName = versionName;
-        }
-
-        public String getApkPath() {
-            return apkPath;
-        }
-
-        public void setApkPath(String apkPath) {
-            this.apkPath = apkPath;
-        }
-    }
-
     public String getSystem(Long fkSystemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         entityManager.getEntityManagerFactory().getCache().evictAll();
@@ -474,6 +414,66 @@ public class SystemImpl {
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();
+        }
+    }
+
+    private class ResponseLastSystem {
+        private String systemName;
+        private Long fkSystemId;
+        private Long versionCode;
+        private String versionName;
+        private String apkPath;
+
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder("ResponseLastSystem{");
+            sb.append("systemName='").append(systemName).append('\'');
+            sb.append(", fkSystemId=").append(fkSystemId);
+            sb.append(", versionCode=").append(versionCode);
+            sb.append(", versionName='").append(versionName).append('\'');
+            sb.append(", apkPath='").append(apkPath).append('\'');
+            sb.append('}');
+            return sb.toString();
+        }
+
+        public Long getFkSystemId() {
+            return fkSystemId;
+        }
+
+        public void setFkSystemId(Long fkSystemId) {
+            this.fkSystemId = fkSystemId;
+        }
+
+        public String getSystemName() {
+            return systemName;
+        }
+
+        public void setSystemName(String systemName) {
+            this.systemName = systemName;
+        }
+
+        public Long getVersionCode() {
+            return versionCode;
+        }
+
+        public void setVersionCode(Long versionCode) {
+            this.versionCode = versionCode;
+        }
+
+        public String getVersionName() {
+            return versionName;
+        }
+
+        public void setVersionName(String versionName) {
+            this.versionName = versionName;
+        }
+
+        public String getApkPath() {
+            return apkPath;
+        }
+
+        public void setApkPath(String apkPath) {
+            this.apkPath = apkPath;
         }
     }
 }

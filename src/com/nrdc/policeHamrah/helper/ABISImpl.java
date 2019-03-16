@@ -11,16 +11,6 @@ public class ABISImpl {
     private final static String username = "mobileClient";
     private final static String password = "422@Mobile";
 
-    public String sendRequest(Object request, String serviceName) throws Exception {
-        String servicePath = ConstantDao.getConstant("ABIS_BASE_PATH") + ConstantDao.getConstant(serviceName);
-        return callPostService(servicePath, request);
-    }
-
-    public String sendRequest(String serviceName, String pathParam) throws Exception {
-        String servicePath = ConstantDao.getConstant("ABIS_BASE_PATH") + ConstantDao.getConstant(serviceName);
-        return callGetService(servicePath + "/" + pathParam);
-    }
-
     private static String callGetService(String path) {
         WebResource.Builder webResourceBuilder = createWebResourceBuilder(path);
         ClientResponse response = webResourceBuilder.get(ClientResponse.class);
@@ -44,6 +34,16 @@ public class ABISImpl {
         WebResource.Builder webResourceBuilder = createWebResourceBuilder(path);
         ClientResponse response = webResourceBuilder.post(ClientResponse.class, new Gson().toJson(object));
         return response.getEntity(String.class);
+    }
+
+    public String sendRequest(Object request, String serviceName) throws Exception {
+        String servicePath = ConstantDao.getConstant("ABIS_BASE_PATH") + ConstantDao.getConstant(serviceName);
+        return callPostService(servicePath, request);
+    }
+
+    public String sendRequest(String serviceName, String pathParam) throws Exception {
+        String servicePath = ConstantDao.getConstant("ABIS_BASE_PATH") + ConstantDao.getConstant(serviceName);
+        return callGetService(servicePath + "/" + pathParam);
     }
 
 }

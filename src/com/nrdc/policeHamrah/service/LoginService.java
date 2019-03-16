@@ -34,7 +34,7 @@ public class LoginService {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response login(RequestLogin requestLogin) throws Exception {
+    public Response login(RequestLogin requestLogin) {
         logger.info("++================== login SERVICE : START ==================++");
         try {
             StandardResponse response = new LoginImpl().login(requestLogin);
@@ -56,7 +56,7 @@ public class LoginService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response authenticateUser(EncryptedRequest encryptedRequest) throws Exception {
+    public Response authenticateUser(EncryptedRequest encryptedRequest) {
         logger.info("++================== authenticateUser SERVICE : START ==================++");
         try {
             RequestAuthenticateUser request = new ObjectMapper().readValue(Encryption.decryptRequest(encryptedRequest), RequestAuthenticateUser.class);
@@ -83,7 +83,7 @@ public class LoginService {
     @Path("/system")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response loginToSystem(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) throws Exception {
+    public Response loginToSystem(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) {
         logger.info("++================== login-to-system SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null) {

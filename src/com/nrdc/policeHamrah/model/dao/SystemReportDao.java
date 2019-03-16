@@ -11,16 +11,15 @@ import java.util.Date;
 @Table(name = "PH_SYSTEM_REPORT", schema = Constants.SCHEMA)
 public class SystemReportDao extends SystemReportDto {
     public static final String tableName = "PH_SYSTEM_REPORT";
+    private Date time;
 
     public SystemReportDao() {
     }
 
+
     public SystemReportDao(RequestReportSystem requestReportSystem, Long fkUserId) {
         super(requestReportSystem, fkUserId);
     }
-
-
-    private Date time;
 
     @Override
     @Id
@@ -101,14 +100,14 @@ public class SystemReportDao extends SystemReportDto {
         return this.time;
     }
 
+    public void setTime(Date time) {
+        this.time = time;
+    }
+
     @Override
     @Basic
     @Column(name = "FK_USER_ID", table = tableName)
     public Long getFkUserId() {
         return super.getFkUserId();
-    }
-
-    public void setTime(Date time) {
-        this.time = time;
     }
 }
