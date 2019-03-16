@@ -113,7 +113,7 @@ public class UserServices {
         logger.info("++================== activeUser SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null || fkUserId == null) {
-                throw new ServerException(Constants.NOT_VALID_REQUEST);
+                throw new ServerException(Constants.REQUEST + Constants.IS_NOT_VALID);
             }
             StandardResponse response = new UserImpl().activeUser(token, fkUserId, fkSystemId);
             String key = UserDao.getKey(token).getKey();
@@ -141,7 +141,7 @@ public class UserServices {
         logger.info("++================== deActiveUser SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null || fkUserId == null) {
-                throw new ServerException(Constants.NOT_VALID_REQUEST);
+                throw new ServerException(Constants.REQUEST + Constants.IS_NOT_VALID);
             }
             StandardResponse response = new UserImpl().deActiveUser(token, fkUserId, fkSystemId);
             String key = UserDao.getKey(token).getKey();
@@ -220,7 +220,7 @@ public class UserServices {
         logger.info("++================== getRoles SERVICE : START ==================++");
         try {
             if (token == null || fkUserId == null) {
-                throw new ServerException(Constants.NOT_VALID_REQUEST);
+                throw new ServerException(Constants.REQUEST + Constants.IS_NOT_VALID);
             }
             StandardResponse response = new UserImpl().resetPassword(token, fkUserId);
             String key = UserDao.getKey(token).getKey();
@@ -248,7 +248,7 @@ public class UserServices {
         logger.info("++================== getRoles SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null) {
-                throw new ServerException(Constants.NOT_VALID_REQUEST);
+                throw new ServerException(Constants.REQUEST + Constants.IS_NOT_VALID);
             }
             StandardResponse response = new UserImpl().getUserRoles(token, fkUserId, fkSystemId);
             String key = UserDao.getKey(token).getKey();
@@ -301,7 +301,7 @@ public class UserServices {
         logger.info("++================== getUserRolesWithPrivileges SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null) {
-                throw new ServerException(Constants.NOT_VALID_REQUEST);
+                throw new ServerException(Constants.REQUEST + Constants.IS_NOT_VALID);
             }
             StandardResponse<ResponseGetRolesWithPrivileges> response = new UserImpl().getUserRolesWithPrivileges(token, fkUserId, fkSystemId);
             String key = UserDao.getKey(token).getKey();
@@ -329,7 +329,7 @@ public class UserServices {
         logger.info("++================== getPrivileges SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null) {
-                throw new ServerException(Constants.NOT_VALID_REQUEST);
+                throw new ServerException(Constants.REQUEST + Constants.IS_NOT_VALID);
             }
             StandardResponse response = new UserImpl().getPrivileges(token, fkSystemId);
             String key = UserDao.getKey(token).getKey();
@@ -354,7 +354,7 @@ public class UserServices {
         logger.info("++================== getUserSystems SERVICE : START ==================++");
         try {
             if (token == null) {
-                throw new ServerException(Constants.NOT_VALID_REQUEST);
+                throw new ServerException(Constants.REQUEST + Constants.IS_NOT_VALID);
             }
             StandardResponse<ResponseGetSystems> response = new SystemImpl().getUserSystems(token);
             String key = UserDao.getKey(token).getKey();
@@ -379,7 +379,7 @@ public class UserServices {
         logger.info("++================== getUserLoginSystems SERVICE : START ==================++");
         try {
             if (token == null) {
-                throw new ServerException(Constants.NOT_VALID_REQUEST);
+                throw new ServerException(Constants.REQUEST + Constants.IS_NOT_VALID);
             }
             StandardResponse<ResponseGetSystems> response = new SystemImpl().getUserLoginSystems(token);
             String key = UserDao.getKey(token).getKey();
@@ -404,7 +404,7 @@ public class UserServices {
         logger.info("++================== getUserSystems SERVICE : START ==================++");
         try {
             if (token == null || fkUserId == null) {
-                throw new ServerException(Constants.NOT_VALID_REQUEST);
+                throw new ServerException(Constants.REQUEST + Constants.IS_NOT_VALID);
             }
             StandardResponse<ResponseGetSystems> response = new SystemImpl().getUserSystems(token, fkUserId);
             String key = UserDao.getKey(token).getKey();

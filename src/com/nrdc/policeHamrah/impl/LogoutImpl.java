@@ -92,7 +92,7 @@ public class LogoutImpl {
                     .setParameter("fkUserId", user.getId())
                     .getSingleResult();
         } catch (Exception ex) {
-            throw new ServerException(Constants.NOT_VALID_TOKEN);
+            throw new ServerException(Constants.TOKEN + Constants.IS_NOT_VALID);
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();

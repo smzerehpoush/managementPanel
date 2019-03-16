@@ -97,7 +97,7 @@ public class SystemImpl {
                 rateCount = systemDao.getRateCount();
                 rate = systemDao.getRate();
             } catch (Exception ex) {
-                throw new ServerException(Constants.NOT_VALID_SYSTEM);
+                throw new ServerException(Constants.SYSTEM + Constants.IS_NOT_VALID);
             }
             Double newRate = (rate * rateCount + requestReportSystem.getRate()) / (rateCount + 1L);
             entityManager.createQuery("UPDATE SystemDao s SET s.rate = :newRate  WHERE s.id = :systemId ")
@@ -420,7 +420,7 @@ public class SystemImpl {
                     .setParameter("fkSystemId", fkSystemId)
                     .getSingleResult();
         } catch (Exception ex) {
-            throw new ServerException(Constants.NOT_VALID_SYSTEM + Constants.VERSION + Constants.IS_NOT_VALID);
+            throw new ServerException(Constants.SYSTEM + Constants.IS_NOT_VALID + Constants.VERSION + Constants.IS_NOT_VALID);
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();

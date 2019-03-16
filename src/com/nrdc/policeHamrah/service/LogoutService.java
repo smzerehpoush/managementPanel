@@ -33,7 +33,7 @@ public class LogoutService {
         logger.info("++================== logout SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null) {
-                throw new ServerException(Constants.NOT_VALID_REQUEST);
+                throw new ServerException(Constants.REQUEST + Constants.IS_NOT_VALID);
             }
             logger.info("Request Logout = { token : " + token + " , fkSystemId : " + fkSystemId + " }");
             StandardResponse response = new LogoutImpl().logout(token, fkSystemId);

@@ -37,7 +37,7 @@ public class PrivilegeServices {
         logger.info("++================== getUserPrivileges SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null) {
-                throw new ServerException(Constants.NOT_VALID_REQUEST);
+                throw new ServerException(Constants.REQUEST + Constants.IS_NOT_VALID);
             }
             StandardResponse<ResponseGetPrivileges> response = new PrivilegeImpl().getPrivileges(token, fkSystemId);
             String key = UserDao.getKey(token).getKey();

@@ -89,7 +89,7 @@ public class RoleServices {
         logger.info("++================== removeRole SERVICE : START ==================++");
         try {
             if (token == null || fkRoleId == null) {
-                throw new ServerException(Constants.NOT_VALID_REQUEST);
+                throw new ServerException(Constants.REQUEST + Constants.IS_NOT_VALID);
             }
             StandardResponse response = new RoleImpl().removeRole(token, fkRoleId);
             String key = UserDao.getKey(token).getKey();
@@ -117,7 +117,7 @@ public class RoleServices {
         logger.info("++================== getRolePrivileges SERVICE : START ==================++");
         try {
             if (token == null || fkRoleId == null) {
-                throw new ServerException(Constants.NOT_VALID_REQUEST);
+                throw new ServerException(Constants.REQUEST + Constants.IS_NOT_VALID);
             }
             StandardResponse response = new RoleImpl().getRolePrivileges(token, fkRoleId);
             String key = UserDao.getKey(token).getKey();

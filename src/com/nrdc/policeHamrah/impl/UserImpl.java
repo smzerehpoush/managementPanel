@@ -187,7 +187,7 @@ public class UserImpl {
                     .setParameter("roleId", roleId)
                     .getSingleResult();
             if (!size.equals(1L))
-                throw new ServerException(Constants.NOT_VALID_ROLE);
+                throw new ServerException(Constants.ROLE + Constants.IS_NOT_VALID);
 
         } finally {
             if (entityManager.isOpen())
@@ -209,7 +209,7 @@ public class UserImpl {
             if (!checkUserPassword(user.getUsername(), requestResetPassword.getOldPassword()))
                 throw new ServerException(Constants.INCORRECT_USERNAME_OR_PASSWORD);
             if (!checkPassword(requestResetPassword.getNewPassword()))
-                throw new ServerException(Constants.NOT_VALID_PASSWORD);
+                throw new ServerException(Constants.PASSWORD + Constants.IS_NOT_VALID);
             setUserNewPassword(user.getUsername(), requestResetPassword.getNewPassword());
             StandardResponse response = new StandardResponse();
 //            operation.setStatusCode(1L);
@@ -457,7 +457,7 @@ public class UserImpl {
                     .setParameter("username", requestAddUser.getUsername())
                     .getSingleResult();
             if (size > 0)
-                throw new ServerException(Constants.USERNAME + Constants.ACTIVE_USER);
+                throw new ServerException(Constants.USERNAME + Constants.DUPLICATED);
             //check nationalId
 //            if (requestAddUser.getUsername() == null || requestAddUser.getUsername().equals(""))
 //                throw new ServerException("کد ملی اجباری شده");

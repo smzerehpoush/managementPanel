@@ -36,7 +36,7 @@ public class TokenServices {
         logger.info("++================== removeToken SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null || fkUserId == null) {
-                throw new ServerException(Constants.NOT_VALID_REQUEST);
+                throw new ServerException(Constants.REQUEST + Constants.IS_NOT_VALID);
             }
             StandardResponse response = new TokenImpl().removeToken(token, fkSystemId, fkUserId);
             String key = UserDao.getKey(token).getKey();

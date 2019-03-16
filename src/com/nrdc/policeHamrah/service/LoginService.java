@@ -87,7 +87,7 @@ public class LoginService {
         logger.info("++================== login-to-system SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null) {
-                throw new ServerException(Constants.NOT_VALID_REQUEST);
+                throw new ServerException(Constants.REQUEST + Constants.IS_NOT_VALID);
             }
             StandardResponse<ResponseLogin> response = new LoginImpl().loginToSystem(token, fkSystemId);
             SystemDao systemDao = SystemDao.getSystem(fkSystemId);

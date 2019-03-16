@@ -27,11 +27,9 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
         checkUsername(requestAddUser.getUsername());
         this.setUsername(requestAddUser.getUsername());
         this.setPassword(requestAddUser.getPassword());
-        checkPhoneNumber(requestAddUser.getPhoneNumber());
         this.setPhoneNumber(requestAddUser.getPhoneNumber());
         this.setFirstName(requestAddUser.getFirstName());
         this.setLastName(requestAddUser.getLastName());
-        checkNationalId(requestAddUser.getNationalId());
         this.setNationalId(requestAddUser.getNationalId());
         this.setPoliceCode(requestAddUser.getPoliceCode());
         this.setIsActive(true);
@@ -77,12 +75,12 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
                     .setParameter("systemName", systemName)
                     .getSingleResult();
             if (!user.getIsActive())
-                throw new ServerException(Constants.NOT_ACTIVE_USER);
+                throw new ServerException(Constants.USER + Constants.IS_NOT_ACTIVE);
             return user;
         } catch (NoResultException ex1) {
             throw new ServerException(Constants.INCORRECT_USERNAME_OR_PASSWORD);
         } catch (NonUniqueResultException ex2) {
-            throw new ServerException(Constants.NOT_VALID_USER);
+            throw new ServerException(Constants.USER + Constants.IS_NOT_VALID);
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();
@@ -97,7 +95,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
                     .setParameter("fkUserId", fkUserId)
                     .getSingleResult();
         } catch (Exception ex) {
-            throw new ServerException(Constants.NOT_VALID_USER);
+            throw new ServerException(Constants.USER + Constants.IS_NOT_VALID);
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();
@@ -114,12 +112,12 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
                     .setParameter("password", password);
             UserDao user = (UserDao) query.getSingleResult();
             if (!user.getIsActive())
-                throw new ServerException(Constants.NOT_ACTIVE_USER);
+                throw new ServerException(Constants.USER + Constants.IS_NOT_ACTIVE);
             return user;
         } catch (NoResultException ex1) {
             throw new ServerException(Constants.INCORRECT_USERNAME_OR_PASSWORD);
         } catch (NonUniqueResultException ex2) {
-            throw new ServerException(Constants.NOT_VALID_USER);
+            throw new ServerException(Constants.USER + Constants.IS_NOT_VALID);
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();
@@ -140,7 +138,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
         } catch (NoResultException ex1) {
             throw new ServerException(Constants.INCORRECT_USERNAME_OR_PASSWORD);
         } catch (NonUniqueResultException ex2) {
-            throw new ServerException(Constants.NOT_VALID_USER);
+            throw new ServerException(Constants.USER + Constants.IS_NOT_VALID);
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();
@@ -183,7 +181,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
                     .setParameter("token", token)
                     .getSingleResult();
         } catch (NonUniqueResultException | NoResultException ex) {
-            throw new ServerException(Constants.NOT_VALID_USER);
+            throw new ServerException(Constants.USER + Constants.IS_NOT_VALID);
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();
@@ -206,7 +204,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
                     .setParameter("username", username)
                     .getSingleResult();
         } catch (NonUniqueResultException | NoResultException ex) {
-            throw new ServerException(Constants.NOT_VALID_USER);
+            throw new ServerException(Constants.USER + Constants.IS_NOT_VALID);
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();
@@ -244,7 +242,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
                     .getResultList()
                     .size();
             if (size < 1) {
-                throw new ServerException(Constants.PERMISSION_ERROR);
+                throw new ServerException(Constants.PRIVILEGE+ Constants.IS_NOT_VALID);
             }
             return true;
 
@@ -270,7 +268,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
                     .getResultList()
                     .size();
             if (size < 1) {
-                throw new ServerException(Constants.PERMISSION_ERROR);
+                throw new ServerException(Constants.PRIVILEGE + Constants.IS_NOT_VALID);
             }
             return true;
 
@@ -366,7 +364,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
                     .setParameter("fkUserId", super.getId())
                     .getSingleResult();
             if (!size.equals(0L))
-                throw new ServerException(Constants.ACTIVE_USER);
+                throw new ServerException(Constants.USER + Constants.IS_ACTIVE);
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();
@@ -383,7 +381,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
                     .getSingleResult();
 
             if (!size.equals(0L))
-                throw new ServerException(Constants.ACTIVE_USER);
+                throw new ServerException(Constants.USER + Constants.IS_ACTIVE);
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();
@@ -401,7 +399,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
                     .setParameter("fkUserId", super.getId())
                     .getSingleResult();
             if (!size.equals(0L))
-                throw new ServerException(Constants.ACTIVE_USER);
+                throw new ServerException(Constants.USER + Constants.IS_ACTIVE);
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();
@@ -418,7 +416,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
                     .setParameter("fkUserId", super.getId())
                     .getSingleResult();
             if (!size.equals(0L))
-                throw new ServerException(Constants.ACTIVE_USER + Constants.TOKEN + Constants.EXISTS);
+                throw new ServerException(Constants.USER + Constants.IS_ACTIVE + Constants.TOKEN + Constants.EXISTS);
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();
@@ -444,7 +442,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
                     .getResultList()
                     .size() == 1;
             if (!hasAccess) {
-                throw new ServerException(Constants.PERMISSION_ERROR);
+                throw new ServerException(Constants.PRIVILEGE + Constants.IS_NOT_VALID);
             }
         } finally {
             if (entityManager.isOpen())

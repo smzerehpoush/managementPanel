@@ -32,7 +32,7 @@ public class AuthDao extends com.nrdc.policeHamrah.model.dto.AuthDto {
                     .setParameter("token", token)
                     .getSingleResult();
             if (!size.equals(1L)) {
-                throw new ServerException(Constants.NOT_VALID_TOKEN);
+                throw new ServerException(Constants.TOKEN + Constants.IS_NOT_VALID);
             }
         } finally {
             if (entityManager.isOpen())

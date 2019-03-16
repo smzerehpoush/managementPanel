@@ -39,7 +39,7 @@ public class LoginImpl {
 
             } catch (Exception ex) {
                 response.setResultCode(-1);
-                response.setResultMessage(Constants.NOT_VALID_USER);
+                response.setResultMessage(Constants.USER + Constants.IS_NOT_VALID);
             }
         } finally {
             if (entityManager.isOpen())
@@ -189,7 +189,7 @@ public class LoginImpl {
                     .setParameter("username", requestLogin.getUsername())
                     .getSingleResult();
             if (!size.equals(0L))
-                throw new ServerException(Constants.ACTIVE_USER);
+                throw new ServerException(Constants.USER + Constants.IS_ACTIVE);
             UserDao user = verifyUser(requestLogin);
             SystemDao systemDao = SystemDao.getSystem(SystemNames.POLICE_HAMRAH);
             PrivilegeDto privilege = PrivilegeDao.getPrivilege(PrivilegeNames.LOGIN);
@@ -241,7 +241,7 @@ public class LoginImpl {
             }
             UserDao user = UserDao.validate(policeHamrahToken);
             if (!user.getIsActive())
-                throw new ServerException(Constants.USER_IS_NOT_ACTIVE);
+                throw new ServerException(Constants.USER + Constants.IS_NOT_ACTIVE);
             SystemDao systemDao = SystemDao.getSystem(fkSystemId);
             entityManager.createQuery("DELETE FROM AuthDao WHERE fkUserId = :fkUserId AND fkSystemId = :fkSystemId")
                     .setParameter("fkUserId", user.getId())
@@ -278,7 +278,7 @@ public class LoginImpl {
 //            user.setPassword("");
 //
 //        } else {
-//            throw new ServerException(Constants.NOT_VALID_SYSTEM);
+//            throw new ServerException(Constants.SYSTEM + Constants.IS_NOT_VALID);
 //        }
         responseLogin.setUser(user);
         response.setResponse(responseLogin);
@@ -322,7 +322,7 @@ public class LoginImpl {
         if (user.getIsActive())
             return user;
         else
-            throw new ServerException(Constants.NOT_ACTIVE_USER);
+            throw new ServerException(Constants.USER + Constants.IS_NOT_ACTIVE);
     }
 
     private String decryptPassword(String username, String encryptedPassword) throws Exception {

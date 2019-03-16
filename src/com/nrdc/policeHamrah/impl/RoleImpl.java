@@ -79,7 +79,7 @@ public class RoleImpl {
                 if (role.getRole().equals(Constants.SYS_ADMIN))
                     throw new ServerException(Constants.CAN_NOT_EDIT_SYSADMIN);
             } catch (NonUniqueResultException | NoResultException ex) {
-                throw new ServerException(Constants.NOT_VALID_ROLE);
+                throw new ServerException(Constants.ROLE + Constants.IS_NOT_VALID);
             }
             UserDao user = UserDao.validate(token);
             Long fkSystemId = (Long) entityManager.createQuery("SELECT r.fkSystemId FROM RoleDao r WHERE r.id = :fkRoleId ")
