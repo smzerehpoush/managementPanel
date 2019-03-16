@@ -32,7 +32,7 @@ public class SystemServices {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllSystem(@QueryParam("token") String token) throws Exception {
+    public Response getAllSystem(@QueryParam("token") String token) {
         logger.info("++================== getAllSystems SERVICE : START ==================++");
         try {
             if (token == null) {
@@ -81,7 +81,7 @@ public class SystemServices {
     @Path("/versions")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getSystemWithVersion(@QueryParam("token") String token) throws Exception {
+    public Response getSystemWithVersion(@QueryParam("token") String token) {
         logger.info("++================== getSystemWithVersion SERVICE : START ==================++");
         try {
             if (token == null) {
@@ -123,14 +123,13 @@ public class SystemServices {
      * 36
      * get last version of given system
      *
-     * @param fkSystemId
+     * @param fkSystemId id of system
      * @return json data
-     * @throws Exception
      */
     @Path("/version/{fkSystemId}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getSystem(@PathParam("fkSystemId") Long fkSystemId) throws Exception {
+    public Response getSystem(@PathParam("fkSystemId") Long fkSystemId) {
         logger.info("++================== getSystemWithVersion SERVICE : START ==================++");
         try {
             String result = new SystemImpl().getSystem(fkSystemId);
@@ -166,7 +165,7 @@ public class SystemServices {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getSystemUsers(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) throws Exception {
+    public Response getSystemUsers(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) {
         logger.info("++================== getSystemUsers SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null) {
@@ -195,7 +194,7 @@ public class SystemServices {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getSystemRoles(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) throws Exception {
+    public Response getSystemRoles(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) {
         logger.info("++================== getSystemRoles SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null) {
@@ -223,7 +222,7 @@ public class SystemServices {
     @Path("/roles/privileges")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getSystemRolesWithPrivileges(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) throws Exception {
+    public Response getSystemRolesWithPrivileges(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) {
         logger.info("++================== getUserRolesWithPrivileges SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null) {
@@ -251,7 +250,7 @@ public class SystemServices {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response reportSystem(EncryptedRequest encryptedRequest) throws Exception {
+    public Response reportSystem(EncryptedRequest encryptedRequest) {
         logger.info("++================== reportSystem SERVICE : START ==================++");
         ObjectMapper objectMapper = new ObjectMapper();
         try {
@@ -279,7 +278,7 @@ public class SystemServices {
     @Path("/download")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response incrementDownloadCount(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId, @QueryParam("versionCode") Long versionCode) throws Exception {
+    public Response incrementDownloadCount(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId, @QueryParam("versionCode") Long versionCode) {
         logger.info("++================== incrementDownloadCount SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null || versionCode == null) {
@@ -307,7 +306,7 @@ public class SystemServices {
     @Path("/report")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getSystemReports(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) throws Exception {
+    public Response getSystemReports(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) {
         logger.info("++================== incrementDownloadCount SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null) {

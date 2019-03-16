@@ -177,9 +177,8 @@ public class LoginImpl {
      * @param policeHamrahToken token of user in policeHamrah system
      * @param fkSystemId id of system that user wants to login to it
      * @return ResponseLogin
-     * @throws Exception
      */
-    public StandardResponse<ResponseLogin> loginToSystem(String policeHamrahToken, Long fkSystemId) throws Exception {
+    public StandardResponse<ResponseLogin> loginToSystem(String policeHamrahToken, Long fkSystemId) {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         entityManager.getEntityManagerFactory().getCache().evictAll();

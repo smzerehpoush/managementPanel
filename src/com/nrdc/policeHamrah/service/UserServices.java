@@ -35,7 +35,7 @@ public class UserServices {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addUser(EncryptedRequest encryptedRequest) throws Exception {
+    public Response addUser(EncryptedRequest encryptedRequest) {
         logger.info("++================== addUser SERVICE : START ==================++");
         try {
             RequestAddUser request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestAddUser.class);
@@ -60,7 +60,7 @@ public class UserServices {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response registerUser(EncryptedRequest encryptedRequest) throws Exception {
+    public Response registerUser(EncryptedRequest encryptedRequest) {
         logger.info("++================== addUser SERVICE : START ==================++");
         try {
             RequestAddUser request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestAddUser.class);
@@ -83,7 +83,7 @@ public class UserServices {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response editUser(EncryptedRequest encryptedRequest) throws Exception {
+    public Response editUser(EncryptedRequest encryptedRequest) {
         logger.info("++================== editUser SERVICE : START ==================++");
         try {
             RequestEditUser request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestEditUser.class);
@@ -109,7 +109,7 @@ public class UserServices {
     @Path("/active")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response activeUser(@QueryParam("token") String token, @QueryParam("fkUserId") Long fkUserId, @QueryParam("fkSystemId") Long fkSystemId) throws Exception {
+    public Response activeUser(@QueryParam("token") String token, @QueryParam("fkUserId") Long fkUserId, @QueryParam("fkSystemId") Long fkSystemId) {
         logger.info("++================== activeUser SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null || fkUserId == null) {
@@ -137,7 +137,7 @@ public class UserServices {
     @Path("/deActive")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deActiveUser(@QueryParam("token") String token, @QueryParam("fkUserId") Long fkUserId, @QueryParam("fkSystemId") Long fkSystemId) throws Exception {
+    public Response deActiveUser(@QueryParam("token") String token, @QueryParam("fkUserId") Long fkUserId, @QueryParam("fkSystemId") Long fkSystemId) {
         logger.info("++================== deActiveUser SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null || fkUserId == null) {
@@ -165,7 +165,7 @@ public class UserServices {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response filterUsers(EncryptedRequest encryptedRequest) throws Exception {
+    public Response filterUsers(EncryptedRequest encryptedRequest) {
         logger.info("++================== filterUsers SERVICE : START ==================++");
         try {
             RequestFilterUsers request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestFilterUsers.class);
@@ -191,7 +191,7 @@ public class UserServices {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response resetPassword(EncryptedRequest encryptedRequest) throws Exception {
+    public Response resetPassword(EncryptedRequest encryptedRequest) {
         logger.info("++================== resetPassword SERVICE : START ==================++");
         try {
             RequestResetPassword request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestResetPassword.class);
@@ -208,15 +208,14 @@ public class UserServices {
 
     /***
      * reset password of user for his boss
-     * @param token
-     * @param fkUserId
-     * @return
-     * @throws Exception
+     * @param token token value
+     * @param fkUserId id of user
+     * @return response
      */
     @Path("/resetPassword")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response resetPassword(@QueryParam("token") String token, @QueryParam("fkUserId") Long fkUserId) throws Exception {
+    public Response resetPassword(@QueryParam("token") String token, @QueryParam("fkUserId") Long fkUserId) {
         logger.info("++================== getRoles SERVICE : START ==================++");
         try {
             if (token == null || fkUserId == null) {
@@ -239,12 +238,13 @@ public class UserServices {
      *
      * @param token      token of currentUser
      * @param fkSystemId id of system
+     * @param fkUserId   id of user
      * @return all roles of current user
      */
     @Path("/roles")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserRoles(@QueryParam("token") String token, @QueryParam("fkUserId") Long fkUserId, @QueryParam("fkSystemId") Long fkSystemId) throws Exception {
+    public Response getUserRoles(@QueryParam("token") String token, @QueryParam("fkUserId") Long fkUserId, @QueryParam("fkSystemId") Long fkSystemId) {
         logger.info("++================== getRoles SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null) {
@@ -272,7 +272,7 @@ public class UserServices {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response assignRole(EncryptedRequest encryptedRequest) throws Exception {
+    public Response assignRole(EncryptedRequest encryptedRequest) {
         logger.info("++================== assignRoles SERVICE : START ==================++");
         try {
             RequestAssignRole request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestAssignRole.class);
@@ -292,12 +292,13 @@ public class UserServices {
      *
      * @param token      user token
      * @param fkSystemId id of system
+     * @param fkUserId   id of user
      * @return list of roles with privileges of a user
      */
     @Path("/roles/privileges")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserRolesWithPrivileges(@QueryParam("token") String token, @QueryParam("fkUserId") Long fkUserId, @QueryParam("fkSystemId") Long fkSystemId) throws Exception {
+    public Response getUserRolesWithPrivileges(@QueryParam("token") String token, @QueryParam("fkUserId") Long fkUserId, @QueryParam("fkSystemId") Long fkSystemId) {
         logger.info("++================== getUserRolesWithPrivileges SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null) {
@@ -325,7 +326,7 @@ public class UserServices {
     @Path("/privileges")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getPrivileges(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) throws Exception {
+    public Response getPrivileges(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) {
         logger.info("++================== getPrivileges SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null) {
@@ -350,7 +351,7 @@ public class UserServices {
     @Path("/systems")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserSystems(@QueryParam("token") String token) throws Exception {
+    public Response getUserSystems(@QueryParam("token") String token) {
         logger.info("++================== getUserSystems SERVICE : START ==================++");
         try {
             if (token == null) {
@@ -375,7 +376,7 @@ public class UserServices {
     @Path("/systems/login")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserLoginSystems(@QueryParam("token") String token) throws Exception {
+    public Response getUserLoginSystems(@QueryParam("token") String token) {
         logger.info("++================== getUserLoginSystems SERVICE : START ==================++");
         try {
             if (token == null) {
@@ -395,12 +396,13 @@ public class UserServices {
     /***
      * 28
      * @param token token of a valid user
+     * @param fkUserId id of user
      * @return returns list of systems of a specific user with fkUserId
      */
     @Path("/systems/id")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserSystems(@QueryParam("token") String token, @QueryParam("fkUserId") Long fkUserId) throws Exception {
+    public Response getUserSystems(@QueryParam("token") String token, @QueryParam("fkUserId") Long fkUserId) {
         logger.info("++================== getUserSystems SERVICE : START ==================++");
         try {
             if (token == null || fkUserId == null) {

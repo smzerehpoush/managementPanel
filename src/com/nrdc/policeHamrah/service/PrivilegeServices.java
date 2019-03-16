@@ -33,7 +33,7 @@ public class PrivilegeServices {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserPrivileges(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) throws Exception {
+    public Response getUserPrivileges(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) {
         logger.info("++================== getUserPrivileges SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null) {

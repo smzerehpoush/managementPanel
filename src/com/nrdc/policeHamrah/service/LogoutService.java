@@ -29,7 +29,7 @@ public class LogoutService {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response logout(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) throws Exception {
+    public Response logout(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId) {
         logger.info("++================== logout SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null) {

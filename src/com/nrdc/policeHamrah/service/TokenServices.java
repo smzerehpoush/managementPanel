@@ -32,7 +32,7 @@ public class TokenServices {
      */
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-    public Response removeToken(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId, @QueryParam("fkUserId") Long fkUserId) throws Exception {
+    public Response removeToken(@QueryParam("token") String token, @QueryParam("fkSystemId") Long fkSystemId, @QueryParam("fkUserId") Long fkUserId) {
         logger.info("++================== removeToken SERVICE : START ==================++");
         try {
             if (token == null || fkSystemId == null || fkUserId == null) {

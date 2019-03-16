@@ -32,7 +32,7 @@ public class RoleServices {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addRole(EncryptedRequest encryptedRequest) throws Exception {
+    public Response addRole(EncryptedRequest encryptedRequest) {
         logger.info("++================== addRole SERVICE : START ==================++");
         ObjectMapper objectMapper = new ObjectMapper();
         try {
@@ -58,7 +58,7 @@ public class RoleServices {
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response editRole(EncryptedRequest encryptedRequest) throws Exception {
+    public Response editRole(EncryptedRequest encryptedRequest) {
         logger.info("++================== editRole SERVICE : START ==================++");
         ObjectMapper objectMapper = new ObjectMapper();
         try {
@@ -85,7 +85,7 @@ public class RoleServices {
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response removeRole(@QueryParam("token") String token, @QueryParam("fkRoleId") Long fkRoleId) throws Exception {
+    public Response removeRole(@QueryParam("token") String token, @QueryParam("fkRoleId") Long fkRoleId) {
         logger.info("++================== removeRole SERVICE : START ==================++");
         try {
             if (token == null || fkRoleId == null) {
@@ -113,7 +113,7 @@ public class RoleServices {
     @Path("/privileges")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getRolePrivileges(@QueryParam("token") String token, @QueryParam("fkRoleId") Long fkRoleId) throws Exception {
+    public Response getRolePrivileges(@QueryParam("token") String token, @QueryParam("fkRoleId") Long fkRoleId) {
         logger.info("++================== getRolePrivileges SERVICE : START ==================++");
         try {
             if (token == null || fkRoleId == null) {
