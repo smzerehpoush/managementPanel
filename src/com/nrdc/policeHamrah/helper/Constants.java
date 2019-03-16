@@ -38,6 +38,7 @@ public class Constants {
     public static final String CAN_NOT_REMOVE_SYSADMIN = "شما نمی توانید نقش مدیر ارشد را حذف کنید";
     public static final String CAN_NOT_EDIT_THIS_USER = "شما دسترسی تغییر کارری با چنین سیتمی را ندارید.";
     public static final String CAN_NOT_DE_ACTIVE_THIS_USER = "شما دسترسی غیر فعال کردن کارری با چنین سیتمی را ندارید.";
+    public static final String CAN_NOT_LOGOUT_FROM_SYSTEM = "شما نمیتوانید از این سیستم خارج شوید.";
 
 
     public static final String USER_IS_NOT_ACTIVE = "کاربر فعال نمی باشد";
