@@ -3,6 +3,7 @@ package com.nrdc.policeHamrah.helper;
 public class Constants {
     public static final String DEFAULT_KEY = "Android";
     public static final String SCHEMA = "POLICE_HAMRAH";
+    public static final String LOGOUT_PATH = "/logout";
 
 
     public static final String SYS_ADMIN = "SYS_ADMIN";

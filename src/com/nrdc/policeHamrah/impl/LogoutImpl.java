@@ -103,9 +103,9 @@ public class LogoutImpl {
         TokenRequest request = new TokenRequest();
         request.setToken(token);
         EncryptedResponse encryptedRequest = Encryption.encryptResponse(Constants.DEFAULT_KEY, request);
-        String output = CallWebService.callPostService(systemDao.getSystemPath() + "/logout", encryptedRequest);
+        String output = CallWebService.callPostService(systemDao.getSystemPath() + Constants.LOGOUT_PATH, encryptedRequest);
         EncryptedRequest encryptedResponse = new Gson().fromJson(output, EncryptedRequest.class);
-        encryptedResponse.setToken("Android");
+        encryptedResponse.setToken(Constants.DEFAULT_KEY);
         StandardResponse response = new Gson().fromJson(Encryption.decryptRequest(encryptedResponse), StandardResponse.class);
         if (response.getResultCode() == -1)
             throw new ServerException(Constants.CAN_NOT_LOGOUT_FROM_SYSTEM + systemDao.getTitle());
