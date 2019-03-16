@@ -3,6 +3,7 @@ package com.nrdc.policeHamrah.impl;
 import com.nrdc.policeHamrah.exceptions.ServerException;
 import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.PrivilegeNames;
+import com.nrdc.policeHamrah.helper.SystemNames;
 import com.nrdc.policeHamrah.jsonModel.StandardResponse;
 import com.nrdc.policeHamrah.model.dao.PrivilegeDao;
 import com.nrdc.policeHamrah.model.dao.SystemDao;
@@ -42,7 +43,8 @@ public class TokenImpl {
                     .setParameter("fkUserId", fkUserId)
                     .setParameter("fkSystemId", fkSystemId)
                     .executeUpdate();
-            new LogoutImpl().deleteAuthInfoFromAnotherSystemDatabase(dbToken, inputSystem);
+            if (!inputSystem.getSystemName().equals(SystemNames.POLICE_HAMRAH.name()))
+                new LogoutImpl().deleteAuthInfoFromAnotherSystemDatabase(dbToken, inputSystem);
             if (transaction.isActive())
                 transaction.commit();
 
