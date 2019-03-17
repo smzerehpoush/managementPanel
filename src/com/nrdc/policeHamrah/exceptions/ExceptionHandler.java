@@ -16,6 +16,7 @@ public class ExceptionHandler extends Exception {
         logger.error(message);
         logger.error(ex.getMessage());
         if (!(ex instanceof ServerException)) {
+            ex.printStackTrace();
             ex = new Exception(Constants.SERVER_EXCEPTION);
         }
         StandardResponse response = StandardResponse.getNOKExceptions(ex);
