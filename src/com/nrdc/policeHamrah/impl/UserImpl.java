@@ -47,7 +47,7 @@ public class UserImpl {
                     SystemDao systemDao = SystemDao.getSystem(fkSystemId);
                     if (systemDao.getSystemName().equals(SystemNames.VEHICLE_TICKET.name()))
                         addUserToSystem(user, fkSystemId);
-                    else if (systemDao.getSystemName().equals(SystemNames.GASHT.name()) || systemDao.getSystemName().equals(SystemNames.CRASHES.name())) {
+                    else if (systemDao.getSystemName().equals(SystemNames.VT_REPORT.name()) || systemDao.getSystemName().equals(SystemNames.AGAHI.name()) || systemDao.getSystemName().equals(SystemNames.GASHT.name()) || systemDao.getSystemName().equals(SystemNames.CRASHES.name())) {
                     } else {
                         throw new ServerException(Constants.FEATURE_NOT_SUPPORTED);
                     }
@@ -458,14 +458,6 @@ public class UserImpl {
                     .getSingleResult();
             if (size > 0)
                 throw new ServerException(Constants.USERNAME + Constants.DUPLICATED);
-            //check nationalId
-//            if (requestAddUser.getUsername() == null || requestAddUser.getUsername().equals(""))
-//                throw new ServerException("کد ملی اجباری شده");
-//            size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.nationalId = :nationalId")
-//                    .setParameter("nationalId", requestAddUser.getNationalId())
-//                    .getSingleResult();
-//            if (size > 0)
-//                throw new ServerException("کد ملی تکراری می باشد.");
             //check policeCode
             if (requestAddUser.getPoliceCode() != null && !requestAddUser.getPoliceCode().equals(""))
                 size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.policeCode= :policeCode")
@@ -650,7 +642,6 @@ public class UserImpl {
         entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             UserDao.validate(token);
-//            user.checkPrivilege(PrivilegeNames.FILTER_USERS, requestFilterUsers.getFkSystemId());
             StringBuilder query = new StringBuilder();
             query.append("SELECT distinct(u) FROM UserDao u ");
             if (requestFilterUsers.getFkSystemId() != null) {
