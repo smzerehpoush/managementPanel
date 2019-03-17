@@ -6,8 +6,10 @@ import com.nrdc.policeHamrah.helper.*;
 import com.nrdc.policeHamrah.jsonModel.EncryptedRequest;
 import com.nrdc.policeHamrah.jsonModel.EncryptedResponse;
 import com.nrdc.policeHamrah.jsonModel.StandardResponse;
-import com.nrdc.policeHamrah.model.dao.*;
-import com.nrdc.policeHamrah.model.dto.PrivilegeDto;
+import com.nrdc.policeHamrah.model.dao.AuthDao;
+import com.nrdc.policeHamrah.model.dao.OperationDao;
+import com.nrdc.policeHamrah.model.dao.SystemDao;
+import com.nrdc.policeHamrah.model.dao.UserDao;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -23,20 +25,18 @@ public class LogoutImpl {
         entityManager.getEntityManagerFactory().getCache().evictAll();
         OperationDao operation = new OperationDao();
         operation.setUserToken(token);
-        operation.setPrivilegeName(PrivilegeNames.LOGOUT.name());
         String description = new StringBuilder().append("someone wants to logout with token : ")
                 .append(token)
                 .append(" ,systemId : ")
                 .append(fkSystemId)
                 .toString();
         operation.setDescription(description);
+        operation.setPrivilegeName(PrivilegeNames.LOGOUT.name());
         try {
             if (transaction != null && !transaction.isActive())
                 transaction.begin();
             if (!operationTransaction.isActive())
                 operationTransaction.begin();
-            PrivilegeDto privilege = PrivilegeDao.getPrivilege(PrivilegeNames.LOGOUT);
-            operation.setFkPrivilegeId(privilege.getId());
             UserDao user = UserDao.validate(token);
             SystemDao systemDao = SystemDao.getSystem(fkSystemId);
             SystemDao phSystem = SystemDao.getSystem(SystemNames.POLICE_HAMRAH);
