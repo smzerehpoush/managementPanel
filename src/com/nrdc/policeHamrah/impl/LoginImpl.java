@@ -7,9 +7,11 @@ import com.nrdc.policeHamrah.jsonModel.StandardResponse;
 import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestAuthenticateUser;
 import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestLogin;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseLogin;
-import com.nrdc.policeHamrah.model.dao.*;
+import com.nrdc.policeHamrah.model.dao.AuthDao;
+import com.nrdc.policeHamrah.model.dao.OperationDao;
+import com.nrdc.policeHamrah.model.dao.SystemDao;
+import com.nrdc.policeHamrah.model.dao.UserDao;
 import com.nrdc.policeHamrah.model.dto.AuthDto;
-import com.nrdc.policeHamrah.model.dto.PrivilegeDto;
 import com.nrdc.policeHamrah.model.dto.UserDto;
 import org.apache.log4j.Logger;
 
@@ -141,8 +143,7 @@ public class LoginImpl {
                 throw new ServerException(Constants.USER + Constants.IS_ACTIVE);
             UserDao user = verifyUser(requestLogin);
             SystemDao systemDao = SystemDao.getSystem(SystemNames.POLICE_HAMRAH);
-            PrivilegeDto privilege = PrivilegeDao.getPrivilege(PrivilegeNames.LOGIN);
-            operation.setFkPrivilegeId(privilege.getId());
+            operation.setDescription(PrivilegeNames.LOGIN.name());
             AuthDto auth = new AuthDao(user, systemDao);
             entityManager.persist(auth);
             ResponseLogin responseLogin = new ResponseLogin();
