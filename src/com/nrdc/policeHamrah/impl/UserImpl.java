@@ -795,4 +795,21 @@ public class UserImpl {
                 entityManager.close();
         }
     }
+
+    public StandardResponse isManager(String token) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
+        try {
+            UserDao user = UserDao.validate(token);
+            Long size = (Long) entityManager.createQuery("SELECT COUNT (ur) FROM UserRoleDao ur WHERE ur.fkUserId = :fkUserId ")
+                    .setParameter("fkUserId", user.getId())
+                    .getSingleResult();
+            StandardResponse<Boolean> response = new StandardResponse<>();
+            response.setResponse(size.equals(0L));
+            return response;
+        } finally {
+            if (entityManager.isOpen())
+                entityManager.close();
+        }
+    }
 }

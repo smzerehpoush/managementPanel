@@ -261,7 +261,7 @@ public class UserServices {
         }
     }
 
-    /***]
+    /***
      * 25
      * assign a role to a user
      *
@@ -284,6 +284,23 @@ public class UserServices {
             return finalResponse;
         } catch (Exception ex) {
             return ExceptionHandler.create("++================== assignRoles SERVICE : EXCEPTION ==================++", ex, encryptedRequest.getToken());
+        }
+    }
+
+    @Path("/isManager")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response assignRole(@QueryParam("token") String token) {
+        logger.info("++================== isManager SERVICE : START ==================++");
+        try {
+            StandardResponse response = new UserImpl().isManager(token);
+            String key = UserDao.getKey(token).getKey();
+            EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
+            Response finalResponse = Response.status(200).entity(encryptedResponse).build();
+            logger.info("++================== isManager SERVICE : END ==================++");
+            return finalResponse;
+        } catch (Exception ex) {
+            return ExceptionHandler.create("++================== isManager SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
 
