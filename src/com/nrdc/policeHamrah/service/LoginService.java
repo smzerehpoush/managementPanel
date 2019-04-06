@@ -61,13 +61,12 @@ public class LoginService {
         try {
             RequestAuthenticateUser request = new ObjectMapper().readValue(Encryption.decryptRequest(encryptedRequest), RequestAuthenticateUser.class);
             StandardResponse response = new LoginImpl().authenticateUser(request);
-            String key = Constants.DEFAULT_KEY;
-            EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
+            EncryptedResponse encryptedResponse = Encryption.encryptResponse(response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
             logger.info("++================== authenticateUser SERVICE : END ==================++");
             return finalResponse;
         } catch (Exception ex) {
-            return ExceptionHandler.create("++================== authenticateUser SERVICE : EXCEPTION ==================++", ex, Constants.DEFAULT_KEY);
+            return ExceptionHandler.create("++================== authenticateUser SERVICE : EXCEPTION ==================++", ex);
         }
     }
 
