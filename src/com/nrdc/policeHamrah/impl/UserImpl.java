@@ -44,11 +44,19 @@ public class UserImpl {
                     SystemUserDao systemUserDao = new SystemUserDao();
                     systemUserDao.setFkUserId(requestAssignSystemToUser.getFkUserId());
                     systemUserDao.setFkSystemId(fkSystemId);
-                    entityManager.persist(systemUserDao);
                     SystemDao systemDao = SystemDao.getSystem(fkSystemId);
-                    if (systemDao.getSystemName().equals(SystemNames.VEHICLE_TICKET.name()))
+                    if (systemDao.getSystemName().equals(SystemNames.VEHICLE_TICKET.name())) {
+                        entityManager.persist(systemUserDao);
                         addUserToSystem(user, fkSystemId);
-                    else if (systemDao.getSystemName().equals(SystemNames.VT_REPORT.name()) || systemDao.getSystemName().equals(SystemNames.AGAHI.name()) || systemDao.getSystemName().equals(SystemNames.GASHT.name()) || systemDao.getSystemName().equals(SystemNames.CRASHES.name())) {
+                    } else if (systemDao.getSystemName().equals(SystemNames.VT_REPORT.name())) {
+                        entityManager.persist(systemUserDao);
+                        SystemDao VTSystem = SystemDao.getSystem(SystemNames.VEHICLE_TICKET);
+                        addUserToSystem(user, VTSystem.getId());
+                    } else if (systemDao.getSystemName().equals(SystemNames.AGAHI.name()) || systemDao.getSystemName().equals(SystemNames.GASHT.name()) || systemDao.getSystemName().equals(SystemNames.CRASHES.name())) {
+                        entityManager.persist(systemUserDao);
+                    } else if (systemDao.getSystemName().equals(SystemNames.NAZER.name())) {
+                        entityManager.persist(systemUserDao);
+                        checkUserInNazer(user);
                     } else {
                         throw new ServerException(Constants.FEATURE_NOT_SUPPORTED);
                     }
@@ -60,6 +68,45 @@ public class UserImpl {
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();
+        }
+    }
+
+    private class RequestNazerAuth {
+        private String phoneNumber;
+        private String password;
+
+        public RequestNazerAuth(String phoneNumber, String password) {
+            this.phoneNumber = phoneNumber;
+            this.password = password;
+        }
+
+        public String getPhoneNumber() {
+            return phoneNumber;
+        }
+
+        public void setPhoneNumber(String phoneNumber) {
+            this.phoneNumber = phoneNumber;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
+    }
+
+    private void checkUserInNazer(UserDao user) throws Exception {
+        SystemDao systemDao = SystemDao.getSystem(SystemNames.NAZER);
+        RequestNazerAuth request = new RequestNazerAuth(user.getPhoneNumber(), user.getPassword());
+        String output = CallWebService.callPostService(systemDao.getSystemPath() + "/authenticateUser", request);
+        StandardResponse response = new Gson().fromJson(output, StandardResponse.class);
+        if (response.getResultCode() == -1) {
+            if (response.getResultMessage().trim().equals("1"))
+                throw new ServerException(Constants.UNKNOWN_USER);
+            else if (response.getResultMessage().trim().equals("3"))
+                throw new ServerException(Constants.NAZER_NOT_APN_USER);
         }
     }
 
