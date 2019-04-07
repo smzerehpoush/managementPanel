@@ -104,9 +104,9 @@ public class LogoutImpl {
         request.setToken(token);
         EncryptedResponse encryptedRequest = Encryption.encryptResponse(Constants.DEFAULT_KEY, request);
         String output = CallWebService.callPostService(systemDao.getSystemPath() + Constants.LOGOUT_PATH, encryptedRequest);
-        EncryptedRequest encryptedResponse = new Gson().fromJson(output, EncryptedRequest.class);
+        EncryptedRequest encryptedResponse = MyGsonBuilder.build().fromJson(output, EncryptedRequest.class);
         encryptedResponse.setToken(Constants.DEFAULT_KEY);
-        StandardResponse response = new Gson().fromJson(Encryption.decryptRequest(encryptedResponse), StandardResponse.class);
+        StandardResponse response = MyGsonBuilder.build().fromJson(Encryption.decryptRequest(encryptedResponse), StandardResponse.class);
         if (response.getResultCode() == -1)
             throw new ServerException(Constants.CAN_NOT_LOGOUT_FROM_SYSTEM + systemDao.getTitle());
 

@@ -2,10 +2,7 @@ package com.nrdc.policeHamrah.impl;
 
 import com.google.gson.Gson;
 import com.nrdc.policeHamrah.exceptions.ServerException;
-import com.nrdc.policeHamrah.helper.CallWebService;
-import com.nrdc.policeHamrah.helper.Constants;
-import com.nrdc.policeHamrah.helper.PrivilegeNames;
-import com.nrdc.policeHamrah.helper.SystemNames;
+import com.nrdc.policeHamrah.helper.*;
 import com.nrdc.policeHamrah.jsonModel.StandardResponse;
 import com.nrdc.policeHamrah.jsonModel.customizedModel.RoleWithPrivileges;
 import com.nrdc.policeHamrah.jsonModel.jsonRequest.*;
@@ -101,7 +98,7 @@ public class UserImpl {
         SystemDao systemDao = SystemDao.getSystem(SystemNames.NAZER);
         RequestNazerAuth request = new RequestNazerAuth(user.getPhoneNumber(), user.getPassword());
         String output = CallWebService.callPostService(systemDao.getSystemPath() + "/authenticateUser", request);
-        StandardResponse response = new Gson().fromJson(output, StandardResponse.class);
+        StandardResponse response = MyGsonBuilder.build().fromJson(output, StandardResponse.class);
         if (response.getResultCode() == -1) {
             if (response.getResultMessage().trim().equals("1"))
                 throw new ServerException(Constants.UNKNOWN_USER);
@@ -121,7 +118,7 @@ public class UserImpl {
         requestAddUser.setUsername(user.getUsername());
         String path = SystemDao.getSystem(fkSystemId).getSystemPath() + "/addUser";
         String output = CallWebService.callPostService(path, requestAddUser);
-        StandardResponse response = new Gson().fromJson(output, StandardResponse.class);
+        StandardResponse response = MyGsonBuilder.build().fromJson(output, StandardResponse.class);
         if (response.getResultCode() != 1)
             throw new ServerException(response.getResultMessage());
 

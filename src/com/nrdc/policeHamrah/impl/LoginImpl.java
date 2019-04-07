@@ -81,7 +81,7 @@ public class LoginImpl {
         SystemDao systemDao = SystemDao.getSystem(requestAuthenticateUser.getFkSystemId());
         Object request = fillRequestBySystemId(systemDao.getSystemName(), requestAuthenticateUser);
         String output = CallWebService.callPostService(systemDao.getSystemPath() + "/authenticateUser", request);
-        StandardResponse response = new Gson().fromJson(output, StandardResponse.class);
+        StandardResponse response = MyGsonBuilder.build().fromJson(output, StandardResponse.class);
         if (response.getResultCode() == -1) {
             if (response.getResultMessage().trim().equals("1"))
                 response.setResultMessage(Constants.UNKNOWN_USER);

@@ -45,7 +45,6 @@ public class PersianCalender {
             result = hour + ":" + minute;
             return result;
         } catch (Exception exception) {
-            logger.error(exception);
             throw exception;
         }
     }
@@ -80,7 +79,6 @@ public class PersianCalender {
             result = hour + ":" + minute + ":" + second;
             return result;
         } catch (Exception exception) {
-            logger.error(exception);
             throw exception;
         }
     }
@@ -95,7 +93,6 @@ public class PersianCalender {
             result = new PersianCalender(timeMilli).getCustomDate();
             return result;
         } catch (Exception exception) {
-            logger.error(exception);
             throw exception;
         }
     }
