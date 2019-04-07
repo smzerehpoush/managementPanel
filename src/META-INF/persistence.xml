@@ -21,6 +21,8 @@
         <class>com.nrdc.policeHamrah.model.dao.SystemDownloadDao</class>
         <class>com.nrdc.policeHamrah.model.dao.OperationDao</class>
         <class>com.nrdc.policeHamrah.model.dao.ConstantDao</class>
+        <class>com.nrdc.policeHamrah.model.dao.ProvinceDao</class>
+        <class>com.nrdc.policeHamrah.model.dao.ProvinceUserDao</class>
 
     </persistence-unit>
 
