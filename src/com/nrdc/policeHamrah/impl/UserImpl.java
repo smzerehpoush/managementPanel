@@ -852,7 +852,7 @@ public class UserImpl {
                     .setParameter("fkUserId", user.getId())
                     .getSingleResult();
             StandardResponse<Boolean> response = new StandardResponse<>();
-            response.setResponse(size.equals(0L));
+            response.setResponse(!size.equals(0L));
             return response;
         } finally {
             if (entityManager.isOpen())
