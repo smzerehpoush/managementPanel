@@ -21,7 +21,7 @@ public class VerifyService {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response verifyRESTService() {
-        logger.error("++================== VERIFY SERVICE : START ==================++");
+        logger.info("++================== VERIFY SERVICE : START ==================++");
 
         ResponseVerify response = new ResponseVerify();
         response.setName(SystemNames.POLICE_HAMRAH.name());
