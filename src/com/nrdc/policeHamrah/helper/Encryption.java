@@ -71,7 +71,7 @@ public class Encryption {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             String responseText = objectMapper.writeValueAsString(response);
-            logger.info(responseText);
+//            logger.info(responseText);
             String strEncrypted = encryptOrNull(key, responseText);
             encryptedResponse.setData(strEncrypted);
             return encryptedResponse;
