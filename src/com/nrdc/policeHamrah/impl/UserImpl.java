@@ -522,7 +522,7 @@ public class UserImpl {
         }
     }
 
-    public StandardResponse editUser(String token, RequestEditUser requestEditUser) {
+    public StandardResponse editUser(String token, RequestEditUser requestEditUser) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         entityManager.getEntityManagerFactory().getCache().evictAll();
@@ -537,26 +537,21 @@ public class UserImpl {
             if (!userSystemList.contains(systemDao)) {
                 throw new ServerException(Constants.USER_SYSTEM_ERROR);
             }
-
 //            checkRequestEditUser(requestEditUser);
             if (!transaction.isActive())
                 transaction.begin();
-            entityManager.createQuery("UPDATE UserDao u SET " +
-                    " u.firstName = :firstName ," +
-                    " u.lastName = :lastName " +
-                    " WHERE u.id = :fkUserId")
-                    .setParameter("firstName", requestEditUser.getFirstName())
-                    .setParameter("lastName", requestEditUser.getLastName())
-                    .setParameter("fkUserId", requestEditUser.getFkUserId())
-                    .executeUpdate();
             try {
-                user.checkPrivilege(PrivilegeNames.FULL_EDIT, requestEditUser.getFkSystemId());
+                adminUser.checkPrivilege(PrivilegeNames.FULL_EDIT, requestEditUser.getFkSystemId());
                 entityManager.createQuery("UPDATE UserDao u SET " +
                         " u.username = :username ," +
-                        " u.nationalId = : nationalId ," +
-                        " u.phoneNumber = : phoneNumber ," +
-                        " u.policeCode = : policeCode " +
+                        " u.nationalId = :nationalId ," +
+                        " u.phoneNumber = :phoneNumber ," +
+                        " u.policeCode = :policeCode ," +
+                        " u.firstName = :firstName , " +
+                        " u.lastName = :lastName " +
                         " WHERE u.id = :fkUserId")
+                        .setParameter("firstName", requestEditUser.getFirstName())
+                        .setParameter("lastName", requestEditUser.getLastName())
                         .setParameter("username", requestEditUser.getFirstName())
                         .setParameter("nationalId", requestEditUser.getNationalId())
                         .setParameter("phoneNumber", requestEditUser.getPhoneNumber())
@@ -564,6 +559,14 @@ public class UserImpl {
                         .setParameter("fkUserId", requestEditUser.getFkUserId())
                         .executeUpdate();
             } catch (Exception ignored) {
+                entityManager.createQuery("UPDATE UserDao u SET " +
+                        " u.firstName = :firstName ," +
+                        " u.lastName = :lastName " +
+                        " WHERE u.id = :fkUserId")
+                        .setParameter("firstName", requestEditUser.getFirstName())
+                        .setParameter("lastName", requestEditUser.getLastName())
+                        .setParameter("fkUserId", requestEditUser.getFkUserId())
+                        .executeUpdate();
             }
             if (transaction.isActive())
                 transaction.commit();
@@ -574,7 +577,7 @@ public class UserImpl {
         } catch (Exception ex) {
             if (transaction != null && transaction.isActive())
                 transaction.rollback();
-            return StandardResponse.getNOKExceptions(ex);
+            throw ex;
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();
