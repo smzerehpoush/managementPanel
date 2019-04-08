@@ -1,6 +1,5 @@
 package com.nrdc.policeHamrah.impl;
 
-import com.google.gson.Gson;
 import com.nrdc.policeHamrah.exceptions.ServerException;
 import com.nrdc.policeHamrah.helper.*;
 import com.nrdc.policeHamrah.jsonModel.StandardResponse;
@@ -18,7 +17,6 @@ import com.nrdc.policeHamrah.model.dto.UserDto;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -698,7 +696,7 @@ public class UserImpl {
                 query.append(requestFilterUsers.getFkSystemId());
             }
             if (requestFilterUsers.getUsername() != null) {
-                query.append(" AND u.username LIKE '");
+                query.append(" AND u.username LIKE '%");
                 query.append(requestFilterUsers.getUsername());
                 query.append("%' ");
             }
@@ -707,22 +705,22 @@ public class UserImpl {
                 query.append(requestFilterUsers.getIsActive() ? "true" : "false");
             }
             if (requestFilterUsers.getPhoneNumber() != null) {
-                query.append(" AND u.phoneNumber LIKE '");
+                query.append(" AND u.phoneNumber LIKE '%");
                 query.append(requestFilterUsers.getPhoneNumber());
                 query.append("%' ");
             }
             if (requestFilterUsers.getFirstName() != null) {
-                query.append(" AND u.firstName LIKE '");
+                query.append(" AND u.firstName LIKE '%");
                 query.append(requestFilterUsers.getFirstName());
                 query.append("%' ");
             }
             if (requestFilterUsers.getLastName() != null) {
-                query.append(" AND u.lastName LIKE '");
+                query.append(" AND u.lastName LIKE '%");
                 query.append(requestFilterUsers.getLastName());
                 query.append("%' ");
             }
             if (requestFilterUsers.getNationalId() != null) {
-                query.append(" AND u.nationalId LIKE '");
+                query.append(" AND u.nationalId LIKE '%");
                 query.append(requestFilterUsers.getNationalId());
                 query.append("%' ");
             }
@@ -792,12 +790,6 @@ public class UserImpl {
                     .setParameter("fkSystemId", fkSystemId)
                     .setParameter("fkUserId", fkUserId)
                     .getResultList();
-            Iterator iterator = roles.iterator();
-            while (iterator.hasNext()) {
-                RoleDao role = (RoleDao) iterator.next();
-                if (role.getRole().equals(Constants.SYS_ADMIN))
-                    iterator.remove();
-            }
             ResponseGetRoles responseGetRoles = new ResponseGetRoles();
             responseGetRoles.setRoles(roles);
             StandardResponse response = new StandardResponse<>();
