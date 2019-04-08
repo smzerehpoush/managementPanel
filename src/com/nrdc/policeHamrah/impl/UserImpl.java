@@ -549,6 +549,22 @@ public class UserImpl {
                     .setParameter("lastName", requestEditUser.getLastName())
                     .setParameter("fkUserId", requestEditUser.getFkUserId())
                     .executeUpdate();
+            try {
+                user.checkPrivilege(PrivilegeNames.FULL_EDIT, requestEditUser.getFkSystemId());
+                entityManager.createQuery("UPDATE UserDao u SET " +
+                        " u.username = :username ," +
+                        " u.nationalId = : nationalId ," +
+                        " u.phoneNumber = : phoneNumber ," +
+                        " u.policeCode = : policeCode " +
+                        " WHERE u.id = :fkUserId")
+                        .setParameter("username", requestEditUser.getFirstName())
+                        .setParameter("nationalId", requestEditUser.getNationalId())
+                        .setParameter("phoneNumber", requestEditUser.getPhoneNumber())
+                        .setParameter("policeCode", requestEditUser.getPoliceCode())
+                        .setParameter("fkUserId", requestEditUser.getFkUserId())
+                        .executeUpdate();
+            } catch (Exception ignored) {
+            }
             if (transaction.isActive())
                 transaction.commit();
             StandardResponse response = new StandardResponse<>();
