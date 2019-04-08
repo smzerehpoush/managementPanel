@@ -552,7 +552,7 @@ public class UserImpl {
                         " WHERE u.id = :fkUserId")
                         .setParameter("firstName", requestEditUser.getFirstName())
                         .setParameter("lastName", requestEditUser.getLastName())
-                        .setParameter("username", requestEditUser.getFirstName())
+                        .setParameter("username", requestEditUser.getUsername())
                         .setParameter("nationalId", requestEditUser.getNationalId())
                         .setParameter("phoneNumber", requestEditUser.getPhoneNumber())
                         .setParameter("policeCode", requestEditUser.getPoliceCode())
