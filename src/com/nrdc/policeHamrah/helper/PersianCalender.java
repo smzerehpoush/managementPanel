@@ -30,7 +30,7 @@ public class PersianCalender {
             String result;
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(timeMilli);
-            int hourValue = calendar.get(Calendar.HOUR);
+            int hourValue = calendar.get(Calendar.HOUR_OF_DAY);
             int minuteValue = calendar.get(Calendar.MINUTE);
             String hour;
             String minute;
@@ -53,12 +53,16 @@ public class PersianCalender {
         return getCompleteTime(System.currentTimeMillis());
     }
 
+    public static String getDate() {
+        return getDate(System.currentTimeMillis());
+    }
+
     public static String getCompleteTime(long timeMilli) {
         try {
             String result;
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(timeMilli);
-            int hourValue = calendar.get(Calendar.HOUR);
+            int hourValue = calendar.get(Calendar.HOUR_OF_DAY);
             int minuteValue = calendar.get(Calendar.MINUTE);
             int secondValue = calendar.get(Calendar.SECOND);
             String hour;
@@ -83,10 +87,6 @@ public class PersianCalender {
         }
     }
 
-    public static String getDate() {
-        return getDate(System.currentTimeMillis());
-    }
-
     public static String getDate(long timeMilli) {
         try {
             String result;
@@ -97,13 +97,19 @@ public class PersianCalender {
         }
     }
 
+    public static String getDateAndTime() {
+        //returns sth like 1397/12/27-11:56
+        long time = System.currentTimeMillis();
+        return getDate(time) + "-" + getTime(time);
+    }
+
     private void calcSolarCalendar(long timeMillis) {
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(timeMillis);
         int ld;
         time = getTime(timeMillis);
-        timeMillis = calendar.get(Calendar.HOUR) + calendar.get(Calendar.MINUTE) + calendar.get(Calendar.SECOND);
+        timeMillis = calendar.get(Calendar.HOUR_OF_DAY) + calendar.get(Calendar.MINUTE) + calendar.get(Calendar.SECOND);
         int year = calendar.get(Calendar.YEAR);
 //        int year = calendar.get(Calendar.YEAR) + 1900;
         int month = calendar.get(Calendar.MONTH) + 1;
