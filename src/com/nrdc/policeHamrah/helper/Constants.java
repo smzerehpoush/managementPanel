@@ -20,6 +20,7 @@ public class Constants {
     public static final String PASSWORD = "رمز عبور ";
     public static final String ROLE = "نقش ";
     public static final String REQUEST = "درخواست ";
+    public static final String IN = " در ";
 
 
     public static final String IS_NOT_VALID = " معتبر نمی باشد";
