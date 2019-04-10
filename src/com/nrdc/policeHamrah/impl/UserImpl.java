@@ -50,8 +50,8 @@ public class UserImpl {
                     } else if (systemDao.getSystemName().equals(SystemNames.AGAHI.name()) || systemDao.getSystemName().equals(SystemNames.GASHT.name()) || systemDao.getSystemName().equals(SystemNames.CRASHES.name())) {
                         entityManager.persist(systemUserDao);
                     } else if (systemDao.getSystemName().equals(SystemNames.NAZER.name())) {
-                        entityManager.persist(systemUserDao);
                         checkUserInNazer(user);
+                        entityManager.persist(systemUserDao);
                     } else {
                         throw new ServerException(Constants.FEATURE_NOT_SUPPORTED);
                     }
@@ -93,13 +93,15 @@ public class UserImpl {
     }
 
     private void checkUserInNazer(UserDao user) throws Exception {
+        if (user.getPhoneNumber() == null || user.getPhoneNumber().isEmpty())
+            throw new Exception(Constants.PHONE_NUMBER + Constants.USER + Constants.IS_REQUIRED);
         SystemDao systemDao = SystemDao.getSystem(SystemNames.NAZER);
         RequestNazerAuth request = new RequestNazerAuth(user.getPhoneNumber(), user.getPassword());
         String output = CallWebService.callPostService(systemDao.getSystemPath() + "/authenticateUser", request);
         StandardResponse response = MyGsonBuilder.build().fromJson(output, StandardResponse.class);
         if (response.getResultCode() == -1) {
             if (response.getResultMessage().trim().equals("1"))
-                throw new ServerException(Constants.UNKNOWN_USER);
+                throw new ServerException(Constants.IN + systemDao.getTitle() + Constants.UNKNOWN_USER );
             else if (response.getResultMessage().trim().equals("3"))
                 throw new ServerException(Constants.NAZER_NOT_APN_USER);
         }
