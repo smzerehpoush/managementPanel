@@ -101,7 +101,7 @@ public class UserImpl {
         StandardResponse response = MyGsonBuilder.build().fromJson(output, StandardResponse.class);
         if (response.getResultCode() == -1) {
             if (response.getResultMessage().trim().equals("1"))
-                throw new ServerException(Constants.IN + systemDao.getTitle() + Constants.UNKNOWN_USER );
+                throw new ServerException(Constants.IN + systemDao.getTitle() + Constants.UNKNOWN_USER);
             else if (response.getResultMessage().trim().equals("3"))
                 throw new ServerException(Constants.NAZER_NOT_APN_USER);
         }
@@ -454,8 +454,8 @@ public class UserImpl {
                 transaction.begin();
             Long userId = (Long) entityManager.createQuery("SELECT MAX (u.id) FROM UserDao u").getSingleResult() + 1;
 //            if (!requestAddUser.getPhoneNumber().equals("09121316873") && !requestAddUser.getPoliceCode().equals("270030"))
-            checkRequestAddUser(requestAddUser);
             UserDao u = new UserDao(requestAddUser);
+            u.checkUser();
             u.setId(userId);
             entityManager.persist(u);
             if (transaction.isActive()) {
@@ -490,39 +490,6 @@ public class UserImpl {
         }
     }
 
-    private void checkRequestAddUser(RequestAddUser requestAddUser) throws Exception {
-        EntityManager entityManager = Database.getEntityManager();
-        Long size;
-        entityManager.getEntityManagerFactory().getCache().evictAll();
-        try {
-            //check username
-            if (requestAddUser.getUsername() == null || requestAddUser.getUsername().equals(""))
-                throw new ServerException(Constants.USERNAME + Constants.IS_REQUIRED);
-            size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.username = :username")
-                    .setParameter("username", requestAddUser.getUsername())
-                    .getSingleResult();
-            if (size > 0)
-                throw new ServerException(Constants.USERNAME + Constants.DUPLICATED);
-            //check policeCode
-            if (requestAddUser.getPoliceCode() != null && !requestAddUser.getPoliceCode().equals(""))
-                size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.policeCode= :policeCode")
-                        .setParameter("policeCode", requestAddUser.getPoliceCode())
-                        .getSingleResult();
-            if (size > 0)
-                throw new ServerException(Constants.POLICE_CODE + Constants.DUPLICATED);
-            //check phoneNumber
-            if (requestAddUser.getPhoneNumber() != null && !requestAddUser.getPhoneNumber().equals("")) {
-                size = (Long) entityManager.createQuery("SELECT COUNT (u) FROM UserDao u WHERE u.phoneNumber= :phoneNumber")
-                        .setParameter("phoneNumber", requestAddUser.getPhoneNumber())
-                        .getSingleResult();
-                if (size > 0)
-                    throw new ServerException(Constants.PHONE_NUMBER + Constants.DUPLICATED);
-            }
-        } finally {
-            if (entityManager.isOpen())
-                entityManager.close();
-        }
-    }
 
     public StandardResponse editUser(String token, RequestEditUser requestEditUser) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
@@ -539,7 +506,8 @@ public class UserImpl {
             if (!userSystemList.contains(systemDao)) {
                 throw new ServerException(Constants.USER_SYSTEM_ERROR);
             }
-//            checkRequestEditUser(requestEditUser);
+            UserDto userDto = new UserDto(requestEditUser);
+            UserDao.checkUser(userDto);
             if (!transaction.isActive())
                 transaction.begin();
             try {
@@ -585,121 +553,6 @@ public class UserImpl {
                 entityManager.close();
         }
     }
-
-    private void checkUsername(String username, Long fkUserId) throws Exception {
-        EntityManager entityManager = Database.getEntityManager();
-        entityManager.getEntityManagerFactory().getCache().evictAll();
-        Long size;
-        try {
-            //check username
-            if (username == null || username.equals(""))
-                throw new ServerException(Constants.USERNAME + Constants.IS_REQUIRED);
-            size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.username = :username")
-                    .setParameter("username", username)
-                    .getSingleResult();
-            if (size.equals(1L)) {
-                Long id = (Long) entityManager.createQuery("SELECT (u.id) FROM UserDao u WHERE u.username = :username")
-                        .setParameter("username", username)
-                        .getSingleResult();
-                if (!id.equals(fkUserId))
-                    throw new ServerException(Constants.USERNAME + Constants.DUPLICATED);
-
-            }
-            if (size > 1)
-                throw new ServerException(Constants.USERNAME + Constants.DUPLICATED);
-        } finally {
-            if (entityManager.isOpen())
-                entityManager.close();
-        }
-    }
-
-    private void checkNationalId(String nationalId, Long fkUserId) throws Exception {
-        EntityManager entityManager = Database.getEntityManager();
-        entityManager.getEntityManagerFactory().getCache().evictAll();
-        Long size;
-        try {
-            //check nationalId
-            if (nationalId == null || nationalId.equals(""))
-                throw new ServerException(Constants.NATIONAL_ID + Constants.IS_REQUIRED);
-            size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.nationalId = :username")
-                    .setParameter("username", nationalId)
-                    .getSingleResult();
-            if (size.equals(1L)) {
-                Long id = (Long) entityManager.createQuery("SELECT (u.id) FROM UserDao u WHERE u.nationalId = :nationalId")
-                        .setParameter("nationalId", nationalId)
-                        .getSingleResult();
-                if (!id.equals(fkUserId))
-                    throw new ServerException(Constants.NATIONAL_ID + Constants.IS_NOT_VALID);
-
-            }
-            if (size > 1)
-                throw new ServerException(Constants.NATIONAL_ID + Constants.DUPLICATED);
-        } finally {
-            if (entityManager.isOpen())
-                entityManager.close();
-        }
-    }
-
-    private void checkPhoneNumber(String phoneNumber, Long fkUserId) throws Exception {
-        EntityManager entityManager = Database.getEntityManager();
-        entityManager.getEntityManagerFactory().getCache().evictAll();
-        Long size;
-        try {
-            //check phoneNumber
-            if (phoneNumber == null || phoneNumber.equals(""))
-                throw new ServerException(Constants.PHONE_NUMBER + Constants.IS_REQUIRED);
-            size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.phoneNumber = :phoneNumber")
-                    .setParameter("phoneNumber", phoneNumber)
-                    .getSingleResult();
-            if (size.equals(1L)) {
-                Long id = (Long) entityManager.createQuery("SELECT (u.id) FROM UserDao u WHERE u.phoneNumber= :phoneNumber")
-                        .setParameter("phoneNumber", phoneNumber)
-                        .getSingleResult();
-                if (!id.equals(fkUserId))
-                    throw new ServerException(Constants.PHONE_NUMBER + Constants.IS_NOT_VALID);
-
-            }
-            if (size > 1)
-                throw new ServerException(Constants.PHONE_NUMBER + Constants.DUPLICATED);
-        } finally {
-            if (entityManager.isOpen())
-                entityManager.close();
-        }
-    }
-
-    private void checkPoliceCode(String policeCode, Long fkUserId) throws Exception {
-        EntityManager entityManager = Database.getEntityManager();
-        entityManager.getEntityManagerFactory().getCache().evictAll();
-        Long size;
-        try {
-            //check policeCode
-            size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.policeCode = :policeCode")
-                    .setParameter("policeCode", policeCode)
-                    .getSingleResult();
-            if (size.equals(1L)) {
-                Long id = (Long) entityManager.createQuery("SELECT (u.id) FROM UserDao u WHERE u.policeCode = :policeCode")
-                        .setParameter("policeCode", policeCode)
-                        .getSingleResult();
-                if (!id.equals(fkUserId))
-                    throw new ServerException(Constants.POLICE_CODE + Constants.IS_NOT_VALID);
-
-            }
-            if (size > 1)
-                throw new ServerException(Constants.POLICE_CODE + Constants.DUPLICATED);
-        } finally {
-            if (entityManager.isOpen())
-                entityManager.close();
-        }
-    }
-
-    private void checkRequestEditUser(RequestEditUser requestEditUser) throws Exception {
-        checkUsername(requestEditUser.getUsername(), requestEditUser.getFkUserId());
-        checkNationalId(requestEditUser.getNationalId(), requestEditUser.getFkUserId());
-        checkPoliceCode(requestEditUser.getPoliceCode(), requestEditUser.getFkUserId());
-        checkPhoneNumber(requestEditUser.getPhoneNumber(), requestEditUser.getFkUserId());
-
-    }
-
 
     public StandardResponse<ResponseGetUsers> filterUsers(String token, RequestFilterUsers requestFilterUsers) throws Exception {
         EntityManager entityManager = Database.getEntityManager();

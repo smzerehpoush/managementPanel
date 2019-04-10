@@ -20,11 +20,8 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
     private static Logger logger = Logger.getLogger(UserDao.class.getName());
 
 
-    public UserDao() {
-    }
 
     public UserDao(RequestAddUser requestAddUser) throws Exception {
-        checkUsername(requestAddUser.getUsername());
         this.setUsername(requestAddUser.getUsername());
         this.setPassword(requestAddUser.getPassword());
         this.setPhoneNumber(requestAddUser.getPhoneNumber());
@@ -78,6 +75,24 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
                     .getSingleResult();
         } catch (Exception ex) {
             throw new ServerException(Constants.USER + Constants.IS_NOT_VALID);
+        } finally {
+            if (entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+
+    public void checkUser() throws Exception {
+        checkUser(this);
+    }
+    public static void checkUser(UserDto user) throws Exception {
+        EntityManager entityManager = Database.getEntityManager();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
+        try {
+            checkNationalId(user, entityManager);
+            checkUsername(user, entityManager);
+            checkPoliceCode(user, entityManager);
+            checkPhoneNumber(user, entityManager);
+            checkPassword(user);
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();
@@ -192,21 +207,62 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
         }
     }
 
-    private void checkUsername(String username) throws Exception {
-        if (username != null && !username.matches("^[a-zA-Z0-9]{5,}$"))
-            throw new ServerException(Constants.USERNAME + Constants.IS_NOT_VALID);
-    }
-
-    private void checkPhoneNumber(String phoneNumber) throws Exception {
-        if (phoneNumber != null && !phoneNumber.matches("0\\d{10}"))
-            throw new ServerException(Constants.PHONE_NUMBER + Constants.IS_NOT_VALID);
-
-    }
-
-    private void checkNationalId(String nationalId) throws Exception {
-        if (nationalId != null && !nationalId.equals("") && nationalId.matches("\\d{10}"))
+    private static void checkUsername(UserDto user, EntityManager entityManager) throws Exception {
+        //start : check username
+        if (user.getUsername() == null || user.getUsername().isEmpty())
+            throw new ServerException(Constants.USERNAME + Constants.IS_REQUIRED);
+        if (!user.getUsername().matches("^[a-zA-Z0-9]{5,10}$"))
             throw new ServerException(Constants.NATIONAL_ID + Constants.IS_NOT_VALID);
+        Long size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.username = :username")
+                .setParameter("username", user.getUsername())
+                .getSingleResult();
+        if (size > 0)
+            throw new ServerException(Constants.USERNAME + Constants.DUPLICATED);
+    }
 
+    private static void checkPoliceCode(UserDto user, EntityManager entityManager) throws ServerException {
+        if (user.getPoliceCode() != null && !user.getPoliceCode().isEmpty()) {
+            if (!user.getPoliceCode().matches("[0-9]{2,}"))
+                throw new ServerException(Constants.POLICE_CODE + Constants.IS_NOT_VALID);
+        }
+        Long size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.policeCode= :policeCode")
+                .setParameter("policeCode", user.getPoliceCode())
+                .getSingleResult();
+        if (size > 0)
+            throw new ServerException(Constants.POLICE_CODE + Constants.DUPLICATED);
+    }
+
+    private static void checkPassword(UserDto user) throws ServerException {
+        if (user.getPassword()==null || user.getPassword().isEmpty())
+            throw new ServerException(Constants.PASSWORD + Constants.IS_REQUIRED);
+        if (user.getPassword().matches("^[a-zA-Z0-9]{5,10}$"))
+            throw new ServerException(Constants.PASSWORD + Constants.IS_NOT_VALID);
+    }
+
+    private static void checkPhoneNumber(UserDto user, EntityManager entityManager) throws Exception {
+        if (user.getPhoneNumber() != null && !user.getPhoneNumber().isEmpty()) {
+            if (!user.getPhoneNumber().matches("0\\d{10}"))
+                throw new ServerException(Constants.PHONE_NUMBER + Constants.IS_NOT_VALID);
+            Long size = (Long) entityManager.createQuery("SELECT COUNT (u) FROM UserDao u WHERE u.phoneNumber= :phoneNumber")
+                    .setParameter("phoneNumber", user.getPhoneNumber())
+                    .getSingleResult();
+            if (size > 0)
+                throw new ServerException(Constants.PHONE_NUMBER + Constants.DUPLICATED);
+        }
+    }
+
+    private static void checkNationalId(UserDto user, EntityManager entityManager) throws Exception {
+        //start : check national id
+        if (user.getNationalId() != null && !user.getNationalId().isEmpty()) {
+            if (!user.getNationalId().matches("^[0-9]{10}$"))
+                throw new ServerException(Constants.NATIONAL_ID + Constants.IS_NOT_VALID);
+            Long size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.nationalId = :nationalId")
+                    .setParameter("nationalId", user.getNationalId())
+                    .getSingleResult();
+            if (size > 0)
+                throw new ServerException(Constants.NATIONAL_ID + Constants.DUPLICATED);
+        }
+        //end : check national id
     }
 
     public List<SystemDao> systems() {
