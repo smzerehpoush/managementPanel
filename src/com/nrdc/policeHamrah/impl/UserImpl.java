@@ -455,7 +455,7 @@ public class UserImpl {
             Long userId = (Long) entityManager.createQuery("SELECT MAX (u.id) FROM UserDao u").getSingleResult() + 1;
 //            if (!requestAddUser.getPhoneNumber().equals("09121316873") && !requestAddUser.getPoliceCode().equals("270030"))
             UserDao u = new UserDao(requestAddUser);
-            u.checkUser();
+            u.checkUser(false);
             u.setId(userId);
             entityManager.persist(u);
             if (transaction.isActive()) {
@@ -507,7 +507,7 @@ public class UserImpl {
                 throw new ServerException(Constants.USER_SYSTEM_ERROR);
             }
             UserDto userDto = new UserDto(requestEditUser);
-            UserDao.checkUser(userDto);
+            UserDao.checkUser(userDto, true);
             if (!transaction.isActive())
                 transaction.begin();
             try {

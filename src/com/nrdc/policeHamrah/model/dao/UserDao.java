@@ -19,6 +19,8 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
     public static final String tableName = "PH_USER";
     private static Logger logger = Logger.getLogger(UserDao.class.getName());
 
+    public UserDao() {
+    }
 
 
     public UserDao(RequestAddUser requestAddUser) throws Exception {
@@ -81,15 +83,16 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
         }
     }
 
-    public void checkUser() throws Exception {
-        checkUser(this);
+    public void checkUser(boolean isEditing) throws Exception {
+        checkUser(this,isEditing);
     }
-    public static void checkUser(UserDto user) throws Exception {
+
+    public static void checkUser(UserDto user,boolean isEditing) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
             checkNationalId(user, entityManager);
-            checkUsername(user, entityManager);
+            checkUsername(user, entityManager,isEditing);
             checkPoliceCode(user, entityManager);
             checkPhoneNumber(user, entityManager);
             checkPassword(user);
@@ -207,7 +210,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
         }
     }
 
-    private static void checkUsername(UserDto user, EntityManager entityManager) throws Exception {
+    private static void checkUsername(UserDto user, EntityManager entityManager, boolean isEditing) throws Exception {
         //start : check username
         if (user.getUsername() == null || user.getUsername().isEmpty())
             throw new ServerException(Constants.USERNAME + Constants.IS_REQUIRED);
@@ -216,7 +219,8 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
         Long size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.username = :username")
                 .setParameter("username", user.getUsername())
                 .getSingleResult();
-        if (size > 0)
+
+        if (!isEditing && size > 0)
             throw new ServerException(Constants.USERNAME + Constants.DUPLICATED);
     }
 
@@ -233,9 +237,9 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
     }
 
     private static void checkPassword(UserDto user) throws ServerException {
-        if (user.getPassword()==null || user.getPassword().isEmpty())
+        if (user.getPassword() == null || user.getPassword().isEmpty())
             throw new ServerException(Constants.PASSWORD + Constants.IS_REQUIRED);
-        if (user.getPassword().matches("^[a-zA-Z0-9]{5,10}$"))
+        if (!user.getPassword().matches("^[a-zA-Z0-9]{5,10}$"))
             throw new ServerException(Constants.PASSWORD + Constants.IS_NOT_VALID);
     }
 
