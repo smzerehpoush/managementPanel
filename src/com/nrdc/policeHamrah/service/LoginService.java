@@ -11,7 +11,6 @@ import com.nrdc.policeHamrah.jsonModel.EncryptedResponse;
 import com.nrdc.policeHamrah.jsonModel.StandardResponse;
 import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestAuthenticateUser;
 import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestLogin;
-import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseLogin;
 import com.nrdc.policeHamrah.model.dao.SystemDao;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -88,7 +87,7 @@ public class LoginService {
             if (token == null || fkSystemId == null) {
                 throw new ServerException(Constants.REQUEST + Constants.IS_NOT_VALID);
             }
-            StandardResponse<ResponseLogin> response = new LoginImpl().loginToSystem(token, fkSystemId);
+            StandardResponse response = new LoginImpl().loginToSystem(token, fkSystemId);
             SystemDao systemDao = SystemDao.getSystem(fkSystemId);
             if (systemDao.getSystemName().equals(SystemNames.VT_REPORT.name()) || systemDao.getSystemName().equals(SystemNames.VEHICLE_TICKET.name()) || systemDao.getSystemName().equals(SystemNames.AGAHI.name()))
                 return Response.status(200).entity(response).build();
