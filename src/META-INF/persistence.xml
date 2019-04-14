@@ -23,6 +23,8 @@
         <class>com.nrdc.policeHamrah.model.dao.ConstantDao</class>
         <class>com.nrdc.policeHamrah.model.dao.ProvinceDao</class>
         <class>com.nrdc.policeHamrah.model.dao.ProvinceUserDao</class>
+        <class>com.nrdc.policeHamrah.model.dao.LogLoginDao</class>
+        <class>com.nrdc.policeHamrah.model.dao.LogUserActivitiesDao</class>
 
     </persistence-unit>
 
