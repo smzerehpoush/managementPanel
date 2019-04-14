@@ -41,6 +41,8 @@ public class UserImpl {
                     systemUserDao.setFkSystemId(fkSystemId);
                     SystemDao systemDao = SystemDao.getSystem(fkSystemId);
                     if (systemDao.getSystemName().equals(SystemNames.VEHICLE_TICKET.name())) {
+                        checkUserInVT(user);
+                        // TODO: 4/13/2019 authenticate user
                         entityManager.persist(systemUserDao);
                         addUserToSystem(user, fkSystemId);
                     } else if (systemDao.getSystemName().equals(SystemNames.VT_REPORT.name())) {
@@ -105,6 +107,11 @@ public class UserImpl {
             else if (response.getResultMessage().trim().equals("3"))
                 throw new ServerException(Constants.NAZER_NOT_APN_USER);
         }
+    }
+
+    private void checkUserInVT(UserDao user) throws Exception {
+        if (user.getPoliceCode() == null || user.getPoliceCode().isEmpty())
+            throw new Exception(Constants.POLICE_CODE + Constants.USER + Constants.IS_REQUIRED);
     }
 
     private void addUserToSystem(UserDao user, Long fkSystemId) throws Exception {
@@ -498,7 +505,6 @@ public class UserImpl {
         try {
             //admin user
             UserDao adminUser = UserDao.validate(token);
-
             SystemDao systemDao = SystemDao.getSystem(requestEditUser.getFkSystemId());
             adminUser.checkPrivilege(PrivilegeNames.EDIT_USER, requestEditUser.getFkSystemId());
             UserDao user = UserDao.getUser(requestEditUser.getFkUserId());
@@ -506,11 +512,11 @@ public class UserImpl {
             if (!userSystemList.contains(systemDao)) {
                 throw new ServerException(Constants.USER_SYSTEM_ERROR);
             }
-            UserDto userDto = new UserDto(requestEditUser);
-            UserDao.checkUser(userDto, true);
             if (!transaction.isActive())
                 transaction.begin();
             try {
+                UserDto userDto = new UserDto(requestEditUser);
+                UserDao.checkUser(userDto, true);
                 adminUser.checkPrivilege(PrivilegeNames.FULL_EDIT, requestEditUser.getFkSystemId());
                 entityManager.createQuery("UPDATE UserDao u SET " +
                         " u.username = :username ," +
