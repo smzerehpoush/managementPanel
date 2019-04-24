@@ -68,32 +68,6 @@ public class UserImpl {
         }
     }
 
-    private class RequestNazerAuth {
-        private String phoneNumber;
-        private String password;
-
-        public RequestNazerAuth(String phoneNumber, String password) {
-            this.phoneNumber = phoneNumber;
-            this.password = password;
-        }
-
-        public String getPhoneNumber() {
-            return phoneNumber;
-        }
-
-        public void setPhoneNumber(String phoneNumber) {
-            this.phoneNumber = phoneNumber;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public void setPassword(String password) {
-            this.password = password;
-        }
-    }
-
     private void checkUserInNazer(UserDao user) throws Exception {
         if (user.getPhoneNumber() == null || user.getPhoneNumber().isEmpty())
             throw new Exception(Constants.PHONE_NUMBER + Constants.USER + Constants.IS_REQUIRED);
@@ -371,7 +345,6 @@ public class UserImpl {
         }
     }
 
-
     public StandardResponse activeUser(String token, Long fkUserId, Long fkSystemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -447,7 +420,6 @@ public class UserImpl {
         }
     }
 
-
     public StandardResponse addUser(String token, RequestAddUser requestAddUser, boolean checkPrivilege) {
         EntityManager entityManager = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -496,7 +468,6 @@ public class UserImpl {
                 entityManager.close();
         }
     }
-
 
     public StandardResponse editUser(String token, RequestEditUser requestEditUser) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
@@ -683,7 +654,6 @@ public class UserImpl {
         }
     }
 
-
     public StandardResponse getPrivileges(String token, Long fkSystemId) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         entityManager.getEntityManagerFactory().getCache().evictAll();
@@ -726,6 +696,32 @@ public class UserImpl {
         } finally {
             if (entityManager.isOpen())
                 entityManager.close();
+        }
+    }
+
+    private class RequestNazerAuth {
+        private String phoneNumber;
+        private String password;
+
+        public RequestNazerAuth(String phoneNumber, String password) {
+            this.phoneNumber = phoneNumber;
+            this.password = password;
+        }
+
+        public String getPhoneNumber() {
+            return phoneNumber;
+        }
+
+        public void setPhoneNumber(String phoneNumber) {
+            this.phoneNumber = phoneNumber;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
         }
     }
 }

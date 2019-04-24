@@ -1,6 +1,5 @@
 package com.nrdc.policeHamrah.impl;
 
-import com.google.gson.Gson;
 import com.nrdc.policeHamrah.exceptions.ServerException;
 import com.nrdc.policeHamrah.helper.*;
 import com.nrdc.policeHamrah.jsonModel.EncryptedRequest;
