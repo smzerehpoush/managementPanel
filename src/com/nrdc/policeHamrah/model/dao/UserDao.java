@@ -83,18 +83,14 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
         }
     }
 
-    public void checkUser(boolean isEditing) throws Exception {
-        checkUser(this,isEditing);
-    }
-
-    public static void checkUser(UserDto user,boolean isEditing) throws Exception {
+    public static void checkUser(UserDto user, boolean isEditing) throws Exception {
         EntityManager entityManager = Database.getEntityManager();
         entityManager.getEntityManagerFactory().getCache().evictAll();
         try {
-            checkNationalId(user, entityManager);
-            checkUsername(user, entityManager,isEditing);
-            checkPoliceCode(user, entityManager);
-            checkPhoneNumber(user, entityManager);
+            checkNationalId(user, entityManager, isEditing);
+            checkUsername(user, entityManager, isEditing);
+            checkPoliceCode(user, entityManager, isEditing);
+            checkPhoneNumber(user, entityManager, isEditing);
             checkPassword(user);
         } finally {
             if (entityManager.isOpen())
@@ -220,11 +216,11 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
                 .setParameter("username", user.getUsername())
                 .getSingleResult();
 
-        if (!isEditing && size > 0)
+        if (size > 0 && !isEditing)
             throw new ServerException(Constants.USERNAME + Constants.DUPLICATED);
     }
 
-    private static void checkPoliceCode(UserDto user, EntityManager entityManager) throws ServerException {
+    private static void checkPoliceCode(UserDto user, EntityManager entityManager, boolean isEditing) throws ServerException {
         if (user.getPoliceCode() != null && !user.getPoliceCode().isEmpty()) {
             if (!user.getPoliceCode().matches("[0-9]{2,}"))
                 throw new ServerException(Constants.POLICE_CODE + Constants.IS_NOT_VALID);
@@ -232,7 +228,7 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
         Long size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.policeCode= :policeCode")
                 .setParameter("policeCode", user.getPoliceCode())
                 .getSingleResult();
-        if (size > 0)
+        if (size > 0 && !isEditing)
             throw new ServerException(Constants.POLICE_CODE + Constants.DUPLICATED);
     }
 
@@ -243,19 +239,19 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
             throw new ServerException(Constants.PASSWORD + Constants.IS_NOT_VALID);
     }
 
-    private static void checkPhoneNumber(UserDto user, EntityManager entityManager) throws Exception {
+    private static void checkPhoneNumber(UserDto user, EntityManager entityManager, boolean isEditing) throws Exception {
         if (user.getPhoneNumber() != null && !user.getPhoneNumber().isEmpty()) {
             if (!user.getPhoneNumber().matches("0\\d{10}"))
                 throw new ServerException(Constants.PHONE_NUMBER + Constants.IS_NOT_VALID);
             Long size = (Long) entityManager.createQuery("SELECT COUNT (u) FROM UserDao u WHERE u.phoneNumber= :phoneNumber")
                     .setParameter("phoneNumber", user.getPhoneNumber())
                     .getSingleResult();
-            if (size > 0)
+            if (size > 0 && !isEditing)
                 throw new ServerException(Constants.PHONE_NUMBER + Constants.DUPLICATED);
         }
     }
 
-    private static void checkNationalId(UserDto user, EntityManager entityManager) throws Exception {
+    private static void checkNationalId(UserDto user, EntityManager entityManager, boolean isEditing) throws Exception {
         //start : check national id
         if (user.getNationalId() != null && !user.getNationalId().isEmpty()) {
             if (!user.getNationalId().matches("^[0-9]{10}$"))
@@ -263,10 +259,14 @@ public class UserDao extends com.nrdc.policeHamrah.model.dto.UserDto {
             Long size = (Long) entityManager.createQuery("SELECT count (u) FROM UserDao u WHERE u.nationalId = :nationalId")
                     .setParameter("nationalId", user.getNationalId())
                     .getSingleResult();
-            if (size > 0)
+            if (size > 0 && !isEditing)
                 throw new ServerException(Constants.NATIONAL_ID + Constants.DUPLICATED);
         }
         //end : check national id
+    }
+
+    public void checkUser(boolean isEditing) throws Exception {
+        checkUser(this, isEditing);
     }
 
     public List<SystemDao> systems() {
