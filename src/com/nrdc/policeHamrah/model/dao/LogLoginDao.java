@@ -116,7 +116,7 @@ public class LogLoginDao extends LogLoginDto {
 
     @Override
     @Basic
-    @Column(name = "STATUS_CODE ", table = tableName)
+    @Column(name = "STATUS_CODE", table = tableName)
     public Long getStatusCode() {
         return super.getStatusCode();
     }
