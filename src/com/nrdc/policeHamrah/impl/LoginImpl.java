@@ -6,10 +6,7 @@ import com.nrdc.policeHamrah.jsonModel.StandardResponse;
 import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestAuthenticateUser;
 import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestLogin;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseLogin;
-import com.nrdc.policeHamrah.model.dao.AuthDao;
-import com.nrdc.policeHamrah.model.dao.LogLoginDao;
-import com.nrdc.policeHamrah.model.dao.SystemDao;
-import com.nrdc.policeHamrah.model.dao.UserDao;
+import com.nrdc.policeHamrah.model.dao.*;
 import com.nrdc.policeHamrah.model.dto.AuthDto;
 import com.nrdc.policeHamrah.model.dto.UserDto;
 import org.apache.log4j.Logger;
@@ -115,11 +112,14 @@ public class LoginImpl {
     public StandardResponse login(RequestLogin requestLogin) {
         EntityManager entityManager = Database.getEntityManager();
         EntityManager entityManagerLog = Database.getEntityManager();
+        EntityManager entityManagerUserActivities = Database.getEntityManager();
         entityManager.getEntityManagerFactory().getCache().evictAll();
         EntityTransaction transaction = entityManager.getTransaction();
         EntityTransaction logTransaction = entityManagerLog.getTransaction();
+        EntityTransaction activitiesTransaction = entityManagerUserActivities.getTransaction();
         LogLoginDao log = new LogLoginDao();
         log.setDescription("LOGIN");
+        log.setId(IDBuilder.generateNewID());
         log.setTime(new Date());
         log.setUsername(requestLogin.getUsername());
         try {
@@ -127,6 +127,8 @@ public class LoginImpl {
                 transaction.begin();
             if (!logTransaction.isActive())
                 logTransaction.begin();
+            if (!activitiesTransaction.isActive())
+                activitiesTransaction.begin();
             SystemDao system = SystemDao.getSystem(SystemNames.POLICE_HAMRAH);
             Long size = (Long) entityManager.createQuery("SELECT COUNT (a) FROM AuthDao a " +
                     "JOIN UserDao u ON u.id = a.fkUserId " +
@@ -157,9 +159,21 @@ public class LoginImpl {
             responseLogin.setUser(user.createCustomUser());
             StandardResponse<ResponseLogin> response = new StandardResponse<>();
             response.setResponse(responseLogin);
+            LogUserActivitiesDao logUserActivities = new LogUserActivitiesDao();
+            logUserActivities.setId(IDBuilder.generateNewID());
+            logUserActivities.setActionType("LOGIN");
+            logUserActivities.setFkUserId(user.getId());
+            logUserActivities.setActionId(log.getId());
+            entityManagerUserActivities.persist(logUserActivities);
+//            log.setId();
+//            logUserActivities.setActionId();
             entityManagerLog.persist(log);
             if (transaction.isActive())
                 transaction.commit();
+            if (logTransaction.isActive())
+                logTransaction.commit();
+            if (activitiesTransaction.isActive())
+                activitiesTransaction.commit();
             return response;
         } catch (Exception ex) {
             log.setStatusCode(-1L);
@@ -167,13 +181,12 @@ public class LoginImpl {
                 transaction.rollback();
             return StandardResponse.getNOKExceptions(ex);
         } finally {
-            entityManagerLog.persist(log);
-            if (logTransaction.isActive())
-                logTransaction.commit();
             if (entityManager.isOpen())
                 entityManager.close();
             if (entityManagerLog.isOpen())
                 entityManagerLog.close();
+            if (entityManagerUserActivities.isOpen())
+                entityManagerUserActivities.close();
         }
     }
 
@@ -186,12 +199,16 @@ public class LoginImpl {
     public StandardResponse loginToSystem(String policeHamrahToken, Long fkSystemId) {
         EntityManager entityManager = Database.getEntityManager();
         EntityManager entityManagerLog = Database.getEntityManager();
+        EntityManager entityManagerUserActivities = Database.getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         EntityTransaction transactionLog = entityManagerLog.getTransaction();
+        EntityTransaction transactionUserActivities = entityManagerLog.getTransaction();
         entityManager.getEntityManagerFactory().getCache().evictAll();
-        LogLoginDao log = new LogLoginDao();
-        log.setToken(policeHamrahToken);
-        log.setFkSystemId(fkSystemId);
+        LogLoginDao logLogin = new LogLoginDao();
+        logLogin.setId(IDBuilder.generateNewID());
+        logLogin.setTime(new Date());
+        logLogin.setToken(policeHamrahToken);
+        logLogin.setFkSystemId(fkSystemId);
         try {
             if (transaction != null && !transaction.isActive()) {
                 transaction.begin();
@@ -199,28 +216,39 @@ public class LoginImpl {
             if (transactionLog != null && !transactionLog.isActive()) {
                 transactionLog.begin();
             }
+            if (transactionUserActivities != null && !transactionUserActivities.isActive()) {
+                transactionUserActivities.begin();
+            }
             UserDao user = UserDao.validate(policeHamrahToken);
             if (!user.getIsActive())
                 throw new ServerException(Constants.USER + Constants.IS_NOT_ACTIVE);
-            log.setFkProvinceId(user.getFkProvinceId());
-            log.setPoliceCode(user.getPoliceCode());
-            log.setPhoneNumber(user.getPhoneNumber());
-            log.setNationalId(user.getNationalId());
-            log.setFkUserId(user.getId());
-            log.setLastName(user.getLastName());
-            log.setFirstName(user.getFirstName());
-            log.setUsername(user.getUsername());
-            log.setDescription("LOGIN_TO_SYSTEM");
-            log.setTime(new Date());
+            logLogin.setFkProvinceId(user.getFkProvinceId());
+            logLogin.setPoliceCode(user.getPoliceCode());
+            logLogin.setPhoneNumber(user.getPhoneNumber());
+            logLogin.setNationalId(user.getNationalId());
+            logLogin.setFkUserId(user.getId());
+            logLogin.setLastName(user.getLastName());
+            logLogin.setFirstName(user.getFirstName());
+            logLogin.setUsername(user.getUsername());
+            logLogin.setDescription("LOGIN_TO_SYSTEM");
+            logLogin.setTime(new Date());
+            LogUserActivitiesDao logUserActivitiesDao = new LogUserActivitiesDao();
+            logUserActivitiesDao.setId(IDBuilder.generateNewID());
+            logUserActivitiesDao.setActionType("LOGIN_TO_SYSTEM");
+            logUserActivitiesDao.setActionId(logLogin.getId());
+            logUserActivitiesDao.setFkUserId(user.getId());
             SystemDao systemDao = SystemDao.getSystem(fkSystemId);
-            log.setSystemName(systemDao.getSystemName());
+            logLogin.setSystemName(systemDao.getSystemName());
             entityManager.createQuery("DELETE FROM AuthDao WHERE fkUserId = :fkUserId AND fkSystemId = :fkSystemId")
                     .setParameter("fkUserId", user.getId())
                     .setParameter("fkSystemId", fkSystemId)
                     .executeUpdate();
-            StandardResponse<ResponseLogin> response = loginToSystem(user, systemDao, entityManager);
-            log.setStatusCode(1L);
-            entityManagerLog.persist(log);
+            AuthDao auth = new AuthDao(user, systemDao);
+            entityManager.persist(auth);
+            StandardResponse<ResponseLogin> response = loginToSystem(user, systemDao, auth);
+            logLogin.setStatusCode(1L);
+            entityManagerLog.persist(logLogin);
+            entityManagerUserActivities.persist(logUserActivitiesDao);
             if (transaction != null && transaction.isActive())
                 transaction.commit();
             if (transactionLog != null && transactionLog.isActive())
@@ -229,8 +257,8 @@ public class LoginImpl {
         } catch (Exception exception) {
             if (transaction != null && transaction.isActive())
                 transaction.rollback();
-            log.setStatusCode(-1L);
-            entityManagerLog.persist(log);
+            logLogin.setStatusCode(-1L);
+            entityManagerLog.persist(logLogin);
             if (transactionLog != null && transactionLog.isActive())
                 transactionLog.commit();
             return StandardResponse.getNOKExceptions(exception);
@@ -242,10 +270,8 @@ public class LoginImpl {
         }
     }
 
-    private StandardResponse<ResponseLogin> loginToSystem(UserDao user, SystemDao systemDao, EntityManager entityManager) throws Exception {
+    private StandardResponse<ResponseLogin> loginToSystem(UserDao user, SystemDao systemDao, AuthDao auth) throws Exception {
 
-        AuthDao auth = new AuthDao(user, systemDao);
-        entityManager.persist(auth);
         return createResponseLogin(user, systemDao, auth);
     }
 
