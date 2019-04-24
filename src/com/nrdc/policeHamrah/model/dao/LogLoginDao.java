@@ -99,6 +99,7 @@ public class LogLoginDao extends LogLoginDto {
         return super.getToken();
     }
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Override
     @Basic
     @Column(name = "TIME", table = tableName)
