@@ -9,7 +9,7 @@ import javax.persistence.*;
  * Created by mhd.zerehpoosh on 4/14/2019.
  */
 @Entity
-@Table(name = "PH_LOG_USER_ACTIVIRIES", schema = Constants.SCHEMA)
+@Table(name = "PH_LOG_USER_ACTIVITIES", schema = Constants.SCHEMA)
 public class LogUserActivitiesDao extends LogUserActivitiesDto {
     public static final String tableName = "PH_LOG_USER_ACTIVITIES";
 
