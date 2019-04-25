@@ -22,13 +22,12 @@ public class VerifyService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response verifyRESTService() {
         logger.info("++================== VERIFY SERVICE : START ==================++");
-
         ResponseVerify response = new ResponseVerify();
         response.setName(SystemNames.POLICE_HAMRAH.name());
         response.setStatusCode(200);
         response.setStatusMessage("OK");
         response.setTime(PersianCalender.getDate() + " - " + PersianCalender.getTime());
-        response.setDeployDate("1398/02/05");
+        response.setDeployDate("1398/02/06");
         Response finalResponse = Response.status(200).entity(response).build();
         logger.info("++================== VERIFY SERVICE : END ==================++");
         return finalResponse;
