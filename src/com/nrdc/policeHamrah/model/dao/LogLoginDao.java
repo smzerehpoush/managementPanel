@@ -6,9 +6,6 @@ import com.nrdc.policeHamrah.model.dto.LogLoginDto;
 import javax.persistence.*;
 import java.util.Date;
 
-/**
- * Created by mhd.zerehpoosh on 4/13/2019.
- */
 @Entity
 @Table(name = "PH_LOG_LOGIN", schema = Constants.SCHEMA)
 public class LogLoginDao extends LogLoginDto {
@@ -38,7 +35,7 @@ public class LogLoginDao extends LogLoginDto {
     @Override
     @Id
     @GeneratedValue
-    @Column(name = "ID_PH_LOG_USER_ACTIVITIES", table = tableName)
+    @Column(name = "ID_PH_LOG_LOGIN", table = tableName)
     public String getId() {
         return super.getId();
     }
@@ -102,7 +99,7 @@ public class LogLoginDao extends LogLoginDto {
     @Temporal(TemporalType.TIMESTAMP)
     @Override
     @Basic
-    @Column(name = "TIME", table = tableName)
+    @Column(name = "LOG_TIME", table = tableName)
     public Date getTime() {
         return super.getTime();
     }
