@@ -7,6 +7,7 @@
 
     <persistence-unit name="policeHamrahJPA" transaction-type="JTA">
         <jta-data-source>policeHamrahDataSource</jta-data-source>
+        <!--<jta-data-source>testHibernateDataSource</jta-data-source>-->
 
         <class>com.nrdc.policeHamrah.model.dao.PrivilegeDao</class>
         <class>com.nrdc.policeHamrah.model.dao.RoleDao</class>
