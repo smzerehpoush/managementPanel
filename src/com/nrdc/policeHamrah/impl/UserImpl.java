@@ -699,6 +699,43 @@ public class UserImpl {
         }
     }
 
+    public StandardResponse removeUser(String token, Long fkUserId, Long fkSystemId) {
+        EntityManager entityManager = Database.getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
+        try {
+            UserDao user1 = UserDao.validate(token);
+            user1.checkPrivilege(PrivilegeNames.PHYSICAL_REMOVE, fkSystemId);
+            SystemDao systemDao = SystemDao.getSystem(fkSystemId);
+            UserDao user2 = UserDao.getUser(fkUserId);
+            if (user1.getId().equals(user2.getId()))
+                throw new ServerException(Constants.CAN_NOT_REMOVE_YOURSELF);
+            List<SystemDao> user2SystemList = user2.systems();
+            if (!user2SystemList.contains(systemDao)) {
+                throw new ServerException(Constants.USER_SYSTEM_ERROR);
+            }
+            if (transaction != null && !transaction.isActive())
+                transaction.begin();
+            entityManager.createQuery("DELETE UserDao u WHERE u.id = :fkUserId")
+                    .setParameter("fkUserId", fkUserId)
+                    .executeUpdate();
+            if (transaction != null && transaction.isActive())
+                transaction.commit();
+
+            return new StandardResponse<>();
+
+        } catch (Exception ex) {
+            if (transaction != null && transaction.isActive())
+                transaction.rollback();
+            if (entityManager.isOpen())
+                entityManager.close();
+            return StandardResponse.getNOKExceptions(ex);
+        } finally {
+            if (entityManager.isOpen())
+                entityManager.close();
+        }
+    }
+
     private class RequestNazerAuth {
         private String phoneNumber;
         private String password;

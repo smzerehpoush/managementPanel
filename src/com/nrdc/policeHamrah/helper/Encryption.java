@@ -5,7 +5,6 @@ import com.nrdc.policeHamrah.jsonModel.EncryptedRequest;
 import com.nrdc.policeHamrah.jsonModel.EncryptedResponse;
 import com.nrdc.policeHamrah.model.dao.UserDao;
 import org.apache.log4j.Logger;
-import org.codehaus.jackson.map.ObjectMapper;
 
 import java.security.NoSuchAlgorithmException;
 
@@ -69,8 +68,7 @@ public class Encryption {
     public static EncryptedResponse encryptResponse(String key, Object response) {
         EncryptedResponse encryptedResponse = new EncryptedResponse();
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            String responseText = objectMapper.writeValueAsString(response);
+            String responseText = MyGsonBuilder.build().toJson(response);
 //            logger.info(responseText);
             String strEncrypted = encryptOrNull(key, responseText);
             encryptedResponse.setData(strEncrypted);

@@ -4,6 +4,7 @@ import com.nrdc.policeHamrah.exceptions.ExceptionHandler;
 import com.nrdc.policeHamrah.exceptions.ServerException;
 import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.Encryption;
+import com.nrdc.policeHamrah.helper.MyGsonBuilder;
 import com.nrdc.policeHamrah.impl.SystemImpl;
 import com.nrdc.policeHamrah.impl.UserImpl;
 import com.nrdc.policeHamrah.jsonModel.EncryptedRequest;
@@ -15,7 +16,6 @@ import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetSystems;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.ResponseGetUsers;
 import com.nrdc.policeHamrah.model.dao.UserDao;
 import org.apache.log4j.Logger;
-import org.codehaus.jackson.map.ObjectMapper;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -24,7 +24,6 @@ import javax.ws.rs.core.Response;
 @Path("/user")
 public class UserServices {
     private static Logger logger = Logger.getLogger(UserServices.class.getName());
-    private ObjectMapper objectMapper = new ObjectMapper();
 
     /**
      * 12
@@ -38,7 +37,7 @@ public class UserServices {
     public Response addUser(EncryptedRequest encryptedRequest) {
         logger.info("++================== addUser SERVICE : START ==================++");
         try {
-            RequestAddUser request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestAddUser.class);
+            RequestAddUser request = MyGsonBuilder.build().fromJson(Encryption.decryptRequest(encryptedRequest), RequestAddUser.class);
             StandardResponse response = new UserImpl().addUser(encryptedRequest.getToken(), request, true);
             String key = UserDao.getKey(encryptedRequest.getToken()).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
@@ -63,7 +62,7 @@ public class UserServices {
     public Response registerUser(EncryptedRequest encryptedRequest) {
         logger.info("++================== addUser SERVICE : START ==================++");
         try {
-            RequestAddUser request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestAddUser.class);
+            RequestAddUser request = MyGsonBuilder.build().fromJson(Encryption.decryptRequest(encryptedRequest), RequestAddUser.class);
             StandardResponse response = new UserImpl().addUser(encryptedRequest.getToken(), request, false);
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();
@@ -86,7 +85,7 @@ public class UserServices {
     public Response editUser(EncryptedRequest encryptedRequest) {
         logger.info("++================== editUser SERVICE : START ==================++");
         try {
-            RequestEditUser request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestEditUser.class);
+            RequestEditUser request = MyGsonBuilder.build().fromJson(Encryption.decryptRequest(encryptedRequest), RequestEditUser.class);
             StandardResponse response = new UserImpl().editUser(encryptedRequest.getToken(), request);
             String key = UserDao.getKey(encryptedRequest.getToken()).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
@@ -153,6 +152,7 @@ public class UserServices {
             return ExceptionHandler.create("++================== deActiveUser SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
+
     @Path("/remove")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -187,7 +187,7 @@ public class UserServices {
     public Response filterUsers(EncryptedRequest encryptedRequest) {
         logger.info("++================== filterUsers SERVICE : START ==================++");
         try {
-            RequestFilterUsers request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestFilterUsers.class);
+            RequestFilterUsers request = MyGsonBuilder.build().fromJson(Encryption.decryptRequest(encryptedRequest), RequestFilterUsers.class);
             StandardResponse<ResponseGetUsers> response = new UserImpl().filterUsers(encryptedRequest.getToken(), request);
             String key = UserDao.getKey(encryptedRequest.getToken()).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
@@ -213,7 +213,7 @@ public class UserServices {
     public Response resetPassword(EncryptedRequest encryptedRequest) {
         logger.info("++================== resetPassword SERVICE : START ==================++");
         try {
-            RequestResetPassword request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestResetPassword.class);
+            RequestResetPassword request = MyGsonBuilder.build().fromJson(Encryption.decryptRequest(encryptedRequest), RequestResetPassword.class);
             StandardResponse response = new UserImpl().resetPassword(encryptedRequest.getToken(), request);
             String key = UserDao.getKey(encryptedRequest.getToken()).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
@@ -294,7 +294,7 @@ public class UserServices {
     public Response assignRole(EncryptedRequest encryptedRequest) {
         logger.info("++================== assignRoles SERVICE : START ==================++");
         try {
-            RequestAssignRole request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestAssignRole.class);
+            RequestAssignRole request = MyGsonBuilder.build().fromJson(Encryption.decryptRequest(encryptedRequest), RequestAssignRole.class);
             StandardResponse response = new UserImpl().assignRole(encryptedRequest.getToken(), request);
             String key = UserDao.getKey(encryptedRequest.getToken()).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
@@ -468,7 +468,7 @@ public class UserServices {
     public Response assignUserToSystem(EncryptedRequest encryptedRequest) {
         logger.info("++================== assignSystemToUser SERVICE : START ==================++");
         try {
-            RequestAssignSystemToUser request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestAssignSystemToUser.class);
+            RequestAssignSystemToUser request = MyGsonBuilder.build().fromJson(Encryption.decryptRequest(encryptedRequest), RequestAssignSystemToUser.class);
             StandardResponse response = new UserImpl().assignUserToSystem(encryptedRequest.getToken(), request);
             String key = UserDao.getKey(encryptedRequest.getToken()).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);

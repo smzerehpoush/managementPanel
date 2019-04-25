@@ -4,6 +4,7 @@ import com.nrdc.policeHamrah.exceptions.ExceptionHandler;
 import com.nrdc.policeHamrah.exceptions.ServerException;
 import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.Encryption;
+import com.nrdc.policeHamrah.helper.MyGsonBuilder;
 import com.nrdc.policeHamrah.helper.SystemNames;
 import com.nrdc.policeHamrah.impl.LoginImpl;
 import com.nrdc.policeHamrah.jsonModel.EncryptedRequest;
@@ -13,7 +14,6 @@ import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestAuthenticateUser;
 import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestLogin;
 import com.nrdc.policeHamrah.model.dao.SystemDao;
 import org.apache.log4j.Logger;
-import org.codehaus.jackson.map.ObjectMapper;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -58,7 +58,7 @@ public class LoginService {
     public Response authenticateUser(EncryptedRequest encryptedRequest) {
         logger.info("++================== authenticateUser SERVICE : START ==================++");
         try {
-            RequestAuthenticateUser request = new ObjectMapper().readValue(Encryption.decryptRequest(encryptedRequest), RequestAuthenticateUser.class);
+            RequestAuthenticateUser request = MyGsonBuilder.build().fromJson(Encryption.decryptRequest(encryptedRequest), RequestAuthenticateUser.class);
             StandardResponse response = new LoginImpl().authenticateUser(request);
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(response);
             Response finalResponse = Response.status(200).entity(encryptedResponse).build();

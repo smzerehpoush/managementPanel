@@ -4,6 +4,7 @@ import com.nrdc.policeHamrah.exceptions.ExceptionHandler;
 import com.nrdc.policeHamrah.exceptions.ServerException;
 import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.Encryption;
+import com.nrdc.policeHamrah.helper.MyGsonBuilder;
 import com.nrdc.policeHamrah.impl.RoleImpl;
 import com.nrdc.policeHamrah.jsonModel.EncryptedRequest;
 import com.nrdc.policeHamrah.jsonModel.EncryptedResponse;
@@ -12,7 +13,6 @@ import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestAddRole;
 import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestEditRole;
 import com.nrdc.policeHamrah.model.dao.UserDao;
 import org.apache.log4j.Logger;
-import org.codehaus.jackson.map.ObjectMapper;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -34,9 +34,8 @@ public class RoleServices {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addRole(EncryptedRequest encryptedRequest) {
         logger.info("++================== addRole SERVICE : START ==================++");
-        ObjectMapper objectMapper = new ObjectMapper();
         try {
-            RequestAddRole requestAddRole = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestAddRole.class);
+            RequestAddRole requestAddRole = MyGsonBuilder.build().fromJson(Encryption.decryptRequest(encryptedRequest), RequestAddRole.class);
             StandardResponse response = new RoleImpl().addRole(encryptedRequest.getToken(), requestAddRole);
             String key = UserDao.getKey(encryptedRequest.getToken()).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
@@ -60,9 +59,8 @@ public class RoleServices {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response editRole(EncryptedRequest encryptedRequest) {
         logger.info("++================== editRole SERVICE : START ==================++");
-        ObjectMapper objectMapper = new ObjectMapper();
         try {
-            RequestEditRole requestEditRole = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestEditRole.class);
+            RequestEditRole requestEditRole = MyGsonBuilder.build().fromJson(Encryption.decryptRequest(encryptedRequest), RequestEditRole.class);
             StandardResponse response = new RoleImpl().editRole(encryptedRequest.getToken(), requestEditRole);
             String key = UserDao.getKey(encryptedRequest.getToken()).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);

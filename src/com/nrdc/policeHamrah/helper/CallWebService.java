@@ -1,13 +1,11 @@
 package com.nrdc.policeHamrah.helper;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
 import java.io.IOException;
-import java.util.Date;
 
 public class CallWebService {
     public static String callGetService(String path) {
@@ -29,7 +27,7 @@ public class CallWebService {
         Client client = Client.create();
         WebResource webResource = client
                 .resource(path);
-        Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateLongFormatTypeAdapter()).create();
+        Gson gson = MyGsonBuilder.build();
         ClientResponse response = webResource.type("application/json")
                 .post(ClientResponse.class, gson.toJson(object));
 

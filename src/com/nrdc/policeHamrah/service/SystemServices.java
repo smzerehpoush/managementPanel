@@ -4,6 +4,7 @@ import com.nrdc.policeHamrah.exceptions.ExceptionHandler;
 import com.nrdc.policeHamrah.exceptions.ServerException;
 import com.nrdc.policeHamrah.helper.Constants;
 import com.nrdc.policeHamrah.helper.Encryption;
+import com.nrdc.policeHamrah.helper.MyGsonBuilder;
 import com.nrdc.policeHamrah.impl.SystemImpl;
 import com.nrdc.policeHamrah.jsonModel.EncryptedRequest;
 import com.nrdc.policeHamrah.jsonModel.EncryptedResponse;
@@ -12,7 +13,6 @@ import com.nrdc.policeHamrah.jsonModel.jsonRequest.RequestReportSystem;
 import com.nrdc.policeHamrah.jsonModel.jsonResponse.*;
 import com.nrdc.policeHamrah.model.dao.UserDao;
 import org.apache.log4j.Logger;
-import org.codehaus.jackson.map.ObjectMapper;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -55,6 +55,7 @@ public class SystemServices {
      *
      * @return list of all systems
      */
+    // TODO: 4/25/2019 add token to request
     @Path("/get")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -103,6 +104,7 @@ public class SystemServices {
      * return list of systems in tabular format
      * @return tabular fromat of systems
      */
+    // TODO: 4/25/2019 add token to request
     @Path("/version")
     @GET
     @Produces(MediaType.TEXT_HTML)
@@ -126,6 +128,7 @@ public class SystemServices {
      * @param fkSystemId id of system
      * @return json data
      */
+    // TODO: 4/25/2019 add token to request
     @Path("/version/{fkSystemId}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -252,9 +255,8 @@ public class SystemServices {
     @Produces(MediaType.APPLICATION_JSON)
     public Response reportSystem(EncryptedRequest encryptedRequest) {
         logger.info("++================== reportSystem SERVICE : START ==================++");
-        ObjectMapper objectMapper = new ObjectMapper();
         try {
-            RequestReportSystem request = objectMapper.readValue(Encryption.decryptRequest(encryptedRequest), RequestReportSystem.class);
+            RequestReportSystem request = MyGsonBuilder.build().fromJson(Encryption.decryptRequest(encryptedRequest), RequestReportSystem.class);
             StandardResponse response = new SystemImpl().reportSystem(encryptedRequest.getToken(), request);
             String key = UserDao.getKey(encryptedRequest.getToken()).getKey();
             EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);

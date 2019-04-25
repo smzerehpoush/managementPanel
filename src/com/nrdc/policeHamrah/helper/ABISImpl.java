@@ -1,14 +1,11 @@
 package com.nrdc.policeHamrah.helper;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.nrdc.policeHamrah.model.dao.ConstantDao;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import sun.misc.BASE64Encoder;
-
-import java.util.Date;
 
 public class ABISImpl {
     private final static String username = "mobileClient";
@@ -35,7 +32,7 @@ public class ABISImpl {
 
     private static String callPostService(String path, Object object) {
         WebResource.Builder webResourceBuilder = createWebResourceBuilder(path);
-        Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateLongFormatTypeAdapter()).create();
+        Gson gson = MyGsonBuilder.build();
         ClientResponse response = webResourceBuilder.post(ClientResponse.class, gson.toJson(object));
         return response.getEntity(String.class);
     }
