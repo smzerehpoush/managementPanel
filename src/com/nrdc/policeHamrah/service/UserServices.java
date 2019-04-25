@@ -153,6 +153,25 @@ public class UserServices {
             return ExceptionHandler.create("++================== deActiveUser SERVICE : EXCEPTION ==================++", ex, token);
         }
     }
+    @Path("/remove")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response removeUser(@QueryParam("token") String token, @QueryParam("fkUserId") Long fkUserId, @QueryParam("fkSystemId") Long fkSystemId) {
+        logger.info("++================== deActiveUser SERVICE : START ==================++");
+        try {
+            if (token == null || fkSystemId == null || fkUserId == null) {
+                throw new ServerException(Constants.REQUEST + Constants.IS_NOT_VALID);
+            }
+            StandardResponse response = new UserImpl().removeUser(token, fkUserId, fkSystemId);
+            String key = UserDao.getKey(token).getKey();
+            EncryptedResponse encryptedResponse = Encryption.encryptResponse(key, response);
+            Response finalResponse = Response.status(200).entity(encryptedResponse).build();
+            logger.info("++================== deActiveUser SERVICE : END ==================++");
+            return finalResponse;
+        } catch (Exception ex) {
+            return ExceptionHandler.create("++================== deActiveUser SERVICE : EXCEPTION ==================++", ex, token);
+        }
+    }
 
     /**
      * 16
