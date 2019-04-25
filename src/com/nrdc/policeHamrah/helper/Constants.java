@@ -46,6 +46,7 @@ public class Constants {
 
 
     public static final String CAN_NOT_DE_ACTIVE_YOURSELF = "نمی توانید خودتان را غیر فغال کنید.";
+    public static final String CAN_NOT_REMOVE_YOURSELF = "نمی توانید خودتان را حذف کنید.";
     public static final String CAN_NOT_ASSIGN_THIS_ROLE = "نمی توانید نقش مدیر ارشد را به دیگران تخصیص دهید.";
     public static final String CAN_NOT_DELETE_TOKEN = "نمی توانید توکن خودتان را حذف کنید.";
     public static final String CAN_NOT_EDIT_SYSADMIN = "نمی توانید نقش مدیر ارشد را تغییر دهید";
