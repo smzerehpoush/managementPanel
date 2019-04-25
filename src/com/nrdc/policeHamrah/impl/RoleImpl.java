@@ -31,14 +31,14 @@ public class RoleImpl {
                 throw new ServerException(Constants.USER_SYSTEM_ERROR);
 
             user.checkPrivilege(PrivilegeNames.ADD_ROLE, requestAddRole.getFkSystemId());
-            if (requestAddRole.getRoleText().equals(Constants.SYS_ADMIN))
-                throw new ServerException(Constants.CAN_NOT_CREATE_SYSADMIN);
-            List<Long> roleIdList = entityManager.createQuery("SELECT (r.id) FROM RoleDao r WHERE r.fkSystemId = :fkSystemId")
-                    .setParameter("fkSystemId", requestAddRole.getFkSystemId())
-                    .getResultList();
-            roleIdList.removeAll(requestAddRole.getPrivileges());
-            if (roleIdList.size() == 0)
-                throw new ServerException(Constants.CAN_NOT_CREATE_SYSADMIN);
+//            if (requestAddRole.getRoleText().equals(Constants.SYS_ADMIN))
+//                throw new ServerException(Constants.CAN_NOT_CREATE_SYSADMIN);
+//            List<Long> roleIdList = entityManager.createQuery("SELECT (r.id) FROM RoleDao r WHERE r.fkSystemId = :fkSystemId")
+//                    .setParameter("fkSystemId", requestAddRole.getFkSystemId())
+//                    .getResultList();
+//            roleIdList.removeAll(requestAddRole.getPrivileges());
+//            if (roleIdList.size() == 0)
+//                throw new ServerException(Constants.CAN_NOT_CREATE_SYSADMIN);
             RoleDao role = new RoleDao(requestAddRole.getRoleText(), requestAddRole.getFkSystemId(), user.getId());
             Long roleId = (Long) (entityManager.createQuery("SELECT MAX (r.id) FROM RoleDao r")
                     .getSingleResult())
